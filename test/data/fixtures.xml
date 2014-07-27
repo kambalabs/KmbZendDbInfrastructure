@@ -4,6 +4,14 @@
     <users id="2" login="jmiller" name="Jane MILLER" email="jmiller@gmail.com" role="root" />
     <users id="3" login="psmith" name="Paul SMITH" email="psmith@gmail.com" role="admin" />
     <users id="4" login="mcollins" name="Mike COLLINS" email="mcollins@gmail.com" role="user" />
+    <environments_users environment_id="4" user_id="3" />
+    <environments_users environment_id="5" user_id="3" />
+    <environments_users environment_id="14" user_id="3" />
+    <environments_users environment_id="15" user_id="3" />
+    <environments_users environment_id="4" user_id="4" />
+    <environments_users environment_id="14" user_id="4" />
+    <environments_users environment_id="6" user_id="4" />
+    <environments_users environment_id="16" user_id="4" />
     <environments id="1" name="STABLE" />
     <environments id="2" name="UNSTABLE" />
     <environments id="3" name="DEFAULT" />

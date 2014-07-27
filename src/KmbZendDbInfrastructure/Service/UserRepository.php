@@ -21,6 +21,7 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
+use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\UserInterface;
 use KmbDomain\Model\UserRepositoryInterface;
 use Zend\Db\Sql\Predicate\Predicate;
@@ -35,5 +36,16 @@ class UserRepository extends Repository implements UserRepositoryInterface
     {
         $criteria = new Predicate();
         return $this->getBy($criteria->equalTo('id', 1));
+    }
+
+    /**
+     * @param EnvironmentInterface $environment
+     * @return array
+     */
+    public function getAllByEnvironment($environment)
+    {
+        $select = $this->getSelect()->join('environments_users', 'id = user_id', []);
+        $select->where->equalTo('environment_id', $environment->getId());
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 }

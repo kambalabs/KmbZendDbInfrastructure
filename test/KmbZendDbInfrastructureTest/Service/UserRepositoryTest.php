@@ -55,4 +55,17 @@ class UserRepositoryTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertInstanceOf('KmbDomain\Model\UserInterface', $user);
         $this->assertEquals(1, $user->getId());
     }
+
+    /** @test */
+    public function canGetAllByEnvironment()
+    {
+        $environment = Bootstrap::getServiceManager()->get('EnvironmentRepository')->getById(4);
+
+        $users = static::$repository->getAllByEnvironment($environment);
+
+        $this->assertEquals(2, count($users));
+        $user = $users[0];
+        $this->assertInstanceOf('KmbDomain\Model\UserInterface', $user);
+        $this->assertEquals('psmith', $user->getLogin());
+    }
 }
