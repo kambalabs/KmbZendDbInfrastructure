@@ -1,5 +1,9 @@
 <?xml version="1.0" ?>
 <dataset>
+    <users id="1" login="jdoe" name="John DOE" email="jdoe@gmail.com" role="root" />
+    <users id="2" login="jmiller" name="Jane MILLER" email="jmiller@gmail.com" role="root" />
+    <users id="3" login="psmith" name="Paul SMITH" email="psmith@gmail.com" role="admin" />
+    <users id="4" login="mcollins" name="Mike COLLINS" email="mcollins@gmail.com" role="user" />
     <environments id="1" name="STABLE" />
     <environments id="2" name="UNSTABLE" />
     <environments id="3" name="DEFAULT" />

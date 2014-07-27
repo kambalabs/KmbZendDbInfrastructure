@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id`   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `login` VARCHAR(256),
+  `name` VARCHAR(256),
+  `email` VARCHAR(256),
+  `role` VARCHAR(256)
+);
+
 DROP TABLE IF EXISTS `environments`;
 CREATE TABLE `environments` (
   `id`   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
