@@ -31,7 +31,8 @@
             "KmbZendDbInfrastructure": "src/"
         },
         "classmap": [
-            "./Module.php"
+            "./Module.php",
+            "./test/KmbZendDbInfrastructureTest/DatabaseInitTrait.php"
         ]
     }
 }
