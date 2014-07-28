@@ -1,6 +1,7 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Service;
 
+use KmbDomain\Model\UserInterface;
 use KmbZendDbInfrastructure\Service\UserRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -43,6 +44,18 @@ class UserRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetAllNonRoot()
+    {
+        $users = static::$repository->getAllNonRoot();
+
+        $this->assertEquals(5, count($users));
+        /** @var UserInterface $user */
+        $user = $users[0];
+        $this->assertInstanceOf('KmbDomain\Model\UserInterface', $user);
+        $this->assertEquals('psmith', $user->getLogin());
+    }
+
+    /** @test */
     public function canGetAllByEnvironment()
     {
         $environment = Bootstrap::getServiceManager()->get('EnvironmentRepository')->getById(4);
@@ -50,8 +63,23 @@ class UserRepositoryTest extends \PHPUnit_Framework_TestCase
         $users = static::$repository->getAllByEnvironment($environment);
 
         $this->assertEquals(2, count($users));
+        /** @var UserInterface $user */
         $user = $users[0];
         $this->assertInstanceOf('KmbDomain\Model\UserInterface', $user);
         $this->assertEquals('psmith', $user->getLogin());
+    }
+
+    /** @test */
+    public function canGetAllAvailableForEnvironment()
+    {
+        $environment = Bootstrap::getServiceManager()->get('EnvironmentRepository')->getById(4);
+
+        $users = static::$repository->getAllAvailableForEnvironment($environment);
+
+        $this->assertEquals(3, count($users));
+        /** @var UserInterface $user */
+        $user = $users[0];
+        $this->assertInstanceOf('KmbDomain\Model\UserInterface', $user);
+        $this->assertEquals('madams', $user->getLogin());
     }
 }

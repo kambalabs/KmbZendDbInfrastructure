@@ -48,4 +48,26 @@ class UserRepository extends Repository implements UserRepositoryInterface
         $select->where->equalTo('environment_id', $environment->getId());
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
+
+    /**
+     * @return array
+     */
+    public function getAllNonRoot()
+    {
+        $criteria = new Predicate();
+        return $this->getAllBy($criteria->notEqualTo('role', UserInterface::ROLE_ROOT));
+    }
+
+    /**
+     * @param EnvironmentInterface $environment
+     * @return array
+     */
+    public function getAllAvailableForEnvironment($environment)
+    {
+        $subSelect = $this->getSlaveSql()->select()->from('environments_users')->columns(['user_id']);
+        $subSelect->where->equalTo('environment_id', $environment->getId());
+        $select = $this->getSelect();
+        $select->where->notEqualTo('role', UserInterface::ROLE_ROOT)->and->notIn('id', $subSelect);
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
 }

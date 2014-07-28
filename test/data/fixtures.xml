@@ -4,6 +4,9 @@
     <users id="2" login="jmiller" name="Jane MILLER" email="jmiller@gmail.com" role="root" />
     <users id="3" login="psmith" name="Paul SMITH" email="psmith@gmail.com" role="admin" />
     <users id="4" login="mcollins" name="Mike COLLINS" email="mcollins@gmail.com" role="user" />
+    <users id="5" login="madams" name="Martin ADAMS" email="madams@gmail.com" role="user" />
+    <users id="6" login="nmurphy" name="Nick MURPHY" email="nmurphy@gmail.com" role="admin" />
+    <users id="7" login="pmatthews" name="Paul MATTHEWS" email="pmatthews@gmail.com" role="user" />
     <environments_users environment_id="4" user_id="3" />
     <environments_users environment_id="5" user_id="3" />
     <environments_users environment_id="14" user_id="3" />
