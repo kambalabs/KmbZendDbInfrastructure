@@ -3,12 +3,13 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbZendDbInfrastructure\Service\UserRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
-use PHPUnit_Extensions_Database_DataSet_IDataSet;
-use PHPUnit_Extensions_Database_DB_IDatabaseConnection;
+use KmbZendDbInfrastructureTest\DatabaseInitTrait;
 use Zend\Db\Adapter\AdapterInterface;
 
-class UserRepositoryTest extends \PHPUnit_Extensions_Database_TestCase
+class UserRepositoryTest extends \PHPUnit_Framework_TestCase
 {
+    use DatabaseInitTrait;
+
     /** @var \PDO */
     protected static $connection;
 
@@ -24,27 +25,12 @@ class UserRepositoryTest extends \PHPUnit_Extensions_Database_TestCase
         $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
         static::$connection = $dbAdapter->getDriver()->getConnection()->getResource();
 
-        static::$connection->exec(file_get_contents(Bootstrap::rootPath() . '/data/migrations/sqlite/schema.sql'));
+        static::initSchema(static::$connection);
     }
 
-    /**
-     * Returns the test database connection.
-     *
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
-     */
-    protected function getConnection()
+    protected function setUp()
     {
-        return $this->createDefaultDBConnection(static::$connection);
-    }
-
-    /**
-     * Returns the test dataset.
-     *
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
-     */
-    protected function getDataSet()
-    {
-        return $this->createFlatXMLDataSet(Bootstrap::rootPath() . '/test/data/fixtures.xml');
+        static::initFixtures(static::$connection);
     }
 
     /** @test */
