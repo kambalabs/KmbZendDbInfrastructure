@@ -3,6 +3,7 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
+use KmbDomain\Model\UserRepositoryInterface;
 use KmbZendDbInfrastructure\Service\EnvironmentRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -76,18 +77,24 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canUpdate()
     {
+        /** @var UserRepositoryInterface $userRepository */
+        $userRepository = Bootstrap::getServiceManager()->get('UserRepository');
+        $mike = $userRepository->getById(4);
+        $nick = $userRepository->getById(6);
         /** @var EnvironmentInterface $aggregateRoot */
         $aggregateRoot = static::$repository->getById(4);
         /** @var EnvironmentInterface $newParent */
         $newParent = static::$repository->getById(2);
         $aggregateRoot->setParent($newParent);
         $aggregateRoot->setName('PF4');
+        $aggregateRoot->addUsers([$mike, $nick]);
 
         static::$repository->update($aggregateRoot);
 
         $this->assertEquals('PF4', static::$connection->query('SELECT name FROM environments WHERE id = 4')->fetchColumn());
         $this->assertEquals('UNSTABLE', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 4')->fetchColumn());
         $this->assertEquals('PF4', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 7')->fetchColumn());
+        $this->assertEquals([[3], [4], [6]], static::$connection->query('SELECT user_id FROM environments_users WHERE environment_id = 4')->fetchAll(\PDO::FETCH_NUM));
     }
 
     /** @test */

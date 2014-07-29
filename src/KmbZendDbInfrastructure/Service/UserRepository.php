@@ -35,7 +35,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
     public function getByLogin($login)
     {
         $criteria = new Predicate();
-        return $this->getBy($criteria->equalTo('id', 1));
+        return $this->getBy($criteria->equalTo('login', $login));
     }
 
     /**

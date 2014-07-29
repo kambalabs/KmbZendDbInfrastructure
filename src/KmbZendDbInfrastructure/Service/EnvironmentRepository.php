@@ -24,6 +24,7 @@ use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb;
 use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Model\UserInterface;
 use Zend\Db\Adapter\Driver\StatementInterface;
 use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Select;
@@ -59,9 +60,28 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
      */
     public function update(AggregateRootInterface $aggregateRoot)
     {
+        /** @var EnvironmentInterface $aggregateRoot */
+        $data = array_map(
+            function (UserInterface $user) use ($aggregateRoot) {
+                return [
+                    'environment_id' => $aggregateRoot->getId(),
+                    'user_id' => $user->getId(),
+                ];
+            }, $aggregateRoot->getUsers()
+        );
         $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
         try {
             parent::update($aggregateRoot);
+
+            $delete = $this->getMasterSql()->delete('environments_users');
+            $delete->where->equalTo('environment_id', $aggregateRoot->getId());
+            $this->performWrite($delete);
+
+            foreach ($data as $datum) {
+                $insert = $this->getMasterSql()->insert('environments_users')->values($datum);
+                $this->performWrite($insert);
+            }
+
             $this->movePaths($aggregateRoot);
             $connection->commit();
         } catch (ExceptionInterface $e) {
