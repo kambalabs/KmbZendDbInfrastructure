@@ -34,6 +34,9 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     /** @var string */
     protected $pathsTableName;
 
+    /** @var array */
+    protected $allRoots;
+
     /**
      * @param AggregateRootInterface $aggregateRoot
      * @return \GtnPersistBase\Model\RepositoryInterface
@@ -115,6 +118,10 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
      */
     public function getAllRoots()
     {
+        if ($this->allRoots !== null) {
+            return $this->allRoots;
+        }
+
         $select = $this->getSelect()
             ->join(
                 ['root' => $this->getPathsTableName()],
@@ -129,7 +136,8 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
                 Select::JOIN_LEFT
             );
         $select->where->isNull('parent.descendant_id');
-        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+        $this->allRoots = $this->hydrateAggregateRootsFromResult($this->performRead($select));
+        return $this->allRoots;
     }
 
     /**
