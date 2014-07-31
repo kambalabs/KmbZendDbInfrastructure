@@ -101,6 +101,17 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canUpdateWithoutResetDefault()
+    {
+        /** @var EnvironmentInterface $aggregateRoot */
+        $aggregateRoot = static::$repository->getById(4);
+
+        static::$repository->update($aggregateRoot);
+
+        $this->assertEquals('1', static::$connection->query('SELECT isdefault FROM environments WHERE id = 3')->fetchColumn());
+    }
+
+    /** @test */
     public function canRemove()
     {
         $aggregateRoot = static::$repository->getById(4);

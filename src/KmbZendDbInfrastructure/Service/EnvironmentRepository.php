@@ -75,10 +75,12 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         );
         $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
         try {
-            $initDefault = $this->getMasterSql()->update($this->getTableName())->set([
-                'isdefault' => 0
-            ]);
-            $this->performWrite($initDefault);
+            if ($aggregateRoot->isDefault()) {
+                $initDefault = $this->getMasterSql()->update($this->getTableName())->set([
+                    'isdefault' => 0
+                ]);
+                $this->performWrite($initDefault);
+            }
 
             parent::update($aggregateRoot);
 
