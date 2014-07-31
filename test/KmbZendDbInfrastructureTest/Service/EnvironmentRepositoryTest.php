@@ -124,6 +124,15 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetDefault()
+    {
+        $defaultEnvironment = static::$repository->getDefault();
+
+        $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $defaultEnvironment);
+        $this->assertEquals('DEFAULT', $defaultEnvironment->getName());
+    }
+
+    /** @test */
     public function cannotGetRootByUnknownRootName()
     {
         $environment = static::$repository->getRootByName('PF1');

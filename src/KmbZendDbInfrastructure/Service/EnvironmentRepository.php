@@ -27,6 +27,7 @@ use KmbDomain\Model\EnvironmentRepositoryInterface;
 use KmbDomain\Model\UserInterface;
 use Zend\Db\Adapter\Driver\StatementInterface;
 use Zend\Db\Exception\ExceptionInterface;
+use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
 
 class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepositoryInterface
@@ -143,6 +144,15 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         $select->where->isNull('parent.descendant_id');
         $this->allRoots = $this->hydrateAggregateRootsFromResult($this->performRead($select));
         return $this->allRoots;
+    }
+
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getDefault()
+    {
+        $criteria = new Predicate();
+        return $this->getBy($criteria->equalTo('isdefault', 1));
     }
 
     /**
