@@ -10,7 +10,8 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `environments`;
 CREATE TABLE `environments` (
   `id`   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  `name` VARCHAR(256)
+  `name` VARCHAR(256),
+  `isdefault` TINYINT NOT NULL DEFAULT 0
 );
 
 DROP TABLE IF EXISTS `environments_paths`;

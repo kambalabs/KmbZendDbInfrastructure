@@ -38,6 +38,7 @@ class EnvironmentHydrator implements HydratorInterface
             $data['id'] = $object->getId();
         }
         $data['name'] = $object->getName();
+        $data['isdefault'] = $object->isDefault() ? 1 : 0;
         return $data;
     }
 
@@ -52,6 +53,7 @@ class EnvironmentHydrator implements HydratorInterface
     {
         $object->setId($data['id']);
         $object->setName($data['name']);
+        $object->setDefault($data['isdefault'] == 1);
         return $object;
     }
 }

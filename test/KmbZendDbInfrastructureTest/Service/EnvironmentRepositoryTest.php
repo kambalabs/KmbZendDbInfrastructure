@@ -88,10 +88,13 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $aggregateRoot->setParent($newParent);
         $aggregateRoot->setName('PF4');
         $aggregateRoot->addUsers([$mike, $nick]);
+        $aggregateRoot->setDefault(true);
 
         static::$repository->update($aggregateRoot);
 
         $this->assertEquals('PF4', static::$connection->query('SELECT name FROM environments WHERE id = 4')->fetchColumn());
+        $this->assertEquals('1', static::$connection->query('SELECT isdefault FROM environments WHERE id = 4')->fetchColumn());
+        $this->assertEquals('0', static::$connection->query('SELECT isdefault FROM environments WHERE id = 3')->fetchColumn());
         $this->assertEquals('UNSTABLE', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 4')->fetchColumn());
         $this->assertEquals('PF4', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 7')->fetchColumn());
         $this->assertEquals([[3], [4], [6]], static::$connection->query('SELECT user_id FROM environments_users WHERE environment_id = 4')->fetchAll(\PDO::FETCH_NUM));
@@ -131,9 +134,10 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetRootByName()
     {
-        $environment = static::$repository->getRootByName('STABLE');
+        $environment = static::$repository->getRootByName('DEFAULT');
 
-        $this->assertEquals(1, $environment->getId());
+        $this->assertEquals(3, $environment->getId());
+        $this->assertTrue($environment->isDefault());
     }
 
     /** @test */

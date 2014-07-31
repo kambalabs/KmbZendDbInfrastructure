@@ -15,24 +15,24 @@
     <environments_users environment_id="14" user_id="4" />
     <environments_users environment_id="6" user_id="4" />
     <environments_users environment_id="16" user_id="4" />
-    <environments id="1" name="STABLE" />
-    <environments id="2" name="UNSTABLE" />
-    <environments id="3" name="DEFAULT" />
-    <environments id="4" name="PF1" />
-    <environments id="5" name="PF2" />
-    <environments id="6" name="PF3" />
-    <environments id="7" name="ITG" />
-    <environments id="8" name="PRP" />
-    <environments id="9" name="PROD" />
-    <environments id="10" name="ITG" />
-    <environments id="11" name="PRP" />
-    <environments id="12" name="PROD" />
-    <environments id="13" name="PROD" />
-    <environments id="14" name="PF1" />
-    <environments id="15" name="PF2" />
-    <environments id="16" name="PF3" />
-    <environments id="17" name="ITG1" />
-    <environments id="18" name="ITG2" />
+    <environments id="1" name="STABLE" isdefault="0" />
+    <environments id="2" name="UNSTABLE" isdefault="0" />
+    <environments id="3" name="DEFAULT" isdefault="1" />
+    <environments id="4" name="PF1" isdefault="0" />
+    <environments id="5" name="PF2" isdefault="0" />
+    <environments id="6" name="PF3" isdefault="0" />
+    <environments id="7" name="ITG" isdefault="0" />
+    <environments id="8" name="PRP" isdefault="0" />
+    <environments id="9" name="PROD" isdefault="0" />
+    <environments id="10" name="ITG" isdefault="0" />
+    <environments id="11" name="PRP" isdefault="0" />
+    <environments id="12" name="PROD" isdefault="0" />
+    <environments id="13" name="PROD" isdefault="0" />
+    <environments id="14" name="PF1" isdefault="0" />
+    <environments id="15" name="PF2" isdefault="0" />
+    <environments id="16" name="PF3" isdefault="0" />
+    <environments id="17" name="ITG1" isdefault="0" />
+    <environments id="18" name="ITG2" isdefault="0" />
     <environments_paths ancestor_id="1" descendant_id="1" length="0" />
     <environments_paths ancestor_id="1" descendant_id="4" length="1" />
     <environments_paths ancestor_id="1" descendant_id="5" length="1" />

@@ -10,7 +10,8 @@ CREATE TABLE users (
 DROP TABLE IF EXISTS environments;
 CREATE TABLE environments (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(256)
+  name VARCHAR(256),
+  isdefault SMALLINT NOT NULL DEFAULT 0
 );
 
 DROP TABLE IF EXISTS environments_paths;
