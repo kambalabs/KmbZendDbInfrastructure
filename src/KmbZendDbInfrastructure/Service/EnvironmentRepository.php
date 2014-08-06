@@ -267,6 +267,23 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     }
 
     /**
+     * @param UserInterface $user
+     * @return EnvironmentInterface[]
+     */
+    public function getAllForUser(UserInterface $user)
+    {
+        $select = $this->getSelect()->join(
+            'environments_users',
+            $this->getTableName() . '.id = environments_users.environment_id',
+            [],
+            Select::JOIN_LEFT
+        );
+        $select->where->equalTo('environments_users.user_id', $user->getId());
+
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
+    /**
      * Set PathsTableName.
      *
      * @param string $pathsTableName

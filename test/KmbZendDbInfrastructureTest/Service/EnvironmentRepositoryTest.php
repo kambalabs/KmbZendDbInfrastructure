@@ -3,6 +3,7 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
+use KmbDomain\Model\User;
 use KmbDomain\Model\UserRepositoryInterface;
 use KmbZendDbInfrastructure\Service\EnvironmentRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
@@ -183,5 +184,20 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $parent);
         $this->assertEquals(1, $parent->getId());
+    }
+
+    /** @test */
+    public function canGetAllForUser()
+    {
+        $user = new User();
+        $user->setId(3);
+
+        $environments = static::$repository->getAllForUser($user);
+
+        $this->assertEquals(4, count($environments));
+        /** @var EnvironmentInterface $firstEnvironment */
+        $firstEnvironment = $environments[0];
+        $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $firstEnvironment);
+        $this->assertEquals('PF1', $firstEnvironment->getName());
     }
 }
