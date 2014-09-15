@@ -23,5 +23,19 @@ return [
             'table_sequence_name' => 'user_id_seq',
             'repository_class' => 'KmbZendDbInfrastructure\Service\UserRepository',
         ],
+        'RevisionRepository' => [
+            'aggregate_root_class' => 'KmbDomain\Model\Revision',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Model\RevisionHydrator',
+            'table_name' => 'revisions',
+            'table_sequence_name' => 'revision_id_seq',
+            'repository_class' => 'KmbZendDbInfrastructure\Service\RevisionRepository',
+        ],
+        'GroupRepository' => [
+            'aggregate_root_class' => 'KmbDomain\Model\Group',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Model\GroupHydrator',
+            'table_name' => 'groups',
+            'table_sequence_name' => 'group_id_seq',
+            'repository_class' => 'KmbZendDbInfrastructure\Service\GroupRepository',
+        ],
     ],
 ];
