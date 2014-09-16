@@ -13,7 +13,7 @@ class EnvironmentRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new EnvironmentRepositoryFactory();
         $factory->setConfig([
             'aggregate_root_class' => 'KmbDomain\Model\Environment',
-            'aggregate_root_proxy_factory' => 'KmbDomain\Service\EnvironmentProxyFactory',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
             'table_name' => 'environments',
             'paths_table_name' => 'environments_paths',
             'repository_class' => 'KmbZendDbInfrastructure\Service\EnvironmentRepository',
@@ -36,7 +36,7 @@ class EnvironmentRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new EnvironmentRepositoryFactory();
         $factory->setConfig([
             'aggregate_root_class' => 'KmbDomain\Model\Environment',
-            'aggregate_root_proxy_factory' => 'KmbDomain\Service\EnvironmentProxyFactory',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
             'table_name' => 'environments',
             'repository_class' => 'KmbZendDbInfrastructure\Service\EnvironmentRepository',
         ]);

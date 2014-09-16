@@ -8,7 +8,7 @@ return [
     'zenddb_repositories' => [
         'EnvironmentRepository' => [
             'aggregate_root_class' => 'KmbDomain\Model\Environment',
-            'aggregate_root_proxy_factory' => 'KmbDomain\Service\EnvironmentProxyFactory',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
             'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Model\EnvironmentHydrator',
             'table_name' => 'environments',
             'table_sequence_name' => 'environment_id_seq',
