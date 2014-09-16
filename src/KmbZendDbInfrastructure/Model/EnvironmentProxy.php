@@ -25,6 +25,8 @@ use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Model\RevisionInterface;
+use KmbDomain\Model\RevisionRepositoryInterface;
 use KmbDomain\Model\UserInterface;
 use KmbDomain\Model\UserRepositoryInterface;
 use Zend\Stdlib\ArrayUtils;
@@ -40,6 +42,9 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     /** @var UserRepositoryInterface */
     protected $userRepository;
 
+    /** @var RevisionRepositoryInterface */
+    protected $revisionRepository;
+
     /** @var EnvironmentProxy */
     protected $parent;
 
@@ -48,6 +53,15 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
 
     /** @var UserInterface[] */
     protected $users;
+
+    /** @var RevisionInterface */
+    protected $currentRevision;
+
+    /** @var RevisionInterface */
+    protected $lastReleasedRevision;
+
+    /** @var RevisionInterface[] */
+    protected $releasedRevisions;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -109,6 +123,28 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     public function getUserRepository()
     {
         return $this->userRepository;
+    }
+
+    /**
+     * Set RevisionRepository.
+     *
+     * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
+     * @return EnvironmentProxy
+     */
+    public function setRevisionRepository($revisionRepository)
+    {
+        $this->revisionRepository = $revisionRepository;
+        return $this;
+    }
+
+    /**
+     * Get RevisionRepository.
+     *
+     * @return \KmbDomain\Model\RevisionRepositoryInterface
+     */
+    public function getRevisionRepository()
+    {
+        return $this->revisionRepository;
     }
 
     /**
@@ -393,6 +429,81 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     public function isDefault()
     {
         return $this->aggregateRoot->isDefault();
+    }
+
+    /**
+     * Set CurrentRevision.
+     *
+     * @param \KmbDomain\Model\RevisionInterface $currentRevision
+     * @return EnvironmentProxy
+     */
+    public function setCurrentRevision($currentRevision)
+    {
+        $this->currentRevision = $currentRevision;
+        return $this;
+    }
+
+    /**
+     * Get CurrentRevision.
+     *
+     * @return \KmbDomain\Model\RevisionInterface
+     */
+    public function getCurrentRevision()
+    {
+        if ($this->currentRevision === null) {
+            $this->setCurrentRevision($this->revisionRepository->getCurrentByEnvironment($this));
+        }
+        return $this->currentRevision;
+    }
+
+    /**
+     * Set LastReleasedRevision.
+     *
+     * @param \KmbDomain\Model\RevisionInterface $lastReleasedRevision
+     * @return EnvironmentProxy
+     */
+    public function setLastReleasedRevision($lastReleasedRevision)
+    {
+        $this->lastReleasedRevision = $lastReleasedRevision;
+        return $this;
+    }
+
+    /**
+     * Get LastReleasedRevision.
+     *
+     * @return \KmbDomain\Model\RevisionInterface
+     */
+    public function getLastReleasedRevision()
+    {
+        if ($this->lastReleasedRevision === null) {
+            $this->setLastReleasedRevision($this->revisionRepository->getLastReleasedByEnvironment($this));
+        }
+        return $this->lastReleasedRevision;
+    }
+
+    /**
+     * Set ReleasedRevisions.
+     *
+     * @param \KmbDomain\Model\RevisionInterface[] $releasedRevisions
+     * @return EnvironmentProxy
+     */
+    public function setReleasedRevisions($releasedRevisions)
+    {
+        $this->releasedRevisions = $releasedRevisions;
+        return $this;
+    }
+
+    /**
+     * Get ReleasedRevisions.
+     *
+     * @return \KmbDomain\Model\RevisionInterface[]
+     */
+    public function getReleasedRevisions()
+    {
+        if ($this->releasedRevisions === null) {
+            $this->setReleasedRevisions($this->revisionRepository->getAllReleasedByEnvironment($this));
+        }
+        return $this->releasedRevisions;
     }
 
     /**

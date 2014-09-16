@@ -23,6 +23,7 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
+use KmbDomain\Model\RevisionRepositoryInterface;
 use KmbZendDbInfrastructure\Model\EnvironmentProxy;
 use KmbDomain\Model\EnvironmentRepositoryInterface;
 use KmbDomain\Model\UserRepositoryInterface;
@@ -49,9 +50,13 @@ class EnvironmentProxyFactory implements AggregateRootProxyFactoryInterface
         $environmentRepository = $this->serviceManager->get('EnvironmentRepository');
         $proxy->setEnvironmentRepository($environmentRepository);
 
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository = $this->serviceManager->get('UserRepository');
-        $proxy->setUserRepository($userRepository);
+        /** @var UserRepositoryInterface $revisionRepository */
+        $revisionRepository = $this->serviceManager->get('UserRepository');
+        $proxy->setUserRepository($revisionRepository);
+
+        /** @var RevisionRepositoryInterface $revisionRepository */
+        $revisionRepository = $this->serviceManager->get('RevisionRepository');
+        $proxy->setRevisionRepository($revisionRepository);
 
         return $proxy;
     }

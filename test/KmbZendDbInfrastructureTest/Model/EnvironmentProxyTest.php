@@ -2,6 +2,7 @@
 namespace KmbZendDbInfrastructureTest\Model;
 
 use KmbDomain\Model\Environment;
+use KmbDomain\Model\Revision;
 use KmbZendDbInfrastructure\Model\EnvironmentProxy;
 use KmbDomain\Model\User;
 use Zend\Stdlib\ArrayUtils;
@@ -26,10 +27,14 @@ class EnvironmentProxyTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $userRepository;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    protected $revisionRepository;
+
     protected function setUp()
     {
         $this->environmentRepository = $this->getMock('KmbDomain\Model\EnvironmentRepositoryInterface');
         $this->userRepository = $this->getMock('KmbDomain\Model\UserRepositoryInterface');
+        $this->revisionRepository = $this->getMock('KmbDomain\Model\RevisionRepositoryInterface');
         $this->grandpa = $this->createProxy(1, 'ROOT');
         $this->parent = $this->createProxy(2, 'STABLE');
         $this->proxy = $this->createProxy(3, 'PF1');
@@ -256,6 +261,42 @@ class EnvironmentProxyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ArrayUtils::merge([$this->parent, $this->proxy], $children), $descendants);
     }
 
+    /** @test */
+    public function canGetCurrentRevisionFromRepository()
+    {
+        $revision = new Revision($this->proxy);
+        $this->revisionRepository->expects($this->any())
+            ->method('getCurrentByEnvironment')
+            ->with($this->equalTo($this->proxy))
+            ->will($this->returnValue($revision));
+
+        $this->assertEquals($revision, $this->proxy->getCurrentRevision());
+    }
+
+    /** @test */
+    public function canGetLastReleasedRevisionFromRepository()
+    {
+        $revision = new Revision($this->proxy);
+        $this->revisionRepository->expects($this->any())
+            ->method('getLastReleasedByEnvironment')
+            ->with($this->equalTo($this->proxy))
+            ->will($this->returnValue($revision));
+
+        $this->assertEquals($revision, $this->proxy->getLastReleasedRevision());
+    }
+
+    /** @test */
+    public function canGetReleasedRevisionsFromRepository()
+    {
+        $revisions = [new Revision($this->proxy), new Revision($this->proxy)];
+        $this->revisionRepository->expects($this->any())
+            ->method('getAllReleasedByEnvironment')
+            ->with($this->equalTo($this->proxy))
+            ->will($this->returnValue($revisions));
+
+        $this->assertEquals($revisions, $this->proxy->getReleasedRevisions());
+    }
+
     /**
      * @return array
      */
@@ -293,6 +334,7 @@ class EnvironmentProxyTest extends \PHPUnit_Framework_TestCase
         $proxy = new EnvironmentProxy();
         $proxy->setEnvironmentRepository($this->environmentRepository);
         $proxy->setUserRepository($this->userRepository);
+        $proxy->setRevisionRepository($this->revisionRepository);
         return $proxy->setAggregateRoot($this->createEnvironment($id, $name));
     }
 }
