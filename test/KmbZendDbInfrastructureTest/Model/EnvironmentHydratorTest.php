@@ -51,4 +51,21 @@ class EnvironmentHydratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('STABLE', $hydratedEnvironment->getName());
         $this->assertTrue($hydratedEnvironment->isDefault());
     }
+
+    /** @test */
+    public function canHydrateWithPrefix()
+    {
+        $environment = new Environment();
+        $hydrator = new EnvironmentHydrator();
+
+        $hydratedEnvironment = $hydrator->hydrate([
+            'e.id' => 1,
+            'e.name' => 'STABLE',
+            'e.isdefault' => 1
+        ], $environment);
+
+        $this->assertEquals(1, $hydratedEnvironment->getId());
+        $this->assertEquals('STABLE', $hydratedEnvironment->getName());
+        $this->assertTrue($hydratedEnvironment->isDefault());
+    }
 }

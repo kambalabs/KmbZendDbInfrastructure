@@ -51,9 +51,9 @@ class EnvironmentHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $object->setId($data['id']);
-        $object->setName($data['name']);
-        $object->setDefault($data['isdefault'] == 1);
+        $object->setId(isset($data['e.id']) ? $data['e.id'] : $data['id']);
+        $object->setName(isset($data['e.name']) ? $data['e.name'] : $data['name']);
+        $object->setDefault(isset($data['e.isdefault']) ? $data['e.isdefault'] == 1 : $data['isdefault'] == 1);
         return $object;
     }
 }

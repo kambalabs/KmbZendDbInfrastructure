@@ -25,9 +25,15 @@ return [
         ],
         'RevisionRepository' => [
             'aggregate_root_class' => 'KmbDomain\Model\Revision',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\RevisionProxyFactory',
             'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Model\RevisionHydrator',
             'table_name' => 'revisions',
             'table_sequence_name' => 'revision_id_seq',
+            'environment_class' => 'KmbDomain\Model\Environment',
+            'environment_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
+            'environment_hydrator_class' => 'KmbZendDbInfrastructure\Model\EnvironmentHydrator',
+            'environment_table_name' => 'environments',
+            'factory' => 'KmbZendDbInfrastructure\Service\RevisionRepositoryFactory',
             'repository_class' => 'KmbZendDbInfrastructure\Service\RevisionRepository',
         ],
         'GroupRepository' => [

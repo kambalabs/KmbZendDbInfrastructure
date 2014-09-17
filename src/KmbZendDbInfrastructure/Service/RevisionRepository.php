@@ -21,13 +21,30 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
+use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\EnvironmentInterface;
+use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\RevisionRepositoryInterface;
+use KmbZendDbInfrastructure\Model\EnvironmentProxy;
+use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Where;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class RevisionRepository extends Repository implements RevisionRepositoryInterface
 {
+    /** @var AggregateRootProxyFactoryInterface */
+    protected $environmentProxyFactory;
+
+    /** @var HydratorInterface */
+    protected $environmentHydrator;
+
+    /** @var string */
+    protected $environmentClass;
+
+    /** @var string */
+    protected $environmentTableName;
+
     /**
      * @param EnvironmentInterface $environment
      * @return RevisionInterface[]
@@ -65,5 +82,129 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
     {
         $revisions = $this->getAllReleasedByEnvironment($environment);
         return empty($revisions) ? null : $revisions[0];
+    }
+
+    /**
+     * Set EnvironmentHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $environmentHydrator
+     * @return RevisionRepository
+     */
+    public function setEnvironmentHydrator($environmentHydrator)
+    {
+        $this->environmentHydrator = $environmentHydrator;
+        return $this;
+    }
+
+    /**
+     * Get EnvironmentHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getEnvironmentHydrator()
+    {
+        return $this->environmentHydrator;
+    }
+
+    /**
+     * Set EnvironmentProxyFactory.
+     *
+     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $environmentProxyFactory
+     * @return RevisionRepository
+     */
+    public function setEnvironmentProxyFactory($environmentProxyFactory)
+    {
+        $this->environmentProxyFactory = $environmentProxyFactory;
+        return $this;
+    }
+
+    /**
+     * Get EnvironmentProxyFactory.
+     *
+     * @return \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface
+     */
+    public function getEnvironmentProxyFactory()
+    {
+        return $this->environmentProxyFactory;
+    }
+
+    /**
+     * Set EnvironmentClass.
+     *
+     * @param string $environmentClass
+     * @return RevisionRepository
+     */
+    public function setEnvironmentClass($environmentClass)
+    {
+        $this->environmentClass = $environmentClass;
+        return $this;
+    }
+
+    /**
+     * Get EnvironmentClass.
+     *
+     * @return string
+     */
+    public function getEnvironmentClass()
+    {
+        return $this->environmentClass;
+    }
+
+    /**
+     * Set EnvironmentTableName.
+     *
+     * @param string $environmentTableName
+     * @return RevisionRepository
+     */
+    public function setEnvironmentTableName($environmentTableName)
+    {
+        $this->environmentTableName = $environmentTableName;
+        return $this;
+    }
+
+    /**
+     * Get EnvironmentTableName.
+     *
+     * @return string
+     */
+    public function getEnvironmentTableName()
+    {
+        return $this->environmentTableName;
+    }
+
+    protected function getSelect()
+    {
+        return parent::getSelect()->join(
+            ['e' => $this->getEnvironmentTableName()],
+            $this->getTableName() . '.environment_id = e.id',
+            [
+                'e.id' => 'id',
+                'e.name' => 'name',
+                'e.isdefault' => 'isdefault',
+            ]
+        );
+    }
+
+    /**
+     * @param ResultInterface $result
+     * @return array
+     */
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $environmentClassName = $this->getEnvironmentClass();
+        $aggregateRoots = array();
+        foreach ($result as $row) {
+            /** @var Revision $aggregateRoot */
+            $aggregateRoot = new $aggregateRootClassName();
+            $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+            $environment = new $environmentClassName();
+            $this->environmentHydrator->hydrate($row, $environment);
+            /** @var EnvironmentProxy $environmentProxy */
+            $environmentProxy = $this->environmentProxyFactory->createProxy($environment);
+            $aggregateRoot->setEnvironment($environmentProxy);
+            $aggregateRoots[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+        }
+        return $aggregateRoots;
     }
 }
