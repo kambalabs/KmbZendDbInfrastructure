@@ -72,12 +72,16 @@ class RevisionHydrator implements HydratorInterface
     /**
      * @param string $key
      * @param array $data
+     * @return mixed
      */
     protected function getData($key, $data)
     {
         if (isset($data['r.' . $key])) {
             return $data['r.' . $key];
         }
-        return $data[$key];
+        if (isset($data[$key])) {
+            return $data[$key];
+        }
+        return null;
     }
 }

@@ -13,5 +13,13 @@ class GroupRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $service = Bootstrap::getServiceManager()->get('GroupRepository');
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Service\GroupRepository', $service);
+        $this->assertEquals('KmbDomain\Model\Revision', $service->getRevisionClass());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\RevisionProxyFactory', $service->getRevisionProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\RevisionHydrator', $service->getRevisionHydrator());
+        $this->assertEquals('revisions', $service->getRevisionTableName());
+        $this->assertEquals('KmbDomain\Model\Environment', $service->getEnvironmentClass());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator', $service->getEnvironmentHydrator());
+        $this->assertEquals('environments', $service->getEnvironmentTableName());
     }
 }

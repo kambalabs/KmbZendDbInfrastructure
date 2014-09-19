@@ -28,6 +28,7 @@ use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\RevisionRepositoryInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
@@ -82,6 +83,45 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
     {
         $revisions = $this->getAllReleasedByEnvironment($environment);
         return empty($revisions) ? null : $revisions[0];
+    }
+
+    /**
+     * @return Select
+     */
+    protected function getSelect()
+    {
+        return parent::getSelect()->join(
+            ['e' => $this->getEnvironmentTableName()],
+            $this->getTableName() . '.environment_id = e.id',
+            [
+                'e.id' => 'id',
+                'e.name' => 'name',
+                'e.isdefault' => 'isdefault',
+            ]
+        );
+    }
+
+    /**
+     * @param ResultInterface $result
+     * @return array
+     */
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $environmentClassName = $this->getEnvironmentClass();
+        $aggregateRoots = array();
+        foreach ($result as $row) {
+            /** @var Revision $aggregateRoot */
+            $aggregateRoot = new $aggregateRootClassName();
+            $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+            $environment = new $environmentClassName();
+            $this->environmentHydrator->hydrate($row, $environment);
+            /** @var EnvironmentProxy $environmentProxy */
+            $environmentProxy = $this->environmentProxyFactory->createProxy($environment);
+            $aggregateRoot->setEnvironment($environmentProxy);
+            $aggregateRoots[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+        }
+        return $aggregateRoots;
     }
 
     /**
@@ -170,41 +210,5 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
     public function getEnvironmentTableName()
     {
         return $this->environmentTableName;
-    }
-
-    protected function getSelect()
-    {
-        return parent::getSelect()->join(
-            ['e' => $this->getEnvironmentTableName()],
-            $this->getTableName() . '.environment_id = e.id',
-            [
-                'e.id' => 'id',
-                'e.name' => 'name',
-                'e.isdefault' => 'isdefault',
-            ]
-        );
-    }
-
-    /**
-     * @param ResultInterface $result
-     * @return array
-     */
-    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
-    {
-        $aggregateRootClassName = $this->getAggregateRootClass();
-        $environmentClassName = $this->getEnvironmentClass();
-        $aggregateRoots = array();
-        foreach ($result as $row) {
-            /** @var Revision $aggregateRoot */
-            $aggregateRoot = new $aggregateRootClassName();
-            $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
-            $environment = new $environmentClassName();
-            $this->environmentHydrator->hydrate($row, $environment);
-            /** @var EnvironmentProxy $environmentProxy */
-            $environmentProxy = $this->environmentProxyFactory->createProxy($environment);
-            $aggregateRoot->setEnvironment($environmentProxy);
-            $aggregateRoots[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
-        }
-        return $aggregateRoots;
     }
 }

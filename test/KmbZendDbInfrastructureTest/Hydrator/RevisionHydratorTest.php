@@ -81,14 +81,7 @@ class RevisionHydratorTest extends \PHPUnit_Framework_TestCase
         $revision = new Revision();
         $hydrator = new RevisionHydrator();
 
-        $hydratedRevision = $hydrator->hydrate([
-            'id' => 1,
-            'updated_at' => null,
-            'updated_by' => null,
-            'released_at' => null,
-            'released_by' => null,
-            'comment' => null,
-        ], $revision);
+        $hydratedRevision = $hydrator->hydrate(['id' => 1], $revision);
 
         $this->assertEquals(1, $hydratedRevision->getId());
         $this->assertNull($hydratedRevision->getUpdatedAt());

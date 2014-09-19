@@ -23,11 +23,8 @@ class GroupHydratorTest extends \PHPUnit_Framework_TestCase
     public function canHydrate()
     {
         $hydrator = new GroupHydrator();
-        $group = new Group();
 
-        $hydrator->hydrate($this->getData(), $group);
-
-        $this->assertEquals($this->createObject(), $group);
+        $this->assertEquals($this->createObject(), $hydrator->hydrate($this->getData(), new Group()));
     }
 
     /** @test */

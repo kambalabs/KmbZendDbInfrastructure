@@ -1,6 +1,7 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Service;
 
+use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Service\RevisionRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -31,6 +32,17 @@ class RevisionRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         static::initFixtures(static::$connection);
+    }
+
+    /** @test */
+    public function canGetById()
+    {
+        /** @var RevisionInterface $revision */
+        $revision = static::$repository->getById(1);
+
+        $this->assertInstanceOf('KmbDomain\Model\RevisionInterface', $revision);
+        $this->assertEquals(1, $revision->getId());
+        $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $revision->getEnvironment());
     }
 
     /** @test */

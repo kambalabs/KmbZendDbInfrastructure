@@ -60,6 +60,7 @@ class GroupHydrator implements HydratorInterface
         $object->setOrdering($this->getData('ordering', $data));
         $object->setIncludePattern($this->getData('include_pattern', $data));
         $object->setExcludePattern($this->getData('exclude_pattern', $data));
+        return $object;
     }
 
     /**
