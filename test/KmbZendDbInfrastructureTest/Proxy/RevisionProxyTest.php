@@ -1,10 +1,10 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\Group;
 use KmbDomain\Model\Revision;
-use KmbZendDbInfrastructure\Model\RevisionProxy;
+use KmbZendDbInfrastructure\Proxy\RevisionProxy;
 
 class RevisionProxyTest extends \PHPUnit_Framework_TestCase
 {

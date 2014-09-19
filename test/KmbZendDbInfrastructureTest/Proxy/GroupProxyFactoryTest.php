@@ -1,8 +1,8 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Service;
+namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Group;
-use KmbZendDbInfrastructure\Service\GroupProxyFactory;
+use KmbZendDbInfrastructure\Proxy\GroupProxyFactory;
 use KmbZendDbInfrastructureTest\Bootstrap;
 
 class GroupProxyFactoryTest extends \PHPUnit_Framework_TestCase
@@ -16,10 +16,10 @@ class GroupProxyFactoryTest extends \PHPUnit_Framework_TestCase
         $group = new Group();
         $group->setId(1);
 
-        /** @var \KmbZendDbInfrastructure\Model\GroupProxy $proxy */
+        /** @var \KmbZendDbInfrastructure\Proxy\GroupProxy $proxy */
         $proxy = $factory->createProxy($group);
 
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Model\GroupProxy', $proxy);
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupProxy', $proxy);
         $this->assertEquals($group, $proxy->getAggregateRoot());
     }
 }

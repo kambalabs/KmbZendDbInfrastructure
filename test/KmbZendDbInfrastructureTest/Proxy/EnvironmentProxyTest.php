@@ -1,9 +1,9 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\Revision;
-use KmbZendDbInfrastructure\Model\EnvironmentProxy;
+use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use KmbDomain\Model\User;
 use Zend\Stdlib\ArrayUtils;
 

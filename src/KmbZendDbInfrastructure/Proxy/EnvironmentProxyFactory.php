@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Kamba.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace KmbZendDbInfrastructure\Service;
+namespace KmbZendDbInfrastructure\Proxy;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
-use KmbDomain\Model\RevisionRepositoryInterface;
-use KmbZendDbInfrastructure\Model\EnvironmentProxy;
 use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Model\RevisionRepositoryInterface;
 use KmbDomain\Model\UserRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 

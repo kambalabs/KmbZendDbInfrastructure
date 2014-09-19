@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Kamba.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace KmbZendDbInfrastructure\Service;
+namespace KmbZendDbInfrastructure\Proxy;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
-use KmbZendDbInfrastructure\Model\RevisionProxy;
 use Zend\ServiceManager\ServiceManager;
 
 class RevisionProxyFactory implements AggregateRootProxyFactoryInterface

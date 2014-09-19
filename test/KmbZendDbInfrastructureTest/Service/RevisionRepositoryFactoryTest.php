@@ -15,7 +15,7 @@ class RevisionRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbZendDbInfrastructure\Service\RevisionRepository', $service);
         $this->assertEquals('environments', $service->getEnvironmentTableName());
         $this->assertEquals('KmbDomain\Model\Environment', $service->getEnvironmentClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Service\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator', $service->getEnvironmentHydrator());
     }
 }

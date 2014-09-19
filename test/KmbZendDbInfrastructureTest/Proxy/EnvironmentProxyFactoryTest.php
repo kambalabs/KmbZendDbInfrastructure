@@ -1,8 +1,8 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Service;
+namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Environment;
-use KmbZendDbInfrastructure\Service\EnvironmentProxyFactory;
+use KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory;
 use KmbZendDbInfrastructureTest\Bootstrap;
 
 class EnvironmentProxyFactoryTest extends \PHPUnit_Framework_TestCase
@@ -17,10 +17,10 @@ class EnvironmentProxyFactoryTest extends \PHPUnit_Framework_TestCase
         $environment->setId(1);
         $environment->setName('STABLE');
 
-        /** @var \KmbZendDbInfrastructure\Model\EnvironmentProxy $proxy */
+        /** @var \KmbZendDbInfrastructure\Proxy\EnvironmentProxy $proxy */
         $proxy = $factory->createProxy($environment);
 
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Model\EnvironmentProxy', $proxy);
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxy', $proxy);
         $this->assertEquals($environment, $proxy->getAggregateRoot());
         $this->assertInstanceOf('KmbDomain\Model\EnvironmentRepositoryInterface', $proxy->getEnvironmentRepository());
         $this->assertInstanceOf('KmbDomain\Model\UserRepositoryInterface', $proxy->getUserRepository());

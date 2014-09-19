@@ -1,8 +1,8 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Group;
-use KmbZendDbInfrastructure\Model\GroupProxy;
+use KmbZendDbInfrastructure\Proxy\GroupProxy;
 
 class GroupProxyTest extends \PHPUnit_Framework_TestCase
 {

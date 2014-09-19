@@ -27,7 +27,7 @@ class EnvironmentRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new EnvironmentRepositoryFactory();
         $factory->setConfig([
             'aggregate_root_class' => 'KmbDomain\Model\Environment',
-            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory',
             'table_name' => 'environments',
             'repository_class' => 'KmbZendDbInfrastructure\Service\EnvironmentRepository',
         ]);

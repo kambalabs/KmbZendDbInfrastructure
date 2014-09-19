@@ -26,7 +26,7 @@ use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\RevisionRepositoryInterface;
-use KmbZendDbInfrastructure\Model\EnvironmentProxy;
+use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Where;
 use Zend\Stdlib\Hydrator\HydratorInterface;
