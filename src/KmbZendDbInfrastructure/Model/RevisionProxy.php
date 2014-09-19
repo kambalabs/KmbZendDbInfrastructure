@@ -22,6 +22,8 @@ namespace KmbZendDbInfrastructure\Model;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
+use KmbDomain\Model\GroupInterface;
+use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
 
@@ -29,6 +31,12 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
 {
     /** @var Revision */
     protected $aggregateRoot;
+
+    /** @var GroupInterface[] */
+    protected $groups;
+
+    /** @var GroupRepositoryInterface */
+    protected $groupRepository;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -196,5 +204,52 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     public function getComment()
     {
         return $this->aggregateRoot->getComment();
+    }
+
+    /**
+     * Set Groups.
+     *
+     * @param \KmbDomain\Model\GroupInterface[] $groups
+     * @return RevisionProxy
+     */
+    public function setGroups($groups)
+    {
+        $this->groups = $groups;
+        return $this;
+    }
+
+    /**
+     * Get Groups.
+     *
+     * @return \KmbDomain\Model\GroupInterface[]
+     */
+    public function getGroups()
+    {
+        if ($this->groups === null) {
+            $this->setGroups($this->groupRepository->getAllByRevision($this));
+        }
+        return $this->groups;
+    }
+
+    /**
+     * Set GroupRepository.
+     *
+     * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
+     * @return RevisionProxy
+     */
+    public function setGroupRepository($groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+        return $this;
+    }
+
+    /**
+     * Get GroupRepository.
+     *
+     * @return \KmbDomain\Model\GroupRepositoryInterface
+     */
+    public function getGroupRepository()
+    {
+        return $this->groupRepository;
     }
 }

@@ -2,6 +2,7 @@
 namespace KmbZendDbInfrastructureTest\Model;
 
 use KmbDomain\Model\Environment;
+use KmbDomain\Model\Group;
 use KmbDomain\Model\Revision;
 use KmbZendDbInfrastructure\Model\RevisionProxy;
 
@@ -14,11 +15,11 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
     protected $aggregateRoot;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $environmentRepository;
+    protected $groupRepository;
 
     protected function setUp()
     {
-        $this->environmentRepository = $this->getMock('KmbDomain\Model\EnvironmentRepositoryInterface');
+        $this->groupRepository = $this->getMock('KmbDomain\Model\GroupRepositoryInterface');
         $this->proxy = $this->createProxy(3);
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }
@@ -59,6 +60,18 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($environment, $this->proxy->getEnvironment());
     }
 
+    /** @test */
+    public function canGetGroupsFromRepository()
+    {
+        $groups = [new Group('default'), new Group('web')];
+        $this->groupRepository->expects($this->any())
+            ->method('getAllByRevision')
+            ->with($this->proxy)
+            ->will($this->returnValue($groups));
+
+        $this->assertEquals($groups, $this->proxy->getGroups());
+    }
+
     /**
      * @param $id
      * @return Revision
@@ -76,6 +89,7 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
     protected function createProxy($id = null)
     {
         $proxy = new RevisionProxy();
+        $proxy->setGroupRepository($this->groupRepository);
         return $proxy->setAggregateRoot($this->createRevision($id));
     }
 }
