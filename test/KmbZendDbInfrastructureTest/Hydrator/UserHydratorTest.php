@@ -1,9 +1,9 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Hydrator;
 
 use KmbDomain\Model\User;
 use KmbDomain\Model\UserInterface;
-use KmbZendDbInfrastructure\Model\UserHydrator;
+use KmbZendDbInfrastructure\Hydrator\UserHydrator;
 
 class UserHydratorTest extends \PHPUnit_Framework_TestCase
 {

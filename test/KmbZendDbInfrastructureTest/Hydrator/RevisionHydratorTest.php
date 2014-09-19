@@ -1,9 +1,9 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Hydrator;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\Revision;
-use KmbZendDbInfrastructure\Model\RevisionHydrator;
+use KmbZendDbInfrastructure\Hydrator\RevisionHydrator;
 
 class RevisionHydratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -96,5 +96,11 @@ class RevisionHydratorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($hydratedRevision->getReleasedAt());
         $this->assertNull($hydratedRevision->getReleasedBy());
         $this->assertNull($hydratedRevision->getComment());
+    }
+
+    /** @test */
+    public function canHydrateWithTablePrefix()
+    {
+
     }
 }

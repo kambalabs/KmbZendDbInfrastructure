@@ -1,8 +1,8 @@
 <?php
-namespace KmbZendDbInfrastructureTest\Model;
+namespace KmbZendDbInfrastructureTest\Hydrator;
 
 use KmbDomain\Model\Environment;
-use KmbZendDbInfrastructure\Model\EnvironmentHydrator;
+use KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator;
 
 class EnvironmentHydratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +39,7 @@ class EnvironmentHydratorTest extends \PHPUnit_Framework_TestCase
     public function canHydrate()
     {
         $environment = new Environment();
-        $hydrator = new EnvironmentHydrator();
+        $hydrator = new \KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator();
 
         $hydratedEnvironment = $hydrator->hydrate([
             'id' => 1,
@@ -53,10 +53,10 @@ class EnvironmentHydratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function canHydrateWithPrefix()
+    public function canHydrateWithTablePrefix()
     {
         $environment = new Environment();
-        $hydrator = new EnvironmentHydrator();
+        $hydrator = new \KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator();
 
         $hydratedEnvironment = $hydrator->hydrate([
             'e.id' => 1,

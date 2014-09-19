@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Kamba.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace KmbZendDbInfrastructure\Model;
+namespace KmbZendDbInfrastructure\Hydrator;
 
 use KmbDomain\Model\EnvironmentInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
