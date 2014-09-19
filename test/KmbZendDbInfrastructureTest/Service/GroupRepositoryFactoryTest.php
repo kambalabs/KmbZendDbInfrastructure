@@ -21,5 +21,9 @@ class GroupRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator', $service->getEnvironmentHydrator());
         $this->assertEquals('environments', $service->getEnvironmentTableName());
+        $this->assertEquals('KmbDomain\Model\PuppetClass', $service->getPuppetClassClass());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\PuppetClassProxyFactory', $service->getPuppetClassProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\PuppetClassHydrator', $service->getPuppetClassHydrator());
+        $this->assertEquals('puppet_classes', $service->getPuppetClassTableName());
     }
 }

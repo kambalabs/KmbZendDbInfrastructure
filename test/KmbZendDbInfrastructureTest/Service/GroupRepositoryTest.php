@@ -45,6 +45,8 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(9, $group->getRevision()->getId());
         $this->assertEquals(4, $group->getEnvironment()->getId());
         $this->assertEquals(4, $group->getRevision()->getEnvironment()->getId());
+        $classes = $group->getClasses();
+        $this->assertEquals(3, count($classes));
     }
 
     /** @test */

@@ -20,25 +20,22 @@
  */
 namespace KmbZendDbInfrastructure\Hydrator;
 
-use KmbDomain\Model\GroupInterface;
+use KmbDomain\Model\PuppetClassInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class GroupHydrator implements HydratorInterface
+class PuppetClassHydrator implements HydratorInterface
 {
     /**
      * Extract values from an object
      *
-     * @param  GroupInterface $object
+     * @param PuppetClassInterface $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'revision_id' => $object->getRevision()->getId(),
+            'group_id' => $object->getGroup()->getId(),
             'name' => $object->getName(),
-            'ordering' => $object->getOrdering(),
-            'include_pattern' => $object->getIncludePattern(),
-            'exclude_pattern' => $object->getExcludePattern(),
         ];
         if ($object->getId()) {
             $data['id'] = $object->getId();
@@ -49,17 +46,14 @@ class GroupHydrator implements HydratorInterface
     /**
      * Hydrate $object with the provided $data.
      *
-     * @param  array          $data
-     * @param  GroupInterface $object
-     * @return GroupInterface
+     * @param  array  $data
+     * @param  PuppetClassInterface $object
+     * @return PuppetClassInterface
      */
     public function hydrate(array $data, $object)
     {
         $object->setId($this->getData('id', $data));
         $object->setName($this->getData('name', $data));
-        $object->setOrdering($this->getData('ordering', $data));
-        $object->setIncludePattern($this->getData('include_pattern', $data));
-        $object->setExcludePattern($this->getData('exclude_pattern', $data));
         return $object;
     }
 
@@ -70,8 +64,8 @@ class GroupHydrator implements HydratorInterface
      */
     protected function getData($key, $data)
     {
-        if (isset($data['g.' . $key])) {
-            return $data['g.' . $key];
+        if (isset($data['c.' . $key])) {
+            return $data['c.' . $key];
         }
         if (isset($data[$key])) {
             return $data[$key];

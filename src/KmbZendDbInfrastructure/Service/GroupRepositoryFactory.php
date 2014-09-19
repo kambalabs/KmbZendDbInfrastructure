@@ -53,6 +53,17 @@ class GroupRepositoryFactory extends ZendDb\RepositoryFactory
         $environmentProxyFactory->setServiceManager($serviceLocator);
         $service->setEnvironmentProxyFactory($environmentProxyFactory);
 
+        $service->setPuppetClassClass($this->getStrict('puppet_class_class'));
+        $service->setPuppetClassTableName($this->getStrict('puppet_class_table_name'));
+        $puppetClassHydratorClass = $this->getStrict('puppet_class_hydrator_class');
+        $service->setPuppetClassHydrator(new $puppetClassHydratorClass);
+        $puppetClassProxyFactoryClass = $this->getStrict('puppet_class_proxy_factory');
+        /** @var AggregateRootProxyFactoryInterface $puppetClassProxyFactory */
+        $puppetClassProxyFactory = new $puppetClassProxyFactoryClass;
+        $puppetClassProxyFactory->setConfig($this->config);
+        $puppetClassProxyFactory->setServiceManager($serviceLocator);
+        $service->setPuppetClassProxyFactory($puppetClassProxyFactory);
+
         return $service;
     }
 }

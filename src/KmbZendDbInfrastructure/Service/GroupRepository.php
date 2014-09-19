@@ -27,6 +27,7 @@ use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
+use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
 use KmbZendDbInfrastructure\Proxy\RevisionProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Select;
@@ -47,17 +48,29 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     /** @var string */
     protected $revisionTableName;
 
-    /** @var AggregateRootProxyFactoryInterface */
-    protected $environmentProxyFactory;
-
     /** @var string */
     protected $environmentClass;
+
+    /** @var AggregateRootProxyFactoryInterface */
+    protected $environmentProxyFactory;
 
     /** @var HydratorInterface */
     protected $environmentHydrator;
 
     /** @var string */
     protected $environmentTableName;
+
+    /** @var string */
+    protected $puppetClassClass;
+
+    /** @var AggregateRootProxyFactoryInterface */
+    protected $puppetClassProxyFactory;
+
+    /** @var HydratorInterface */
+    protected $puppetClassHydrator;
+
+    /** @var string */
+    protected $puppetClassTableName;
 
     /**
      * @param RevisionInterface $revision
@@ -124,6 +137,16 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                     'e.isdefault' => 'isdefault',
                 ]
             )
+            ->join(
+                ['c' => $this->getPuppetClassTableName()],
+                $this->getTableName() . '.id = c.group_id',
+                [
+                    'c.id' => 'id',
+                    'c.group_id' => 'group_id',
+                    'c.name' => 'name',
+                ],
+                Select::JOIN_LEFT
+            )
             ->order($this->getTableName() . '.ordering');
         return $select;
     }
@@ -134,11 +157,22 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
      */
     protected function hydrateAggregateRootsFromResult(ResultInterface $result)
     {
+        $filteredResult = [];
+        foreach ($result as $row) {
+            if (!array_key_exists($row['id'], $filteredResult)) {
+                $filteredResult[$row['id']] = $row;
+            }
+            if (isset($row['c.id'])) {
+                $filteredResult[$row['id']]['classes'][] = $row;
+            }
+        }
+
         $aggregateRootClassName = $this->getAggregateRootClass();
         $revisionClassName = $this->getRevisionClass();
         $environmentClassName = $this->getEnvironmentClass();
+        $puppetClassClassName = $this->getPuppetClassClass();
         $aggregateRoots = array();
-        foreach ($result as $row) {
+        foreach ($filteredResult as $row) {
             /** @var Group $aggregateRoot */
             $aggregateRoot = new $aggregateRootClassName;
             $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
@@ -156,6 +190,18 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
 
             $aggregateRoot->setEnvironment($environmentProxy);
             $aggregateRoot->setRevision($revisionProxy);
+
+            if (isset($row['classes'])) {
+                $classes = [];
+                foreach ($row['classes'] as $classRow) {
+                    $class = new $puppetClassClassName;
+                    $this->puppetClassHydrator->hydrate($classRow, $class);
+                    /** @var PuppetClassProxy $classProxy */
+                    $classProxy = $this->puppetClassProxyFactory->createProxy($class);
+                    $classes[] = $classProxy;
+                }
+                $aggregateRoot->setClasses($classes);
+            }
             $aggregateRoots[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
         }
         return $aggregateRoots;
@@ -335,5 +381,93 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getEnvironmentTableName()
     {
         return $this->environmentTableName;
+    }
+
+    /**
+     * Set PuppetClassClass.
+     *
+     * @param string $puppetClassClass
+     * @return GroupRepository
+     */
+    public function setPuppetClassClass($puppetClassClass)
+    {
+        $this->puppetClassClass = $puppetClassClass;
+        return $this;
+    }
+
+    /**
+     * Get PuppetClassClass.
+     *
+     * @return string
+     */
+    public function getPuppetClassClass()
+    {
+        return $this->puppetClassClass;
+    }
+
+    /**
+     * Set PuppetClassProxyFactory.
+     *
+     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $puppetClassProxyFactory
+     * @return GroupRepository
+     */
+    public function setPuppetClassProxyFactory($puppetClassProxyFactory)
+    {
+        $this->puppetClassProxyFactory = $puppetClassProxyFactory;
+        return $this;
+    }
+
+    /**
+     * Get PuppetClassProxyFactory.
+     *
+     * @return \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface
+     */
+    public function getPuppetClassProxyFactory()
+    {
+        return $this->puppetClassProxyFactory;
+    }
+
+    /**
+     * Set PuppetClassHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $puppetClassHydrator
+     * @return GroupRepository
+     */
+    public function setPuppetClassHydrator($puppetClassHydrator)
+    {
+        $this->puppetClassHydrator = $puppetClassHydrator;
+        return $this;
+    }
+
+    /**
+     * Get PuppetClassHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getPuppetClassHydrator()
+    {
+        return $this->puppetClassHydrator;
+    }
+
+    /**
+     * Set PuppetClassTableName.
+     *
+     * @param string $puppetClassTableName
+     * @return GroupRepository
+     */
+    public function setPuppetClassTableName($puppetClassTableName)
+    {
+        $this->puppetClassTableName = $puppetClassTableName;
+        return $this;
+    }
+
+    /**
+     * Get PuppetClassTableName.
+     *
+     * @return string
+     */
+    public function getPuppetClassTableName()
+    {
+        return $this->puppetClassTableName;
     }
 }
