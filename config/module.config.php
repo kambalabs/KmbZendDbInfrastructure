@@ -38,9 +38,11 @@ return [
         ],
         'GroupRepository' => [
             'aggregate_root_class' => 'KmbDomain\Model\Group',
-            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Model\GroupHydrator',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\GroupProxyFactory',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Hydrator\GroupHydrator',
             'table_name' => 'groups',
             'table_sequence_name' => 'group_id_seq',
+            'factory' => 'KmbZendDbInfrastructure\Service\GroupRepositoryFactory',
             'repository_class' => 'KmbZendDbInfrastructure\Service\GroupRepository',
         ],
     ],

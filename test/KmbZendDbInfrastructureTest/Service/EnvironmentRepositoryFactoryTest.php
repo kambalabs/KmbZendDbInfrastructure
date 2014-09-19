@@ -10,17 +10,8 @@ class EnvironmentRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canCreateService()
     {
-        $factory = new EnvironmentRepositoryFactory();
-        $factory->setConfig([
-            'aggregate_root_class' => 'KmbDomain\Model\Environment',
-            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Service\EnvironmentProxyFactory',
-            'table_name' => 'environments',
-            'paths_table_name' => 'environments_paths',
-            'repository_class' => 'KmbZendDbInfrastructure\Service\EnvironmentRepository',
-        ]);
-
         /** @var EnvironmentRepository $service */
-        $service = $factory->createService(Bootstrap::getServiceManager());
+        $service = Bootstrap::getServiceManager()->get('EnvironmentRepository');
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Service\EnvironmentRepository', $service);
         $this->assertEquals('environments_paths', $service->getPathsTableName());
