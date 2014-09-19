@@ -101,6 +101,23 @@ class RevisionHydratorTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canHydrateWithTablePrefix()
     {
+        $hydrator = new RevisionHydrator();
+        $revision = new Revision();
 
+        $hydratedRevision = $hydrator->hydrate([
+            'r.id' => 1,
+            'r.updated_at' => '2014-09-10 10:32:23',
+            'r.updated_by' => 'John DOE',
+            'r.released_at' => '2014-09-10 10:38:15',
+            'r.released_by' => 'John DOE',
+            'r.comment' => 'Init',
+        ], $revision);
+
+        $this->assertEquals(1, $hydratedRevision->getId());
+        $this->assertEquals(new \DateTime('2014-09-10 10:32:23'), $hydratedRevision->getUpdatedAt());
+        $this->assertEquals('John DOE', $hydratedRevision->getUpdatedBy());
+        $this->assertEquals(new \DateTime('2014-09-10 10:38:15'), $hydratedRevision->getReleasedAt());
+        $this->assertEquals('John DOE', $hydratedRevision->getReleasedBy());
+        $this->assertEquals('Init', $hydratedRevision->getComment());
     }
 }

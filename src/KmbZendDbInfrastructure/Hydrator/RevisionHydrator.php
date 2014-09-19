@@ -58,12 +58,26 @@ class RevisionHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $object->setId($data['id']);
-        $object->setUpdatedAt(isset($data['updated_at']) ? new \DateTime($data['updated_at']) : null);
-        $object->setUpdatedBy($data['updated_by']);
-        $object->setReleasedAt(isset($data['released_at']) ? new \DateTime($data['released_at']) : null);
-        $object->setReleasedBy($data['released_by']);
-        $object->setComment($data['comment']);
+        $object->setId($this->getData('id', $data));
+        $updatedAt = $this->getData('updated_at', $data);
+        $object->setUpdatedAt(isset($updatedAt) ? new \DateTime($updatedAt) : null);
+        $object->setUpdatedBy($this->getData('updated_by', $data));
+        $releasedAt = $this->getData('released_at', $data);
+        $object->setReleasedAt(isset($releasedAt) ? new \DateTime($releasedAt) : null);
+        $object->setReleasedBy($this->getData('released_by', $data));
+        $object->setComment($this->getData('comment', $data));
         return $object;
+    }
+
+    /**
+     * @param string $key
+     * @param array $data
+     */
+    protected function getData($key, $data)
+    {
+        if (isset($data['r.' . $key])) {
+            return $data['r.' . $key];
+        }
+        return $data[$key];
     }
 }
