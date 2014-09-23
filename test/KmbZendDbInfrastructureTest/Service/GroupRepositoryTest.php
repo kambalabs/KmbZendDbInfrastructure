@@ -47,6 +47,15 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $group->getRevision()->getEnvironment()->getId());
         $classes = $group->getClasses();
         $this->assertEquals(3, count($classes));
+        $class = $classes[1];
+        $this->assertEquals('apache::vhost', $class->getName());
+        $parameters = $class->getParameters();
+        $this->assertEquals(2, count($parameters));
+        $parameter = $parameters[1];
+        $this->assertEquals('ports', $parameter->getName());
+        $values = $parameter->getValues();
+        $this->assertEquals(2, count($values));
+        $this->assertEquals('80', $values[0]->getName());
     }
 
     /** @test */

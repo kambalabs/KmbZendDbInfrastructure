@@ -115,6 +115,19 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->proxy->hasChildren());
     }
 
+    /** @test */
+    public function canGetChildByNameFromRepository()
+    {
+        $child = new Parameter();
+        $child->setName('DocumentRoot');
+        $this->parameterRepository->expects($this->any())
+            ->method('getAllByParent')
+            ->with($this->proxy)
+            ->will($this->returnValue([new Parameter(), $child]));
+
+        $this->assertEquals($child, $this->proxy->getChildByName('DocumentRoot'));
+    }
+
     /**
      * @param int    $id
      * @param string $name

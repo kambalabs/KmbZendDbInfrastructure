@@ -167,6 +167,7 @@
     <parameters id="14" name="ServerAdmin" parent_id="13" puppet_class_id="8" />
     <parameters id="15" name="host2.local" parent_id="11" puppet_class_id="8" />
     <parameters id="16" name="DocumentRoot" parent_id="15" puppet_class_id="8" />
+    <parameters id="17" name="ports" puppet_class_id="8" />
 
     <!-- RELEASE -->
     <!-- dns / nameserver -->
@@ -190,4 +191,7 @@
     <values id="12" name="/srv/http/host1.local" parameter_id="13" />
     <values id="13" name="jdoe@gmail.com" parameter_id="14" />
     <values id="14" name="/srv/http/host2.local" parameter_id="16" />
+    <!-- apache::vhost / ports -->
+    <values id="15" name="80" parameter_id="17" />
+    <values id="16" name="443" parameter_id="17" />
 </dataset>

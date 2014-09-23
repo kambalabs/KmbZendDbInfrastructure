@@ -194,6 +194,18 @@ class GroupProxy implements GroupInterface
     }
 
     /**
+     * Add specified class.
+     *
+     * @param \KmbDomain\Model\PuppetClassInterface $class
+     * @return GroupProxy
+     */
+    public function addClass($class)
+    {
+        $this->aggregateRoot->addClass($class);
+        return $this;
+    }
+
+    /**
      * Get Classes.
      *
      * @return \KmbDomain\Model\PuppetClassInterface[]
@@ -201,5 +213,31 @@ class GroupProxy implements GroupInterface
     public function getClasses()
     {
         return $this->aggregateRoot->getClasses();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasClasses()
+    {
+        return $this->aggregateRoot->hasClasses();
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasClassWithName($name)
+    {
+        return $this->aggregateRoot->hasClassWithName($name);
+    }
+
+    /**
+     * @param string $name
+     * @return \KmbDomain\Model\PuppetClassInterface
+     */
+    public function getClassByName($name)
+    {
+        return $this->aggregateRoot->getClassByName($name);
     }
 }

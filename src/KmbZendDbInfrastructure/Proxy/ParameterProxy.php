@@ -146,6 +146,17 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
+     * Add specified value.
+     *
+     * @param \KmbDomain\Model\ValueInterface $value
+     * @return ParameterProxy
+     */
+    public function addValue($value)
+    {
+        return $this->aggregateRoot->addValue($value);
+    }
+
+    /**
      * Get Values.
      *
      * @return \KmbDomain\Model\ValueInterface[]
@@ -153,6 +164,32 @@ class ParameterProxy implements ParameterInterface
     public function getValues()
     {
         return $this->aggregateRoot->getValues();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasValues()
+    {
+        return $this->aggregateRoot->hasValues();
+    }
+
+    /**
+     * @param string $name
+     * @return \KmbDomain\Model\ValueInterface
+     */
+    public function getValueByName($name)
+    {
+        return $this->aggregateRoot->getValueByName($name);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasValueWithName($name)
+    {
+        return $this->aggregateRoot->hasValueWithName($name);
     }
 
     /**
@@ -201,6 +238,18 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
+     * Add specified child.
+     *
+     * @param \KmbDomain\Model\ParameterInterface $child
+     * @return ParameterProxy
+     */
+    public function addChild($child)
+    {
+        $this->children[] = $child;
+        return $this;
+    }
+
+    /**
      * Get Children.
      *
      * @return \KmbDomain\Model\ParameterInterface[]
@@ -208,7 +257,7 @@ class ParameterProxy implements ParameterInterface
     public function getChildren()
     {
         if ($this->children === null) {
-            return $this->parameterRepository->getAllByParent($this);
+            $this->setChildren($this->parameterRepository->getAllByParent($this));
         }
         return $this->children;
     }
@@ -218,8 +267,31 @@ class ParameterProxy implements ParameterInterface
      */
     public function hasChildren()
     {
-        $children = $this->getChildren();
-        return !empty($children);
+        return count($this->getChildren()) > 0;
+    }
+
+    /**
+     * @param string $name
+     * @return \KmbDomain\Model\ParameterInterface
+     */
+    public function getChildByName($name)
+    {
+        if ($this->hasChildren()) {
+            foreach ($this->children as $child) {
+                if ($child->getName() === $name) {
+                    return $child;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasChildWithName($name)
+    {
+        return $this->getChildByName($name) !== null;
     }
 
     /**

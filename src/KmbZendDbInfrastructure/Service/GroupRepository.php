@@ -27,6 +27,7 @@ use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
+use KmbZendDbInfrastructure\Proxy\ParameterProxy;
 use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
 use KmbZendDbInfrastructure\Proxy\RevisionProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
@@ -72,6 +73,27 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     /** @var string */
     protected $puppetClassTableName;
 
+    /** @var string */
+    protected $parameterClass;
+
+    /** @var AggregateRootProxyFactoryInterface */
+    protected $parameterProxyFactory;
+
+    /** @var HydratorInterface */
+    protected $parameterHydrator;
+
+    /** @var string */
+    protected $parameterTableName;
+
+    /** @var string */
+    protected $valueClass;
+
+    /** @var HydratorInterface */
+    protected $valueHydrator;
+
+    /** @var string */
+    protected $valueTableName;
+
     /**
      * @param RevisionInterface $revision
      * @return GroupInterface[]
@@ -114,6 +136,8 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
      */
     protected function getSelect()
     {
+        $criteria = new Where();
+        $criteria->isNull('p.parent_id');
         $select = parent::getSelect()
             ->join(
                 ['r' => $this->getRevisionTableName()],
@@ -147,7 +171,28 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                 ],
                 Select::JOIN_LEFT
             )
-            ->order($this->getTableName() . '.ordering');
+            ->join(
+                ['p' => $this->getParameterTableName()],
+                'c.id = p.puppet_class_id',
+                [
+                    'p.id' => 'id',
+                    'p.puppet_class_id' => 'puppet_class_id',
+                    'p.name' => 'name',
+                ],
+                Select::JOIN_LEFT
+            )
+            ->join(
+                ['v' => $this->getValueTableName()],
+                'p.id = v.parameter_id',
+                [
+                    'v.id' => 'id',
+                    'v.parameter_id' => 'parameter_id',
+                    'v.name' => 'name',
+                ],
+                Select::JOIN_LEFT
+            )
+            ->where($criteria)
+            ->order($this->getTableName() . '.ordering, c.name, p.id, v.id');
         return $select;
     }
 
@@ -157,54 +202,68 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
      */
     protected function hydrateAggregateRootsFromResult(ResultInterface $result)
     {
-        $filteredResult = [];
-        foreach ($result as $row) {
-            if (!array_key_exists($row['id'], $filteredResult)) {
-                $filteredResult[$row['id']] = $row;
-            }
-            if (isset($row['c.id'])) {
-                $filteredResult[$row['id']]['classes'][] = $row;
-            }
-        }
-
         $aggregateRootClassName = $this->getAggregateRootClass();
-        $revisionClassName = $this->getRevisionClass();
-        $environmentClassName = $this->getEnvironmentClass();
-        $puppetClassClassName = $this->getPuppetClassClass();
-        $aggregateRoots = array();
-        foreach ($filteredResult as $row) {
+        $revisionClassName      = $this->getRevisionClass();
+        $environmentClassName   = $this->getEnvironmentClass();
+        $puppetClassClassName   = $this->getPuppetClassClass();
+        $parameterClassName     = $this->getParameterClass();
+        $valueClassName         = $this->getValueClass();
+        $aggregateRoots = [];
+        foreach ($result as $row) {
+            $groupId = $row['id'];
             /** @var Group $aggregateRoot */
-            $aggregateRoot = new $aggregateRootClassName;
-            $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+            if (!array_key_exists($groupId, $aggregateRoots)) {
+                $aggregateRoot = new $aggregateRootClassName;
+                $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+                $aggregateRoots[$groupId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
 
-            $environment = new $environmentClassName;
-            $this->environmentHydrator->hydrate($row, $environment);
-            /** @var EnvironmentProxy $environmentProxy */
-            $environmentProxy = $this->environmentProxyFactory->createProxy($environment);
+                $environment = new $environmentClassName;
+                $this->environmentHydrator->hydrate($row, $environment);
+                /** @var EnvironmentProxy $environmentProxy */
+                $environmentProxy = $this->environmentProxyFactory->createProxy($environment);
+                $aggregateRoot->setEnvironment($environmentProxy);
 
-            $revision = new $revisionClassName;
-            $this->revisionHydrator->hydrate($row, $revision);
-            /** @var RevisionProxy $revisionProxy */
-            $revisionProxy = $this->revisionProxyFactory->createProxy($revision);
-            $revisionProxy->setEnvironment($environmentProxy);
+                $revision = new $revisionClassName;
+                $this->revisionHydrator->hydrate($row, $revision);
+                /** @var RevisionProxy $revisionProxy */
+                $revisionProxy = $this->revisionProxyFactory->createProxy($revision);
+                $revisionProxy->setEnvironment($environmentProxy);
+                $aggregateRoot->setRevision($revisionProxy);
 
-            $aggregateRoot->setEnvironment($environmentProxy);
-            $aggregateRoot->setRevision($revisionProxy);
+            } else {
+                $aggregateRoot = $aggregateRoots[$groupId];
+            }
 
-            if (isset($row['classes'])) {
-                $classes = [];
-                foreach ($row['classes'] as $classRow) {
+            if (isset($row['c.name'])) {
+                $class = $aggregateRoot->getClassByName($row['c.name']);
+                if ($class === null) {
                     $class = new $puppetClassClassName;
-                    $this->puppetClassHydrator->hydrate($classRow, $class);
+                    $this->puppetClassHydrator->hydrate($row, $class);
                     /** @var PuppetClassProxy $classProxy */
                     $classProxy = $this->puppetClassProxyFactory->createProxy($class);
-                    $classes[] = $classProxy;
+                    $aggregateRoot->addClass($classProxy);
                 }
-                $aggregateRoot->setClasses($classes);
+                if (isset($row['p.name'])) {
+                    $parameter = $class->getParameterByName($row['p.name']);
+                    if ($parameter === null) {
+                        $parameter = new $parameterClassName;
+                        $this->parameterHydrator->hydrate($row, $parameter);
+                        /** @var ParameterProxy $parameterProxy */
+                        $parameterProxy = $this->parameterProxyFactory->createProxy($parameter);
+                        $class->addParameter($parameterProxy);
+                    }
+                    if (isset($row['v.name'])) {
+                        $value = $parameter->getValueByName($row['v.name']);
+                        if ($value === null) {
+                            $value = new $valueClassName;
+                            $this->valueHydrator->hydrate($row, $value);
+                            $parameter->addValue($value);
+                        }
+                    }
+                }
             }
-            $aggregateRoots[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
         }
-        return $aggregateRoots;
+        return array_values($aggregateRoots);
     }
 
     /**
@@ -469,5 +528,159 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getPuppetClassTableName()
     {
         return $this->puppetClassTableName;
+    }
+
+    /**
+     * Set ParameterClass.
+     *
+     * @param string $parameterClass
+     * @return GroupRepository
+     */
+    public function setParameterClass($parameterClass)
+    {
+        $this->parameterClass = $parameterClass;
+        return $this;
+    }
+
+    /**
+     * Get ParameterClass.
+     *
+     * @return string
+     */
+    public function getParameterClass()
+    {
+        return $this->parameterClass;
+    }
+
+    /**
+     * Set ParameterProxyFactory.
+     *
+     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $parameterProxyFactory
+     * @return GroupRepository
+     */
+    public function setParameterProxyFactory($parameterProxyFactory)
+    {
+        $this->parameterProxyFactory = $parameterProxyFactory;
+        return $this;
+    }
+
+    /**
+     * Get ParameterProxyFactory.
+     *
+     * @return \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface
+     */
+    public function getParameterProxyFactory()
+    {
+        return $this->parameterProxyFactory;
+    }
+
+    /**
+     * Set ParameterHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $parameterHydrator
+     * @return GroupRepository
+     */
+    public function setParameterHydrator($parameterHydrator)
+    {
+        $this->parameterHydrator = $parameterHydrator;
+        return $this;
+    }
+
+    /**
+     * Get ParameterHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getParameterHydrator()
+    {
+        return $this->parameterHydrator;
+    }
+
+    /**
+     * Set ParameterTableName.
+     *
+     * @param string $parameterTableName
+     * @return GroupRepository
+     */
+    public function setParameterTableName($parameterTableName)
+    {
+        $this->parameterTableName = $parameterTableName;
+        return $this;
+    }
+
+    /**
+     * Get ParameterTableName.
+     *
+     * @return string
+     */
+    public function getParameterTableName()
+    {
+        return $this->parameterTableName;
+    }
+
+    /**
+     * Set ValueClass.
+     *
+     * @param string $valueClass
+     * @return GroupRepository
+     */
+    public function setValueClass($valueClass)
+    {
+        $this->valueClass = $valueClass;
+        return $this;
+    }
+
+    /**
+     * Get ValueClass.
+     *
+     * @return string
+     */
+    public function getValueClass()
+    {
+        return $this->valueClass;
+    }
+
+    /**
+     * Set ValueHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $valueHydrator
+     * @return GroupRepository
+     */
+    public function setValueHydrator($valueHydrator)
+    {
+        $this->valueHydrator = $valueHydrator;
+        return $this;
+    }
+
+    /**
+     * Get ValueHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getValueHydrator()
+    {
+        return $this->valueHydrator;
+    }
+
+    /**
+     * Set ValueTableName.
+     *
+     * @param string $valueTableName
+     * @return GroupRepository
+     */
+    public function setValueTableName($valueTableName)
+    {
+        $this->valueTableName = $valueTableName;
+        return $this;
+    }
+
+    /**
+     * Get ValueTableName.
+     *
+     * @return string
+     */
+    public function getValueTableName()
+    {
+        return $this->valueTableName;
     }
 }

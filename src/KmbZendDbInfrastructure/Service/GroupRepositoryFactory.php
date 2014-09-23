@@ -64,6 +64,22 @@ class GroupRepositoryFactory extends ZendDb\RepositoryFactory
         $puppetClassProxyFactory->setServiceManager($serviceLocator);
         $service->setPuppetClassProxyFactory($puppetClassProxyFactory);
 
+        $service->setParameterClass($this->getStrict('parameter_class'));
+        $service->setParameterTableName($this->getStrict('parameter_table_name'));
+        $parameterHydratorClass = $this->getStrict('parameter_hydrator_class');
+        $service->setParameterHydrator(new $parameterHydratorClass);
+        $parameterProxyFactoryClass = $this->getStrict('parameter_proxy_factory');
+        /** @var AggregateRootProxyFactoryInterface $parameterProxyFactory */
+        $parameterProxyFactory = new $parameterProxyFactoryClass;
+        $parameterProxyFactory->setConfig($this->config);
+        $parameterProxyFactory->setServiceManager($serviceLocator);
+        $service->setParameterProxyFactory($parameterProxyFactory);
+
+        $service->setValueClass($this->getStrict('value_class'));
+        $service->setValueTableName($this->getStrict('value_table_name'));
+        $valueHydratorClass = $this->getStrict('value_hydrator_class');
+        $service->setValueHydrator(new $valueHydratorClass);
+
         return $service;
     }
 }

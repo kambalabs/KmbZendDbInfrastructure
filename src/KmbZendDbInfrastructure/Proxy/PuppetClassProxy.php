@@ -125,6 +125,18 @@ class PuppetClassProxy implements PuppetClassInterface
     }
 
     /**
+     * Add specified parameter.
+     *
+     * @param \KmbDomain\Model\ParameterInterface
+     * @return PuppetClassProxy
+     */
+    public function addParameter($parameter)
+    {
+        $this->aggregateRoot->addParameter($parameter);
+        return $this;
+    }
+
+    /**
      * Get Parameters.
      *
      * @return \KmbDomain\Model\ParameterInterface[]
@@ -132,5 +144,31 @@ class PuppetClassProxy implements PuppetClassInterface
     public function getParameters()
     {
         return $this->aggregateRoot->getParameters();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasParameters()
+    {
+        return $this->aggregateRoot->hasParameters();
+    }
+
+    /**
+     * @param string $name
+     * @return \KmbDomain\Model\ParameterInterface
+     */
+    public function getParameterByName($name)
+    {
+        return $this->aggregateRoot->getParameterByName($name);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasParameterWithName($name)
+    {
+        return $this->aggregateRoot->hasParameterWithName($name);
     }
 }
