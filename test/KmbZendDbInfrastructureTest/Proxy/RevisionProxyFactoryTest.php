@@ -2,6 +2,7 @@
 namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Revision;
+use KmbZendDbInfrastructure\Proxy\RevisionProxyFactory;
 use KmbZendDbInfrastructureTest\Bootstrap;
 
 class RevisionProxyFactoryTest extends \PHPUnit_Framework_TestCase
@@ -9,7 +10,7 @@ class RevisionProxyFactoryTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canCreateProxy()
     {
-        $factory = new \KmbZendDbInfrastructure\Proxy\RevisionProxyFactory();
+        $factory = new RevisionProxyFactory();
         $factory->setServiceManager(Bootstrap::getServiceManager());
         $factory->setConfig([]);
         $revision = new Revision();
@@ -20,5 +21,6 @@ class RevisionProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\RevisionProxy', $proxy);
         $this->assertEquals($revision, $proxy->getAggregateRoot());
+        $this->assertInstanceOf('KmbDomain\Model\GroupRepositoryInterface', $proxy->getGroupRepository());
     }
 }
