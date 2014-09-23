@@ -57,5 +57,23 @@ return [
             'factory' => 'KmbZendDbInfrastructure\Service\GroupRepositoryFactory',
             'repository_class' => 'KmbZendDbInfrastructure\Service\GroupRepository',
         ],
+        'PuppetClassRepository' => [
+            'aggregate_root_class' => 'KmbDomain\Model\PuppetClass',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Proxy\PuppetClassProxyFactory',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Hydrator\PuppetClassHydrator',
+            'table_name' => 'puppet_classes',
+            'table_sequence_name' => 'puppet_class_id_seq',
+            'parameter_table_name' => 'parameters',
+            'factory' => 'KmbZendDbInfrastructure\Service\PuppetClassRepositoryFactory',
+            'repository_class' => 'KmbZendDbInfrastructure\Service\PuppetClassRepository',
+        ],
+        'ParameterRepository' => [
+            'aggregate_root_class' => 'KmbDomain\Model\Parameter',
+            'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Proxy\ParameterProxyFactory',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Hydrator\ParameterHydrator',
+            'table_name' => 'parameters',
+            'table_sequence_name' => 'parameter_id_seq',
+            'repository_class' => 'KmbZendDbInfrastructure\Service\ParameterRepository',
+        ],
     ],
 ];

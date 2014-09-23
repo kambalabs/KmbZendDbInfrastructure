@@ -1,25 +1,25 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Proxy;
 
-use KmbDomain\Model\PuppetClass;
-use KmbZendDbInfrastructure\Proxy\PuppetClassProxyFactory;
+use KmbDomain\Model\Parameter;
+use KmbZendDbInfrastructure\Proxy\ParameterProxyFactory;
 use KmbZendDbInfrastructureTest\Bootstrap;
 
-class PuppetClassProxyFactoryTest extends \PHPUnit_Framework_TestCase
+class ParameterProxyFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
     public function canCreateProxy()
     {
-        $factory = new PuppetClassProxyFactory();
+        $factory = new ParameterProxyFactory();
         $factory->setServiceManager(Bootstrap::getServiceManager());
         $factory->setConfig([]);
-        $aggregateRoot = new PuppetClass();
+        $aggregateRoot = new Parameter();
         $aggregateRoot->setId(1);
 
-        /** @var \KmbZendDbInfrastructure\Proxy\PuppetClassProxy $proxy */
+        /** @var \KmbZendDbInfrastructure\Proxy\ParameterProxy $proxy */
         $proxy = $factory->createProxy($aggregateRoot);
 
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\PuppetClassProxy', $proxy);
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\ParameterProxy', $proxy);
         $this->assertEquals($aggregateRoot, $proxy->getAggregateRoot());
     }
 }
