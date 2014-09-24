@@ -59,6 +59,18 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetAllByIds()
+    {
+        /** @var GroupInterface[] $groups */
+        $groups = static::$repository->getAllByIds([1, 3, 6, 999]);
+
+        $this->assertEquals(3, count($groups));
+        $group = $groups[0];
+        $this->assertInstanceOf('KmbDomain\Model\GroupInterface', $group);
+        $this->assertEquals('default', $group->getName());
+    }
+
+    /** @test */
     public function canGetAllByRevision()
     {
         $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);

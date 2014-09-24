@@ -95,6 +95,17 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     protected $valueTableName;
 
     /**
+     * @param int[] ids
+     * @return GroupInterface[]
+     */
+    public function getAllByIds(array $ids)
+    {
+        $criteria = new Where();
+        $criteria->in($this->getTableName() . '.id', $ids);
+        return $this->getAllBy($criteria);
+    }
+
+    /**
      * @param RevisionInterface $revision
      * @return GroupInterface[]
      */
