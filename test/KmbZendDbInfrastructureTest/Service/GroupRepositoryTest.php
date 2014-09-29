@@ -1,6 +1,7 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Service;
 
+use KmbDomain\Model\Group;
 use KmbDomain\Model\GroupInterface;
 use KmbZendDbInfrastructure\Service\GroupRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
@@ -32,6 +33,19 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         static::initFixtures(static::$connection);
+    }
+
+    /** @test */
+    public function canAdd()
+    {
+        $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);
+        $group = new Group('new group');
+        $group->setRevision($revision);
+
+        static::$repository->add($group);
+
+        $this->assertEquals(8, $group->getId());
+        $this->assertEquals(4, $group->getOrdering());
     }
 
     /** @test */

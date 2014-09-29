@@ -20,6 +20,8 @@
  */
 namespace KmbZendDbInfrastructure\Service;
 
+use GtnPersistBase\Model\AggregateRootInterface;
+use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\Group;
@@ -31,6 +33,7 @@ use KmbZendDbInfrastructure\Proxy\ParameterProxy;
 use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
 use KmbZendDbInfrastructure\Proxy\RevisionProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Stdlib\Hydrator\HydratorInterface;
@@ -93,6 +96,24 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
 
     /** @var string */
     protected $valueTableName;
+
+    /**
+     * @param AggregateRootInterface $aggregateRoot
+     * @return GroupRepository
+     */
+    public function add(AggregateRootInterface $aggregateRoot)
+    {
+        /** @var GroupInterface $aggregateRoot */
+        $select = $this->getSlaveSql()
+            ->select()
+            ->from($this->getTableName())
+            ->columns(['ordering' => new Expression('MAX(ordering)')])
+            ->where(['revision_id' => $aggregateRoot->getRevision()->getId()]);
+        $result = $this->performRead($select)->current();
+        $ordering = $result['ordering'] === null ? 0 : $result['ordering'] + 1;
+        $aggregateRoot->setOrdering($ordering);
+        return parent::add($aggregateRoot);
+    }
 
     /**
      * @param int[] ids
