@@ -21,5 +21,7 @@ class ParameterProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\ParameterProxy', $proxy);
         $this->assertEquals($aggregateRoot, $proxy->getAggregateRoot());
+        $this->assertInstanceOf('KmbDomain\Model\PuppetClassRepositoryInterface', $proxy->getClassRepository());
+        $this->assertInstanceOf('KmbDomain\Model\ParameterRepositoryInterface', $proxy->getParameterRepository());
     }
 }

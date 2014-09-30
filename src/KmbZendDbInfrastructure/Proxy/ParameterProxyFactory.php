@@ -23,6 +23,8 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
+use KmbDomain\Model\ParameterRepositoryInterface;
+use KmbDomain\Model\PuppetClassRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class ParameterProxyFactory implements AggregateRootProxyFactoryInterface
@@ -41,6 +43,15 @@ class ParameterProxyFactory implements AggregateRootProxyFactoryInterface
     {
         $proxy = new ParameterProxy();
         $proxy->setAggregateRoot($aggregateRoot);
+
+        /** @var PuppetClassRepositoryInterface $classRepository */
+        $classRepository = $this->serviceManager->get('PuppetClassRepository');
+        $proxy->setClassRepository($classRepository);
+
+        /** @var ParameterRepositoryInterface $parameterRepository */
+        $parameterRepository = $this->serviceManager->get('ParameterRepository');
+        $proxy->setParameterRepository($parameterRepository);
+
         return $proxy;
     }
 
