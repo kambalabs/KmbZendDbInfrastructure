@@ -21,12 +21,11 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistBase\Model\AggregateRootInterface;
-use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\Group;
-use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\GroupInterface;
+use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use KmbZendDbInfrastructure\Proxy\ParameterProxy;
@@ -151,7 +150,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * @param string   $name
+     * @param string            $name
      * @param RevisionInterface $revision
      * @return GroupInterface
      */
@@ -235,11 +234,11 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     protected function hydrateAggregateRootsFromResult(ResultInterface $result)
     {
         $aggregateRootClassName = $this->getAggregateRootClass();
-        $revisionClassName      = $this->getRevisionClass();
-        $environmentClassName   = $this->getEnvironmentClass();
-        $puppetClassClassName   = $this->getPuppetClassClass();
-        $parameterClassName     = $this->getParameterClass();
-        $valueClassName         = $this->getValueClass();
+        $revisionClassName = $this->getRevisionClass();
+        $environmentClassName = $this->getEnvironmentClass();
+        $puppetClassClassName = $this->getPuppetClassClass();
+        $parameterClassName = $this->getParameterClass();
+        $valueClassName = $this->getValueClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
             $groupId = $row['id'];
@@ -261,7 +260,6 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                 $revisionProxy = $this->revisionProxyFactory->createProxy($revision);
                 $revisionProxy->setEnvironment($environmentProxy);
                 $aggregateRoot->setRevision($revisionProxy);
-
             } else {
                 $aggregateRoot = $aggregateRoots[$groupId];
             }

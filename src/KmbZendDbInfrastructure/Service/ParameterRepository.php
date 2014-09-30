@@ -21,13 +21,26 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
+use KmbDomain\Model\Parameter;
 use KmbDomain\Model\ParameterInterface;
 use KmbDomain\Model\ParameterRepositoryInterface;
 use KmbDomain\Model\PuppetClassInterface;
+use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class ParameterRepository extends Repository implements ParameterRepositoryInterface
 {
+    /** @var string */
+    protected $valueClass;
+
+    /** @var HydratorInterface */
+    protected $valueHydrator;
+
+    /** @var string */
+    protected $valueTableName;
+
     /**
      * @param PuppetClassInterface $class
      * @return ParameterInterface[]
@@ -72,5 +85,120 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
         $aggregateRoots = $this->hydrateAggregateRootsFromResult($this->performRead($select));
         return empty($aggregateRoots) ? null : $aggregateRoots[0];
+    }
+
+    /**
+     * @return Select
+     */
+    protected function getSelect()
+    {
+        return parent::getSelect()->join(
+            ['v' => $this->getValueTableName()],
+            $this->getTableName() . '.id = v.parameter_id',
+            [
+                'v.id' => 'id',
+                'v.parameter_id' => 'parameter_id',
+                'v.name' => 'name',
+            ],
+            Select::JOIN_LEFT
+        );
+    }
+
+    /**
+     * @param ResultInterface $result
+     * @return array
+     */
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $valueClassName = $this->getValueClass();
+        $aggregateRoots = [];
+        foreach ($result as $row) {
+            $parameterId = $row['id'];
+            /** @var Parameter $aggregateRoot */
+            if (!array_key_exists($parameterId, $aggregateRoots)) {
+                $aggregateRoot = new $aggregateRootClassName;
+                $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+                $aggregateRoots[$parameterId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            } else {
+                $aggregateRoot = $aggregateRoots[$parameterId];
+            }
+
+            if (isset($row['v.name'])) {
+                $value = $aggregateRoot->getValueByName($row['v.name']);
+                if ($value === null) {
+                    $value = new $valueClassName;
+                    $this->valueHydrator->hydrate($row, $value);
+                    $aggregateRoot->addValue($value);
+                }
+            }
+        }
+        return array_values($aggregateRoots);
+    }
+
+    /**
+     * Set ValueClass.
+     *
+     * @param string $valueClass
+     * @return ParameterRepository
+     */
+    public function setValueClass($valueClass)
+    {
+        $this->valueClass = $valueClass;
+        return $this;
+    }
+
+    /**
+     * Get ValueClass.
+     *
+     * @return string
+     */
+    public function getValueClass()
+    {
+        return $this->valueClass;
+    }
+
+    /**
+     * Set ValueHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $valueHydrator
+     * @return ParameterRepository
+     */
+    public function setValueHydrator($valueHydrator)
+    {
+        $this->valueHydrator = $valueHydrator;
+        return $this;
+    }
+
+    /**
+     * Get ValueHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getValueHydrator()
+    {
+        return $this->valueHydrator;
+    }
+
+    /**
+     * Set ValueTableName.
+     *
+     * @param string $valueTableName
+     * @return ParameterRepository
+     */
+    public function setValueTableName($valueTableName)
+    {
+        $this->valueTableName = $valueTableName;
+        return $this;
+    }
+
+    /**
+     * Get ValueTableName.
+     *
+     * @return string
+     */
+    public function getValueTableName()
+    {
+        return $this->valueTableName;
     }
 }

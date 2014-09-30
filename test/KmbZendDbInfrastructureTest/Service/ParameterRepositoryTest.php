@@ -35,6 +35,19 @@ class ParameterRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetById()
+    {
+        /** @var ParameterInterface $parameter */
+        $parameter = static::$repository->getById(1);
+
+        $this->assertInstanceOf('KmbDomain\Model\ParameterInterface', $parameter);
+        $this->assertEquals('nameserver', $parameter->getName());
+        $values = $parameter->getValues();
+        $this->assertEquals(2, count($values));
+        $this->assertEquals('ns1.local', $values[0]->getName());
+    }
+
+    /** @test */
     public function canGetAllByClass()
     {
         $class = Bootstrap::getServiceManager()->get('PuppetClassRepository')->getById(4);
