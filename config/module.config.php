@@ -83,6 +83,7 @@ return [
             'value_class' => 'KmbDomain\Model\Value',
             'value_hydrator_class' => 'KmbZendDbInfrastructure\Hydrator\ValueHydrator',
             'value_table_name' => 'values',
+            'value_table_sequence_name' => 'values_id_seq',
             'factory' => 'KmbZendDbInfrastructure\Service\ParameterRepositoryFactory',
             'repository_class' => 'KmbZendDbInfrastructure\Service\ParameterRepository',
         ],

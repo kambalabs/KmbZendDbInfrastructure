@@ -20,6 +20,8 @@
  */
 namespace KmbZendDbInfrastructure\Service;
 
+use GtnPersistBase\Model\AggregateRootInterface;
+use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\Parameter;
 use KmbDomain\Model\ParameterInterface;
@@ -40,6 +42,63 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
     /** @var string */
     protected $valueTableName;
+
+    /** @var string */
+    protected $valueTableSequenceName;
+
+    /**
+     * @param AggregateRootInterface $aggregateRoot
+     * @return RepositoryInterface
+     */
+    public function add(AggregateRootInterface $aggregateRoot)
+    {
+        /** @var ParameterInterface $aggregateRoot */
+        parent::add($aggregateRoot);
+
+        if ($aggregateRoot->hasChildren()) {
+            foreach ($aggregateRoot->getChildren() as $child) {
+                $child->setParent($aggregateRoot);
+                $child->setClass($aggregateRoot->getClass());
+                $this->add($child);
+            }
+        }
+
+        if ($aggregateRoot->hasValues()) {
+            foreach ($aggregateRoot->getValues() as $value) {
+                $value->setParameter($aggregateRoot);
+                $data = $this->valueHydrator->extract($value);
+                $insert = $this->getMasterSql()->insert($this->valueTableName)->values($data);
+                $this->performWrite($insert);
+                if ($value->getId() === null) {
+                    $value->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->valueTableSequenceName));
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function update(AggregateRootInterface $aggregateRoot)
+    {
+        /** @var ParameterInterface $aggregateRoot */
+        parent::update($aggregateRoot);
+
+        $delete = $this->getMasterSql()->delete($this->valueTableName);
+        $delete->where(['parameter_id' => $aggregateRoot->getId()]);
+        $this->performWrite($delete);
+
+        if ($aggregateRoot->hasValues()) {
+            foreach ($aggregateRoot->getValues() as $value) {
+                $value->setParameter($aggregateRoot);
+                $data = $this->valueHydrator->extract($value);
+                $insert = $this->getMasterSql()->insert($this->valueTableName)->values($data);
+                $this->performWrite($insert);
+                if ($value->getId() === null) {
+                    $value->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->valueTableSequenceName));
+                }
+            }
+        }
+        return $this;
+    }
 
     /**
      * @param PuppetClassInterface $class
@@ -200,5 +259,27 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     public function getValueTableName()
     {
         return $this->valueTableName;
+    }
+
+    /**
+     * Set ValueTableSequenceName.
+     *
+     * @param string $valueTableSequenceName
+     * @return ParameterRepository
+     */
+    public function setValueTableSequenceName($valueTableSequenceName)
+    {
+        $this->valueTableSequenceName = $valueTableSequenceName;
+        return $this;
+    }
+
+    /**
+     * Get ValueTableSequenceName.
+     *
+     * @return string
+     */
+    public function getValueTableSequenceName()
+    {
+        return $this->valueTableSequenceName;
     }
 }

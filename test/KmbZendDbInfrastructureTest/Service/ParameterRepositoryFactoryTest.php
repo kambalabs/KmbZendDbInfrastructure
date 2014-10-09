@@ -16,5 +16,6 @@ class ParameterRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('KmbDomain\Model\Value', $service->getValueClass());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\ValueHydrator', $service->getValueHydrator());
         $this->assertEquals('values', $service->getValueTableName());
+        $this->assertEquals('values_id_seq', $service->getValueTableSequenceName());
     }
 }

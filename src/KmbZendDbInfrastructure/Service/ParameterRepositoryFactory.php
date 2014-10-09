@@ -32,6 +32,7 @@ class ParameterRepositoryFactory extends ZendDb\RepositoryFactory
 
         $service->setValueClass($this->getStrict('value_class'));
         $service->setValueTableName($this->getStrict('value_table_name'));
+        $service->setValueTableSequenceName($this->getStrict('value_table_sequence_name'));
         $valueHydratorClass = $this->getStrict('value_hydrator_class');
         $service->setValueHydrator(new $valueHydratorClass);
 

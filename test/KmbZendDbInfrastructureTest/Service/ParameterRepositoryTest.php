@@ -1,7 +1,9 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Service;
 
+use KmbDomain\Model\Parameter;
 use KmbDomain\Model\ParameterInterface;
+use KmbDomain\Model\Value;
 use KmbZendDbInfrastructure\Service\ParameterRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -45,6 +47,61 @@ class ParameterRepositoryTest extends \PHPUnit_Framework_TestCase
         $values = $parameter->getValues();
         $this->assertEquals(2, count($values));
         $this->assertEquals('ns1.local', $values[0]->getName());
+    }
+
+    /** @test */
+    public function canAddWithValues()
+    {
+        $class = Bootstrap::getServiceManager()->get('PuppetClassRepository')->getById(4);
+        $parameter = new Parameter();
+        $parameter->setName('ports');
+        $parameter->setClass($class);
+        $parameter->setValues([new Value('80'), new Value('443')]);
+
+        static::$repository->add($parameter);
+
+        $id = $parameter->getId();
+        $this->assertNotNull($id);
+        $this->assertEquals('ports', static::$connection->query("SELECT name FROM parameters WHERE id = $id")->fetchColumn(0));
+        $this->assertEquals(2, static::$connection->query("SELECT count(*) FROM 'values' WHERE parameter_id = $id")->fetchColumn(0));
+        $this->assertEquals('80', static::$connection->query("SELECT name FROM 'values' WHERE parameter_id = $id LIMIT 1")->fetchColumn(0));
+    }
+
+    /** @test */
+    public function canAddWithChildren()
+    {
+        /** @var ParameterInterface $parent */
+        $parent = static::$repository->getById(11);
+        $parameter = new Parameter();
+        $parameter->setName('host3.local');
+        $parameter->setParent($parent);
+        $parameter->setClass($parent->getClass());
+        $child1 = new Parameter();
+        $child1->setName('DocumentRoot');
+        $child2 = new Parameter();
+        $child2->setName('ServerAdmin');
+        $parameter->setChildren([$child1, $child2]);
+
+        static::$repository->add($parameter);
+
+        $id = $parameter->getId();
+        $this->assertNotNull($id);
+        $this->assertEquals('host3.local', static::$connection->query("SELECT name FROM parameters WHERE id = $id")->fetchColumn(0));
+        $this->assertEquals(2, static::$connection->query("SELECT count(*) FROM parameters WHERE parent_id = $id")->fetchColumn(0));
+        $this->assertEquals('DocumentRoot', static::$connection->query("SELECT name FROM parameters WHERE parent_id = $id LIMIT 1")->fetchColumn(0));
+    }
+
+    /** @test */
+    public function canUpdateValues()
+    {
+        /** @var ParameterInterface $parameter */
+        $parameter = static::$repository->getById(17);
+        $parameter->setValues([new Value('80'), new Value('8080'), new Value('9090')]);
+
+        static::$repository->update($parameter);
+
+        $this->assertEquals(3, static::$connection->query("SELECT count(*) FROM 'values' WHERE parameter_id = 17")->fetchColumn(0));
+        $this->assertEquals(['80', '8080', '9090'], static::$connection->query("SELECT name FROM 'values' WHERE parameter_id = 17")->fetchAll(\PDO::FETCH_COLUMN));
     }
 
     /** @test */
