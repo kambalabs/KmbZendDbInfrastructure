@@ -29,7 +29,7 @@ class PuppetClassRepositoryFactory extends ZendDb\RepositoryFactory
     {
         /** @var PuppetClassRepository $service */
         $service = parent::createService($serviceLocator);
-        $service->setParameterTableName($this->getStrict('parameter_table_name'));
+        $service->setParameterRepository($serviceLocator->get('ParameterRepository'));
         return $service;
     }
 }

@@ -20,6 +20,7 @@
  */
 namespace KmbZendDbInfrastructure\Service;
 
+use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\ParameterInterface;
 use KmbDomain\Model\PuppetClassInterface;
@@ -28,8 +29,22 @@ use Zend\Db\Sql\Where;
 
 class PuppetClassRepository extends Repository implements PuppetClassRepositoryInterface
 {
-    /** @var  string */
-    protected $parameterTableName;
+    /** @var  ParameterRepository */
+    protected $parameterRepository;
+
+    public function add(AggregateRootInterface $aggregateRoot)
+    {
+        parent::add($aggregateRoot);
+
+        /** @var PuppetClassInterface $aggregateRoot */
+        if ($aggregateRoot->hasParameters()) {
+            foreach ($aggregateRoot->getParameters() as $parameter) {
+                $parameter->setClass($aggregateRoot);
+                $this->parameterRepository->add($parameter);
+            }
+        }
+        return $this;
+    }
 
     /**
      * @param ParameterInterface $parameter
@@ -42,7 +57,7 @@ class PuppetClassRepository extends Repository implements PuppetClassRepositoryI
 
         $select = $this->getSelect()
             ->join(
-                ['p' => 'parameters'],
+                ['p' => $this->parameterRepository->getTableName()],
                 $this->getTableName() . '.id = p.puppet_class_id',
                 [
                     'p.id' => 'id',
@@ -58,24 +73,24 @@ class PuppetClassRepository extends Repository implements PuppetClassRepositoryI
     }
 
     /**
-     * Set ParameterTableName.
+     * Set Parameter Repository.
      *
-     * @param string $parameterTableName
+     * @param string $parameterRepository
      * @return PuppetClassRepository
      */
-    public function setParameterTableName($parameterTableName)
+    public function setParameterRepository($parameterRepository)
     {
-        $this->parameterTableName = $parameterTableName;
+        $this->parameterRepository = $parameterRepository;
         return $this;
     }
 
     /**
-     * Get ParameterTableName.
+     * Get Parameter Repository.
      *
-     * @return string
+     * @return ParameterRepository
      */
-    public function getParameterTableName()
+    public function getParameterRepository()
     {
-        return $this->parameterTableName;
+        return $this->parameterRepository;
     }
 }

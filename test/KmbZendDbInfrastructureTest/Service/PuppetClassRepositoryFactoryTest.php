@@ -13,6 +13,6 @@ class PuppetClassRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $service = Bootstrap::getServiceManager()->get('PuppetClassRepository');
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Service\PuppetClassRepository', $service);
-        $this->assertEquals('parameters', $service->getParameterTableName());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Service\ParameterRepository', $service->getParameterRepository());
     }
 }
