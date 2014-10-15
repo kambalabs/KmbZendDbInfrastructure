@@ -295,6 +295,82 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
+     * Set Template.
+     *
+     * @param \stdClass $template
+     * @return ParameterProxy
+     */
+    public function setTemplate($template)
+    {
+        $this->aggregateRoot->setTemplate($template);
+        return $this;
+    }
+
+    /**
+     * Get Template.
+     *
+     * @return \stdClass
+     */
+    public function getTemplate()
+    {
+        return $this->aggregateRoot->getTemplate();
+    }
+
+    /**
+     * Check if template is set.
+     *
+     * @return bool
+     */
+    public function hasTemplate()
+    {
+        return $this->aggregateRoot->hasTemplate();
+    }
+
+    /**
+     * Set available siblings.
+     *
+     * @param \stdClass[] $availableSiblings
+     * @return ParameterProxy
+     */
+    public function setAvailableSiblings($availableSiblings)
+    {
+        $this->aggregateRoot->setAvailableSiblings($availableSiblings);
+        return $this;
+    }
+
+    /**
+     * Get available siblings.
+     *
+     * @return \stdClass[]
+     */
+    public function getAvailableSiblings()
+    {
+        return $this->aggregateRoot->getAvailableSiblings();
+    }
+
+    /**
+     * Set AvailableValues.
+     *
+     * @param array $availableValues
+     * @return ParameterProxy
+     */
+    public function setAvailableValues($availableValues)
+    {
+        $this->aggregateRoot->setAvailableValues($availableValues);
+        return $this;
+    }
+
+    /**
+     * Get AvailableValues.
+     *
+     * @return array
+     */
+    public function getAvailableValues()
+    {
+        return $this->aggregateRoot->getAvailableValues();
+    }
+
+    /**
      * Set ClassRepository.
      *
      * @param \KmbDomain\Model\PuppetClassRepositoryInterface $classRepository
