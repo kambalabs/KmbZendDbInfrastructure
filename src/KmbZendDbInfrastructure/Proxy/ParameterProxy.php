@@ -318,25 +318,33 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
-     * Set available siblings.
+     * Set available children.
      *
-     * @param \stdClass[] $availableSiblings
+     * @param \stdClass[] $availableChildren
      * @return ParameterProxy
      */
-    public function setAvailableSiblings($availableSiblings)
+    public function setAvailableChildren($availableChildren)
     {
-        $this->aggregateRoot->setAvailableSiblings($availableSiblings);
+        $this->aggregateRoot->setAvailableChildren($availableChildren);
         return $this;
     }
 
     /**
-     * Get available siblings.
+     * Get available children.
      *
      * @return \stdClass[]
      */
-    public function getAvailableSiblings()
+    public function getAvailableChildren()
     {
-        return $this->aggregateRoot->getAvailableSiblings();
+        return $this->aggregateRoot->getAvailableChildren();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailableChildren()
+    {
+        return $this->aggregateRoot->hasAvailableChildren();
     }
 
     /**
@@ -359,6 +367,14 @@ class ParameterProxy implements ParameterInterface
     public function getAvailableValues()
     {
         return $this->aggregateRoot->getAvailableValues();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailableValues()
+    {
+        return $this->aggregateRoot->hasAvailableValues();
     }
 
     /**
