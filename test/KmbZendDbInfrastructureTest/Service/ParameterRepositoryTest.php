@@ -3,7 +3,6 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Parameter;
 use KmbDomain\Model\ParameterInterface;
-use KmbDomain\Model\Value;
 use KmbZendDbInfrastructure\Service\ParameterRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -44,9 +43,7 @@ class ParameterRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbDomain\Model\ParameterInterface', $parameter);
         $this->assertEquals('nameserver', $parameter->getName());
-        $values = $parameter->getValues();
-        $this->assertEquals(2, count($values));
-        $this->assertEquals('ns1.local', $values[0]->getName());
+        $this->assertEquals(['ns1.local', 'ns2.local'], $parameter->getValues());
     }
 
     /** @test */
@@ -56,7 +53,7 @@ class ParameterRepositoryTest extends \PHPUnit_Framework_TestCase
         $parameter = new Parameter();
         $parameter->setName('ports');
         $parameter->setClass($class);
-        $parameter->setValues([new Value('80'), new Value('443')]);
+        $parameter->setValues(['80', '443']);
 
         static::$repository->add($parameter);
 
@@ -96,7 +93,7 @@ class ParameterRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         /** @var ParameterInterface $parameter */
         $parameter = static::$repository->getById(17);
-        $parameter->setValues([new Value('80'), new Value('8080'), new Value('9090')]);
+        $parameter->setValues(['80', '8080', '9090']);
 
         static::$repository->update($parameter);
 

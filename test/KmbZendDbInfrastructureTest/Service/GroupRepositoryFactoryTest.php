@@ -29,8 +29,6 @@ class GroupRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\ParameterProxyFactory', $service->getParameterProxyFactory());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\ParameterHydrator', $service->getParameterHydrator());
         $this->assertEquals('parameters', $service->getParameterTableName());
-        $this->assertEquals('KmbDomain\Model\Value', $service->getValueClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\ValueHydrator', $service->getValueHydrator());
         $this->assertEquals('values', $service->getValueTableName());
     }
 }

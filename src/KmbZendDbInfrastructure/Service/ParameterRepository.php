@@ -30,21 +30,11 @@ use KmbDomain\Model\PuppetClassInterface;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
-use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class ParameterRepository extends Repository implements ParameterRepositoryInterface
 {
     /** @var string */
-    protected $valueClass;
-
-    /** @var HydratorInterface */
-    protected $valueHydrator;
-
-    /** @var string */
     protected $valueTableName;
-
-    /** @var string */
-    protected $valueTableSequenceName;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -65,13 +55,11 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
         if ($aggregateRoot->hasValues()) {
             foreach ($aggregateRoot->getValues() as $value) {
-                $value->setParameter($aggregateRoot);
-                $data = $this->valueHydrator->extract($value);
-                $insert = $this->getMasterSql()->insert($this->valueTableName)->values($data);
+                $insert = $this->getMasterSql()->insert($this->valueTableName)->values([
+                    'parameter_id' => $aggregateRoot->getId(),
+                    'name' => $value,
+                ]);
                 $this->performWrite($insert);
-                if ($value->getId() === null) {
-                    $value->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->valueTableSequenceName));
-                }
             }
         }
         return $this;
@@ -88,13 +76,11 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
         if ($aggregateRoot->hasValues()) {
             foreach ($aggregateRoot->getValues() as $value) {
-                $value->setParameter($aggregateRoot);
-                $data = $this->valueHydrator->extract($value);
-                $insert = $this->getMasterSql()->insert($this->valueTableName)->values($data);
+                $insert = $this->getMasterSql()->insert($this->valueTableName)->values([
+                    'parameter_id' => $aggregateRoot->getId(),
+                    'name' => $value,
+                ]);
                 $this->performWrite($insert);
-                if ($value->getId() === null) {
-                    $value->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->valueTableSequenceName));
-                }
             }
         }
         return $this;
@@ -155,9 +141,7 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
             ['v' => $this->getValueTableName()],
             $this->getTableName() . '.id = v.parameter_id',
             [
-                'v.id' => 'id',
-                'v.parameter_id' => 'parameter_id',
-                'v.name' => 'name',
+                'value' => 'name',
             ],
             Select::JOIN_LEFT
         );
@@ -170,7 +154,6 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     protected function hydrateAggregateRootsFromResult(ResultInterface $result)
     {
         $aggregateRootClassName = $this->getAggregateRootClass();
-        $valueClassName = $this->getValueClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
             $parameterId = $row['id'];
@@ -183,60 +166,11 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
                 $aggregateRoot = $aggregateRoots[$parameterId];
             }
 
-            if (isset($row['v.name'])) {
-                $value = $aggregateRoot->getValueByName($row['v.name']);
-                if ($value === null) {
-                    $value = new $valueClassName;
-                    $this->valueHydrator->hydrate($row, $value);
-                    $aggregateRoot->addValue($value);
-                }
+            if (isset($row['value'])) {
+                $aggregateRoot->addValue($row['value']);
             }
         }
         return array_values($aggregateRoots);
-    }
-
-    /**
-     * Set ValueClass.
-     *
-     * @param string $valueClass
-     * @return ParameterRepository
-     */
-    public function setValueClass($valueClass)
-    {
-        $this->valueClass = $valueClass;
-        return $this;
-    }
-
-    /**
-     * Get ValueClass.
-     *
-     * @return string
-     */
-    public function getValueClass()
-    {
-        return $this->valueClass;
-    }
-
-    /**
-     * Set ValueHydrator.
-     *
-     * @param \Zend\Stdlib\Hydrator\HydratorInterface $valueHydrator
-     * @return ParameterRepository
-     */
-    public function setValueHydrator($valueHydrator)
-    {
-        $this->valueHydrator = $valueHydrator;
-        return $this;
-    }
-
-    /**
-     * Get ValueHydrator.
-     *
-     * @return \Zend\Stdlib\Hydrator\HydratorInterface
-     */
-    public function getValueHydrator()
-    {
-        return $this->valueHydrator;
     }
 
     /**
@@ -259,27 +193,5 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     public function getValueTableName()
     {
         return $this->valueTableName;
-    }
-
-    /**
-     * Set ValueTableSequenceName.
-     *
-     * @param string $valueTableSequenceName
-     * @return ParameterRepository
-     */
-    public function setValueTableSequenceName($valueTableSequenceName)
-    {
-        $this->valueTableSequenceName = $valueTableSequenceName;
-        return $this;
-    }
-
-    /**
-     * Get ValueTableSequenceName.
-     *
-     * @return string
-     */
-    public function getValueTableSequenceName()
-    {
-        return $this->valueTableSequenceName;
     }
 }

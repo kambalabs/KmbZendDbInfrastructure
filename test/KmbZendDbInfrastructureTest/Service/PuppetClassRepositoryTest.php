@@ -3,7 +3,6 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Parameter;
 use KmbDomain\Model\PuppetClass;
-use KmbDomain\Model\Value;
 use KmbZendDbInfrastructure\Service\PuppetClassRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;
@@ -52,7 +51,7 @@ class PuppetClassRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $parameter = new Parameter();
         $parameter->setName('port');
-        $parameter->setValues([new Value('80')]);
+        $parameter->setValues(['80']);
         $class = new PuppetClass();
         $class->setName('varnish');
         $class->setParameters([$parameter]);

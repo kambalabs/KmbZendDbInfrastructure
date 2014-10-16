@@ -67,9 +67,7 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($parameters));
         $parameter = $parameters[1];
         $this->assertEquals('ports', $parameter->getName());
-        $values = $parameter->getValues();
-        $this->assertEquals(2, count($values));
-        $this->assertEquals('80', $values[0]->getName());
+        $this->assertEquals(['80', '443'], $parameter->getValues());
     }
 
     /** @test */

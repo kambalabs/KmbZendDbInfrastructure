@@ -136,7 +136,7 @@ class ParameterProxy implements ParameterInterface
     /**
      * Set Values.
      *
-     * @param \KmbDomain\Model\ValueInterface[] $values
+     * @param array $values
      * @return ParameterProxy
      */
     public function setValues($values)
@@ -148,7 +148,7 @@ class ParameterProxy implements ParameterInterface
     /**
      * Add specified value.
      *
-     * @param \KmbDomain\Model\ValueInterface $value
+     * @param array $value
      * @return ParameterProxy
      */
     public function addValue($value)
@@ -159,7 +159,7 @@ class ParameterProxy implements ParameterInterface
     /**
      * Get Values.
      *
-     * @return \KmbDomain\Model\ValueInterface[]
+     * @return array
      */
     public function getValues()
     {
@@ -175,21 +175,12 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
-     * @param string $name
-     * @return \KmbDomain\Model\ValueInterface
-     */
-    public function getValueByName($name)
-    {
-        return $this->aggregateRoot->getValueByName($name);
-    }
-
-    /**
-     * @param string $name
+     * @param string $value
      * @return bool
      */
-    public function hasValueWithName($name)
+    public function hasValue($value)
     {
-        return $this->aggregateRoot->hasValueWithName($name);
+        return $this->aggregateRoot->hasValue($value);
     }
 
     /**

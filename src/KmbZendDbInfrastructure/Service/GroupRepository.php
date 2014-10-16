@@ -88,12 +88,6 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     protected $parameterTableName;
 
     /** @var string */
-    protected $valueClass;
-
-    /** @var HydratorInterface */
-    protected $valueHydrator;
-
-    /** @var string */
     protected $valueTableName;
 
     /**
@@ -216,9 +210,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                 ['v' => $this->getValueTableName()],
                 'p.id = v.parameter_id',
                 [
-                    'v.id' => 'id',
-                    'v.parameter_id' => 'parameter_id',
-                    'v.name' => 'name',
+                    'value' => 'name',
                 ],
                 Select::JOIN_LEFT
             )
@@ -238,7 +230,6 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
         $environmentClassName = $this->getEnvironmentClass();
         $puppetClassClassName = $this->getPuppetClassClass();
         $parameterClassName = $this->getParameterClass();
-        $valueClassName = $this->getValueClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
             $groupId = $row['id'];
@@ -282,13 +273,8 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                         $parameterProxy = $this->parameterProxyFactory->createProxy($parameter);
                         $class->addParameter($parameterProxy);
                     }
-                    if (isset($row['v.name'])) {
-                        $value = $parameter->getValueByName($row['v.name']);
-                        if ($value === null) {
-                            $value = new $valueClassName;
-                            $this->valueHydrator->hydrate($row, $value);
-                            $parameter->addValue($value);
-                        }
+                    if (isset($row['value'])) {
+                        $parameter->addValue($row['value']);
                     }
                 }
             }
@@ -646,50 +632,6 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getParameterTableName()
     {
         return $this->parameterTableName;
-    }
-
-    /**
-     * Set ValueClass.
-     *
-     * @param string $valueClass
-     * @return GroupRepository
-     */
-    public function setValueClass($valueClass)
-    {
-        $this->valueClass = $valueClass;
-        return $this;
-    }
-
-    /**
-     * Get ValueClass.
-     *
-     * @return string
-     */
-    public function getValueClass()
-    {
-        return $this->valueClass;
-    }
-
-    /**
-     * Set ValueHydrator.
-     *
-     * @param \Zend\Stdlib\Hydrator\HydratorInterface $valueHydrator
-     * @return GroupRepository
-     */
-    public function setValueHydrator($valueHydrator)
-    {
-        $this->valueHydrator = $valueHydrator;
-        return $this;
-    }
-
-    /**
-     * Get ValueHydrator.
-     *
-     * @return \Zend\Stdlib\Hydrator\HydratorInterface
-     */
-    public function getValueHydrator()
-    {
-        return $this->valueHydrator;
     }
 
     /**
