@@ -82,6 +82,19 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetAncestorsNames()
+    {
+        $parent = new Parameter();
+        $parent->setName('parent');
+        $this->parameterRepository->expects($this->any())
+            ->method('getByChild')
+            ->with($this->proxy)
+            ->will($this->returnValue($parent));
+
+        $this->assertEquals(['parent', 'nameserver'], $this->proxy->getAncestorsNames());
+    }
+
+    /** @test */
     public function canCheckIfHasParentFromRepository()
     {
         $this->parameterRepository->expects($this->any())
