@@ -23,15 +23,13 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistZendDb\Infrastructure\ZendDb;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ParameterRepositoryFactory extends ZendDb\RepositoryFactory
+class GroupClassRepositoryFactory extends ZendDb\RepositoryFactory
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var ParameterRepository $service */
+        /** @var GroupClassRepository $service */
         $service = parent::createService($serviceLocator);
-
-        $service->setValueTableName($this->getStrict('value_table_name'));
-
+        $service->setGroupParameterRepository($serviceLocator->get('GroupParameterRepository'));
         return $service;
     }
 }

@@ -1,17 +1,17 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Hydrator;
 
-use KmbDomain\Model\Parameter;
-use KmbDomain\Model\PuppetClass;
-use KmbZendDbInfrastructure\Hydrator\ParameterHydrator;
+use KmbDomain\Model\GroupParameter;
+use KmbDomain\Model\GroupClass;
+use KmbZendDbInfrastructure\Hydrator\GroupParameterHydrator;
 
-class ParameterHydratorTest extends \PHPUnit_Framework_TestCase
+class GroupParameterHydratorTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
     public function canExtract()
     {
-        $hydrator = new ParameterHydrator();
-        $class = new PuppetClass();
+        $hydrator = new GroupParameterHydrator();
+        $class = new GroupClass();
         $class->setId(2);
         $object = $this->createObject();
         $object->setClass($class);
@@ -22,10 +22,10 @@ class ParameterHydratorTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canExtractWithParent()
     {
-        $hydrator = new ParameterHydrator();
-        $class = new PuppetClass();
+        $hydrator = new GroupParameterHydrator();
+        $class = new GroupClass();
         $class->setId(2);
-        $parent = new Parameter();
+        $parent = new GroupParameter();
         $parent->setId(3);
         $object = $this->createObject();
         $object->setClass($class);
@@ -37,20 +37,20 @@ class ParameterHydratorTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canHydrate()
     {
-        $hydrator = new ParameterHydrator();
+        $hydrator = new GroupParameterHydrator();
 
-        $this->assertEquals($this->createObject(), $hydrator->hydrate($this->getData(), new Parameter()));
+        $this->assertEquals($this->createObject(), $hydrator->hydrate($this->getData(), new GroupParameter()));
     }
 
     /** @test */
     public function canHydrateWithTablePrefix()
     {
-        $hydrator = new ParameterHydrator();
-        $object = new Parameter();
+        $hydrator = new GroupParameterHydrator();
+        $object = new GroupParameter();
 
         $hydrator->hydrate([
             'p.id' => 1,
-            'p.puppet_class_id' => 2,
+            'p.group_class_id' => 2,
             'p.name' => 'nameserver',
         ], $object);
 
@@ -58,11 +58,11 @@ class ParameterHydratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Parameter
+     * @return GroupParameter
      */
     protected function createObject()
     {
-        $object = new Parameter();
+        $object = new GroupParameter();
         $object->setId(1);
         $object->setName('nameserver');
 
@@ -77,7 +77,7 @@ class ParameterHydratorTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'id' => 1,
-            'puppet_class_id' => 2,
+            'group_class_id' => 2,
             'name' => 'nameserver',
             'parent_id' => $parent_id,
         ];

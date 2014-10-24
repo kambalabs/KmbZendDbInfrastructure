@@ -22,48 +22,48 @@ namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
-use KmbDomain\Model\ParameterInterface;
-use KmbDomain\Model\PuppetClassInterface;
-use KmbDomain\Model\PuppetClassRepositoryInterface;
+use KmbDomain\Model\GroupParameterInterface;
+use KmbDomain\Model\GroupClassInterface;
+use KmbDomain\Model\GroupClassRepositoryInterface;
 use Zend\Db\Sql\Where;
 
-class PuppetClassRepository extends Repository implements PuppetClassRepositoryInterface
+class GroupClassRepository extends Repository implements GroupClassRepositoryInterface
 {
-    /** @var  ParameterRepository */
-    protected $parameterRepository;
+    /** @var  GroupParameterRepository */
+    protected $groupParameterRepository;
 
     public function add(AggregateRootInterface $aggregateRoot)
     {
         parent::add($aggregateRoot);
 
-        /** @var PuppetClassInterface $aggregateRoot */
+        /** @var GroupClassInterface $aggregateRoot */
         if ($aggregateRoot->hasParameters()) {
-            foreach ($aggregateRoot->getParameters() as $parameter) {
-                $parameter->setClass($aggregateRoot);
-                $this->parameterRepository->add($parameter);
+            foreach ($aggregateRoot->getParameters() as $groupParameter) {
+                $groupParameter->setClass($aggregateRoot);
+                $this->groupParameterRepository->add($groupParameter);
             }
         }
         return $this;
     }
 
     /**
-     * @param ParameterInterface $parameter
-     * @return PuppetClassInterface
+     * @param GroupParameterInterface $groupParameter
+     * @return GroupClassInterface
      */
-    public function getByParameter($parameter)
+    public function getByParameter($groupParameter)
     {
         $criteria = new Where();
-        $criteria->equalTo('p.id', $parameter->getId());
+        $criteria->equalTo('p.id', $groupParameter->getId());
 
         $select = $this->getSelect()
             ->join(
-                ['p' => $this->parameterRepository->getTableName()],
-                $this->getTableName() . '.id = p.puppet_class_id',
+                ['p' => $this->groupParameterRepository->getTableName()],
+                $this->getTableName() . '.id = p.group_class_id',
                 [
                     'p.id' => 'id',
                     'p.name' => 'name',
                     'p.parent_id' => 'parent_id',
-                    'p.puppet_class_id' => 'puppet_class_id',
+                    'p.group_class_id' => 'group_class_id',
                 ]
             )
             ->where($criteria);
@@ -73,24 +73,24 @@ class PuppetClassRepository extends Repository implements PuppetClassRepositoryI
     }
 
     /**
-     * Set Parameter Repository.
+     * Set GroupParameter Repository.
      *
-     * @param string $parameterRepository
-     * @return PuppetClassRepository
+     * @param string $groupParameterRepository
+     * @return GroupClassRepository
      */
-    public function setParameterRepository($parameterRepository)
+    public function setGroupParameterRepository($groupParameterRepository)
     {
-        $this->parameterRepository = $parameterRepository;
+        $this->groupParameterRepository = $groupParameterRepository;
         return $this;
     }
 
     /**
-     * Get Parameter Repository.
+     * Get GroupParameter Repository.
      *
-     * @return ParameterRepository
+     * @return GroupParameterRepository
      */
-    public function getParameterRepository()
+    public function getGroupParameterRepository()
     {
-        return $this->parameterRepository;
+        return $this->groupParameterRepository;
     }
 }

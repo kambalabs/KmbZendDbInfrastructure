@@ -52,24 +52,24 @@ CREATE TABLE `groups` (
   `exclude_pattern` TEXT         NOT NULL DEFAULT ''
 );
 
-DROP TABLE IF EXISTS `puppet_classes`;
-CREATE TABLE `puppet_classes` (
+DROP TABLE IF EXISTS `group_classes`;
+CREATE TABLE `group_classes` (
   `id`       INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
   `name`     VARCHAR(256) NOT NULL DEFAULT '',
   `group_id` INTEGER      NOT NULL
 );
 
-DROP TABLE IF EXISTS `parameters`;
-CREATE TABLE `parameters` (
+DROP TABLE IF EXISTS `group_parameters`;
+CREATE TABLE `group_parameters` (
   `id`              INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
   `name`            VARCHAR(256) NOT NULL DEFAULT '',
   `parent_id`       INTEGER DEFAULT NULL,
-  `puppet_class_id` INTEGER NOT NULL
+  `group_class_id`  INTEGER NOT NULL
 );
 
-DROP TABLE IF EXISTS `values`;
-CREATE TABLE `values` (
-  `id`           INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
-  `name`         VARCHAR(256) NOT NULL DEFAULT '',
-  `parameter_id` INTEGER NOT NULL
+DROP TABLE IF EXISTS `group_values`;
+CREATE TABLE `group_values` (
+  `id`                 INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `value`              VARCHAR(256) NOT NULL DEFAULT '',
+  `group_parameter_id` INTEGER NOT NULL
 );

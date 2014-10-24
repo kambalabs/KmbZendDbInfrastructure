@@ -23,18 +23,18 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
-use KmbDomain\Model\Parameter;
-use KmbDomain\Model\ParameterInterface;
-use KmbDomain\Model\ParameterRepositoryInterface;
-use KmbDomain\Model\PuppetClassInterface;
+use KmbDomain\Model\GroupParameter;
+use KmbDomain\Model\GroupParameterInterface;
+use KmbDomain\Model\GroupParameterRepositoryInterface;
+use KmbDomain\Model\GroupClassInterface;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
-class ParameterRepository extends Repository implements ParameterRepositoryInterface
+class GroupParameterRepository extends Repository implements GroupParameterRepositoryInterface
 {
     /** @var string */
-    protected $valueTableName;
+    protected $groupValueTableName;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -42,7 +42,7 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
      */
     public function add(AggregateRootInterface $aggregateRoot)
     {
-        /** @var ParameterInterface $aggregateRoot */
+        /** @var GroupParameterInterface $aggregateRoot */
         parent::add($aggregateRoot);
 
         if ($aggregateRoot->hasChildren()) {
@@ -55,9 +55,9 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
         if ($aggregateRoot->hasValues()) {
             foreach ($aggregateRoot->getValues() as $value) {
-                $insert = $this->getMasterSql()->insert($this->valueTableName)->values([
-                    'parameter_id' => $aggregateRoot->getId(),
-                    'name' => $value,
+                $insert = $this->getMasterSql()->insert($this->groupValueTableName)->values([
+                    'group_parameter_id' => $aggregateRoot->getId(),
+                    'value' => $value,
                 ]);
                 $this->performWrite($insert);
             }
@@ -67,18 +67,18 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
 
     public function update(AggregateRootInterface $aggregateRoot)
     {
-        /** @var ParameterInterface $aggregateRoot */
+        /** @var GroupParameterInterface $aggregateRoot */
         parent::update($aggregateRoot);
 
-        $delete = $this->getMasterSql()->delete($this->valueTableName);
-        $delete->where(['parameter_id' => $aggregateRoot->getId()]);
+        $delete = $this->getMasterSql()->delete($this->groupValueTableName);
+        $delete->where(['group_parameter_id' => $aggregateRoot->getId()]);
         $this->performWrite($delete);
 
         if ($aggregateRoot->hasValues()) {
             foreach ($aggregateRoot->getValues() as $value) {
-                $insert = $this->getMasterSql()->insert($this->valueTableName)->values([
-                    'parameter_id' => $aggregateRoot->getId(),
-                    'name' => $value,
+                $insert = $this->getMasterSql()->insert($this->groupValueTableName)->values([
+                    'group_parameter_id' => $aggregateRoot->getId(),
+                    'value' => $value,
                 ]);
                 $this->performWrite($insert);
             }
@@ -87,22 +87,22 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     }
 
     /**
-     * @param PuppetClassInterface $class
-     * @return ParameterInterface[]
+     * @param GroupClassInterface $class
+     * @return GroupParameterInterface[]
      */
     public function getAllByClass($class)
     {
         $criteria = new Where();
         $criteria
-            ->equalTo('puppet_class_id', $class->getId())
+            ->equalTo('group_class_id', $class->getId())
             ->and
             ->isNull('parent_id');
         return $this->getAllBy($criteria);
     }
 
     /**
-     * @param ParameterInterface $parent
-     * @return ParameterInterface[]
+     * @param GroupParameterInterface $parent
+     * @return GroupParameterInterface[]
      */
     public function getAllByParent($parent)
     {
@@ -112,8 +112,8 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     }
 
     /**
-     * @param ParameterInterface $child
-     * @return ParameterInterface
+     * @param GroupParameterInterface $child
+     * @return GroupParameterInterface
      */
     public function getByChild($child)
     {
@@ -138,10 +138,10 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     protected function getSelect()
     {
         return parent::getSelect()->join(
-            ['v' => $this->getValueTableName()],
-            $this->getTableName() . '.id = v.parameter_id',
+            ['v' => $this->getGroupValueTableName()],
+            $this->getTableName() . '.id = v.group_parameter_id',
             [
-                'value' => 'name',
+                'value' => 'value',
             ],
             Select::JOIN_LEFT
         )->order($this->getTableName() . '.id, v.id');
@@ -156,14 +156,14 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
         $aggregateRootClassName = $this->getAggregateRootClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
-            $parameterId = $row['id'];
-            /** @var Parameter $aggregateRoot */
-            if (!array_key_exists($parameterId, $aggregateRoots)) {
+            $groupParameterId = $row['id'];
+            /** @var GroupParameter $aggregateRoot */
+            if (!array_key_exists($groupParameterId, $aggregateRoots)) {
                 $aggregateRoot = new $aggregateRootClassName;
                 $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
-                $aggregateRoots[$parameterId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+                $aggregateRoots[$groupParameterId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
             } else {
-                $aggregateRoot = $aggregateRoots[$parameterId];
+                $aggregateRoot = $aggregateRoots[$groupParameterId];
             }
 
             if (isset($row['value'])) {
@@ -174,14 +174,14 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
     }
 
     /**
-     * Set ValueTableName.
+     * Set GroupValueTableName.
      *
-     * @param string $valueTableName
-     * @return ParameterRepository
+     * @param string $groupValueTableName
+     * @return GroupParameterRepository
      */
-    public function setValueTableName($valueTableName)
+    public function setGroupValueTableName($groupValueTableName)
     {
-        $this->valueTableName = $valueTableName;
+        $this->groupValueTableName = $groupValueTableName;
         return $this;
     }
 
@@ -190,8 +190,8 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
      *
      * @return string
      */
-    public function getValueTableName()
+    public function getGroupValueTableName()
     {
-        return $this->valueTableName;
+        return $this->groupValueTableName;
     }
 }

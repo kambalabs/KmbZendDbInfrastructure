@@ -128,7 +128,7 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetByClass()
     {
-        $class = Bootstrap::getServiceManager()->get('PuppetClassRepository')->getById(5);
+        $class = Bootstrap::getServiceManager()->get('GroupClassRepository')->getById(5);
 
         $group = static::$repository->getByClass($class);
 

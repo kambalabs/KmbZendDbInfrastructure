@@ -21,14 +21,14 @@ class GroupRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator', $service->getEnvironmentHydrator());
         $this->assertEquals('environments', $service->getEnvironmentTableName());
-        $this->assertEquals('KmbDomain\Model\PuppetClass', $service->getPuppetClassClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\PuppetClassProxyFactory', $service->getPuppetClassProxyFactory());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\PuppetClassHydrator', $service->getPuppetClassHydrator());
-        $this->assertEquals('puppet_classes', $service->getPuppetClassTableName());
-        $this->assertEquals('KmbDomain\Model\Parameter', $service->getParameterClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\ParameterProxyFactory', $service->getParameterProxyFactory());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\ParameterHydrator', $service->getParameterHydrator());
-        $this->assertEquals('parameters', $service->getParameterTableName());
-        $this->assertEquals('values', $service->getValueTableName());
+        $this->assertEquals('KmbDomain\Model\GroupClass', $service->getGroupClassClass());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupClassProxyFactory', $service->getGroupClassProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\GroupClassHydrator', $service->getGroupClassHydrator());
+        $this->assertEquals('group_classes', $service->getGroupClassTableName());
+        $this->assertEquals('KmbDomain\Model\GroupParameter', $service->getGroupParameterClass());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupParameterProxyFactory', $service->getGroupParameterProxyFactory());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\GroupParameterHydrator', $service->getGroupParameterHydrator());
+        $this->assertEquals('group_parameters', $service->getGroupParameterTableName());
+        $this->assertEquals('group_values', $service->getGroupValueTableName());
     }
 }

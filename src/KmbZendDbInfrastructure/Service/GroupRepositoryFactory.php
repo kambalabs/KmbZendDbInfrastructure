@@ -53,29 +53,29 @@ class GroupRepositoryFactory extends ZendDb\RepositoryFactory
         $environmentProxyFactory->setServiceManager($serviceLocator);
         $service->setEnvironmentProxyFactory($environmentProxyFactory);
 
-        $service->setPuppetClassClass($this->getStrict('puppet_class_class'));
-        $service->setPuppetClassTableName($this->getStrict('puppet_class_table_name'));
-        $puppetClassHydratorClass = $this->getStrict('puppet_class_hydrator_class');
-        $service->setPuppetClassHydrator(new $puppetClassHydratorClass);
-        $puppetClassProxyFactoryClass = $this->getStrict('puppet_class_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $puppetClassProxyFactory */
-        $puppetClassProxyFactory = new $puppetClassProxyFactoryClass;
-        $puppetClassProxyFactory->setConfig($this->config);
-        $puppetClassProxyFactory->setServiceManager($serviceLocator);
-        $service->setPuppetClassProxyFactory($puppetClassProxyFactory);
+        $service->setGroupClassClass($this->getStrict('group_class_class'));
+        $service->setGroupClassTableName($this->getStrict('group_class_table_name'));
+        $groupClassHydratorClass = $this->getStrict('group_class_hydrator_class');
+        $service->setGroupClassHydrator(new $groupClassHydratorClass);
+        $groupClassProxyFactoryClass = $this->getStrict('group_class_proxy_factory');
+        /** @var AggregateRootProxyFactoryInterface $groupClassProxyFactory */
+        $groupClassProxyFactory = new $groupClassProxyFactoryClass;
+        $groupClassProxyFactory->setConfig($this->config);
+        $groupClassProxyFactory->setServiceManager($serviceLocator);
+        $service->setGroupClassProxyFactory($groupClassProxyFactory);
 
-        $service->setParameterClass($this->getStrict('parameter_class'));
-        $service->setParameterTableName($this->getStrict('parameter_table_name'));
-        $parameterHydratorClass = $this->getStrict('parameter_hydrator_class');
-        $service->setParameterHydrator(new $parameterHydratorClass);
-        $parameterProxyFactoryClass = $this->getStrict('parameter_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $parameterProxyFactory */
-        $parameterProxyFactory = new $parameterProxyFactoryClass;
-        $parameterProxyFactory->setConfig($this->config);
-        $parameterProxyFactory->setServiceManager($serviceLocator);
-        $service->setParameterProxyFactory($parameterProxyFactory);
+        $service->setGroupParameterClass($this->getStrict('group_parameter_class'));
+        $service->setGroupParameterTableName($this->getStrict('group_parameter_table_name'));
+        $groupParameterHydratorClass = $this->getStrict('group_parameter_hydrator_class');
+        $service->setGroupParameterHydrator(new $groupParameterHydratorClass);
+        $groupParameterProxyFactoryClass = $this->getStrict('group_parameter_proxy_factory');
+        /** @var AggregateRootProxyFactoryInterface $groupParameterProxyFactory */
+        $groupParameterProxyFactory = new $groupParameterProxyFactoryClass;
+        $groupParameterProxyFactory->setConfig($this->config);
+        $groupParameterProxyFactory->setServiceManager($serviceLocator);
+        $service->setGroupParameterProxyFactory($groupParameterProxyFactory);
 
-        $service->setValueTableName($this->getStrict('value_table_name'));
+        $service->setGroupValueTableName($this->getStrict('group_value_table_name'));
 
         return $service;
     }

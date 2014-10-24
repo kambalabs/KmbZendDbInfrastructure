@@ -2,15 +2,15 @@
 namespace KmbZendDbInfrastructureTest\Hydrator;
 
 use KmbDomain\Model\Group;
-use KmbDomain\Model\PuppetClass;
-use KmbZendDbInfrastructure\Hydrator\PuppetClassHydrator;
+use KmbDomain\Model\GroupClass;
+use KmbZendDbInfrastructure\Hydrator\GroupClassHydrator;
 
-class PuppetClassHydratorTest extends \PHPUnit_Framework_TestCase
+class GroupClassHydratorTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
     public function canExtract()
     {
-        $hydrator = new PuppetClassHydrator();
+        $hydrator = new GroupClassHydrator();
         $group = new Group();
         $group->setId(2);
         $class = $this->createObject();
@@ -22,16 +22,16 @@ class PuppetClassHydratorTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canHydrate()
     {
-        $hydrator = new PuppetClassHydrator();
+        $hydrator = new GroupClassHydrator();
 
-        $this->assertEquals($this->createObject(), $hydrator->hydrate($this->getData(), new PuppetClass()));
+        $this->assertEquals($this->createObject(), $hydrator->hydrate($this->getData(), new GroupClass()));
     }
 
     /** @test */
     public function canHydrateWithTablePrefix()
     {
-        $hydrator = new PuppetClassHydrator();
-        $class = new PuppetClass();
+        $hydrator = new GroupClassHydrator();
+        $class = new GroupClass();
 
         $hydrator->hydrate([
             'c.id' => 1,
@@ -43,11 +43,11 @@ class PuppetClassHydratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return PuppetClass
+     * @return GroupClass
      */
     protected function createObject()
     {
-        $class = new PuppetClass();
+        $class = new GroupClass();
         $class->setId(1);
         $class->setName('dns');
 

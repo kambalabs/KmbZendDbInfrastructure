@@ -20,22 +20,23 @@
  */
 namespace KmbZendDbInfrastructure\Hydrator;
 
-use KmbDomain\Model\PuppetClassInterface;
+use KmbDomain\Model\GroupParameterInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class PuppetClassHydrator implements HydratorInterface
+class GroupParameterHydrator implements HydratorInterface
 {
     /**
      * Extract values from an object
      *
-     * @param PuppetClassInterface $object
+     * @param  GroupParameterInterface $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'group_id' => $object->getGroup()->getId(),
+            'group_class_id' => $object->getClass()->getId(),
             'name' => $object->getName(),
+            'parent_id' => $object->hasParent() ? $object->getParent()->getId() : null,
         ];
         if ($object->getId()) {
             $data['id'] = $object->getId();
@@ -46,9 +47,9 @@ class PuppetClassHydrator implements HydratorInterface
     /**
      * Hydrate $object with the provided $data.
      *
-     * @param  array  $data
-     * @param  PuppetClassInterface $object
-     * @return PuppetClassInterface
+     * @param  array                   $data
+     * @param  GroupParameterInterface $object
+     * @return GroupParameterInterface
      */
     public function hydrate(array $data, $object)
     {
@@ -59,13 +60,13 @@ class PuppetClassHydrator implements HydratorInterface
 
     /**
      * @param string $key
-     * @param array $data
+     * @param array  $data
      * @return mixed
      */
     protected function getData($key, $data)
     {
-        if (isset($data['c.' . $key])) {
-            return $data['c.' . $key];
+        if (isset($data['p.' . $key])) {
+            return $data['p.' . $key];
         }
         if (isset($data[$key])) {
             return $data[$key];

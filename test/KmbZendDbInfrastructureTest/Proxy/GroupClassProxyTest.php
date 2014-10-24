@@ -2,15 +2,15 @@
 namespace KmbZendDbInfrastructureTest\Proxy;
 
 use KmbDomain\Model\Group;
-use KmbDomain\Model\PuppetClass;
-use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
+use KmbDomain\Model\GroupClass;
+use KmbZendDbInfrastructure\Proxy\GroupClassProxy;
 
-class PuppetClassProxyTest extends \PHPUnit_Framework_TestCase
+class GroupClassProxyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var PuppetClassProxy */
+    /** @var GroupClassProxy */
     protected $proxy;
 
-    /** @var PuppetClass */
+    /** @var GroupClass */
     protected $aggregateRoot;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
@@ -53,21 +53,21 @@ class PuppetClassProxyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $id
-     * @return PuppetClass
+     * @return GroupClass
      */
     protected function createAggregateRoot($id = null)
     {
-        $aggregateRoot = new PuppetClass();
+        $aggregateRoot = new GroupClass();
         return $aggregateRoot->setId($id);
     }
 
     /**
      * @param $id
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     protected function createProxy($id = null)
     {
-        $proxy = new PuppetClassProxy();
+        $proxy = new GroupClassProxy();
         return $proxy->setAggregateRoot($this->createAggregateRoot($id));
     }
 }

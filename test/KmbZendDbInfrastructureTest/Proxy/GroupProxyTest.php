@@ -13,11 +13,11 @@ class GroupProxyTest extends \PHPUnit_Framework_TestCase
     protected $aggregateRoot;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $puppetClassRepository;
+    protected $groupClassRepository;
 
     protected function setUp()
     {
-        $this->puppetClassRepository = $this->getMock('KmbDomain\Model\PuppetClassRepositoryInterface');
+        $this->groupClassRepository = $this->getMock('KmbDomain\Model\GroupClassRepositoryInterface');
         $this->proxy = $this->createProxy(3);
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }

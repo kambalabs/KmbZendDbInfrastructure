@@ -62,28 +62,28 @@ CREATE TABLE groups (
 );
 CREATE INDEX groups_o ON groups (ordering);
 
-DROP TABLE IF EXISTS puppet_classes;
-CREATE TABLE puppet_classes (
+DROP TABLE IF EXISTS group_classes;
+CREATE TABLE group_classes (
   id       SERIAL PRIMARY KEY,
   name     VARCHAR(256) NOT NULL DEFAULT '',
   group_id INT          NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS parameters;
-CREATE TABLE parameters (
+DROP TABLE IF EXISTS group_parameters;
+CREATE TABLE group_parameters (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR(256) NOT NULL DEFAULT '',
   parent_id       INT DEFAULT NULL,
-  puppet_class_id INT NOT NULL,
-  FOREIGN KEY (parent_id) REFERENCES parameters(id) ON DELETE CASCADE,
-FOREIGN KEY (puppet_class_id) REFERENCES puppet_classes(id) ON DELETE CASCADE
+  group_class_id  INT NOT NULL,
+  FOREIGN KEY (parent_id) REFERENCES group_parameters(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_class_id) REFERENCES group_classes(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS values;
-CREATE TABLE values (
-  id           SERIAL PRIMARY KEY,
-  name         VARCHAR(256) NOT NULL DEFAULT '',
-  parameter_id INT NOT NULL,
-  FOREIGN KEY (parameter_id) REFERENCES parameters(id) ON DELETE CASCADE
+DROP TABLE IF EXISTS group_values;
+CREATE TABLE group_values (
+  id                 SERIAL PRIMARY KEY,
+  value              VARCHAR(256) NOT NULL DEFAULT '',
+  group_parameter_id INT NOT NULL,
+  FOREIGN KEY (group_parameter_id) REFERENCES group_parameters(id) ON DELETE CASCADE
 );

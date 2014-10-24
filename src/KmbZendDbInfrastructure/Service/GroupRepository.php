@@ -26,11 +26,11 @@ use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\Group;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\GroupRepositoryInterface;
-use KmbDomain\Model\PuppetClassInterface;
+use KmbDomain\Model\GroupClassInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
-use KmbZendDbInfrastructure\Proxy\ParameterProxy;
-use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
+use KmbZendDbInfrastructure\Proxy\GroupParameterProxy;
+use KmbZendDbInfrastructure\Proxy\GroupClassProxy;
 use KmbZendDbInfrastructure\Proxy\RevisionProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Expression;
@@ -65,31 +65,31 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     protected $environmentTableName;
 
     /** @var string */
-    protected $puppetClassClass;
+    protected $groupClassClass;
 
     /** @var AggregateRootProxyFactoryInterface */
-    protected $puppetClassProxyFactory;
+    protected $groupClassProxyFactory;
 
     /** @var HydratorInterface */
-    protected $puppetClassHydrator;
+    protected $groupClassHydrator;
 
     /** @var string */
-    protected $puppetClassTableName;
+    protected $groupClassTableName;
 
     /** @var string */
-    protected $parameterClass;
+    protected $groupParameterClass;
 
     /** @var AggregateRootProxyFactoryInterface */
-    protected $parameterProxyFactory;
+    protected $groupParameterProxyFactory;
 
     /** @var HydratorInterface */
-    protected $parameterHydrator;
+    protected $groupParameterHydrator;
 
     /** @var string */
-    protected $parameterTableName;
+    protected $groupParameterTableName;
 
     /** @var string */
-    protected $valueTableName;
+    protected $groupValueTableName;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -158,10 +158,10 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * @param PuppetClassInterface $class
+     * @param GroupClassInterface $class
      * @return GroupInterface
      */
-    public function getByClass(PuppetClassInterface $class)
+    public function getByClass(GroupClassInterface $class)
     {
         $criteria = new Where();
         $criteria->equalTo('c.id', $class->getId());
@@ -199,7 +199,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                 ]
             )
             ->join(
-                ['c' => $this->getPuppetClassTableName()],
+                ['c' => $this->getGroupClassTableName()],
                 $this->getTableName() . '.id = c.group_id',
                 [
                     'c.id' => 'id',
@@ -209,20 +209,20 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
                 Select::JOIN_LEFT
             )
             ->join(
-                ['p' => $this->getParameterTableName()],
-                'c.id = p.puppet_class_id',
+                ['p' => $this->getGroupParameterTableName()],
+                'c.id = p.group_class_id',
                 [
                     'p.id' => 'id',
-                    'p.puppet_class_id' => 'puppet_class_id',
+                    'p.group_class_id' => 'group_class_id',
                     'p.name' => 'name',
                 ],
                 Select::JOIN_LEFT
             )
             ->join(
-                ['v' => $this->getValueTableName()],
-                'p.id = v.parameter_id',
+                ['v' => $this->getGroupValueTableName()],
+                'p.id = v.group_parameter_id',
                 [
-                    'value' => 'name',
+                    'value' => 'value',
                 ],
                 Select::JOIN_LEFT
             )
@@ -240,8 +240,8 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
         $aggregateRootClassName = $this->getAggregateRootClass();
         $revisionClassName = $this->getRevisionClass();
         $environmentClassName = $this->getEnvironmentClass();
-        $puppetClassClassName = $this->getPuppetClassClass();
-        $parameterClassName = $this->getParameterClass();
+        $groupClassClassName = $this->getGroupClassClass();
+        $groupParameterClassName = $this->getGroupParameterClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
             $groupId = $row['id'];
@@ -268,25 +268,25 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
             }
 
             if (isset($row['c.name'])) {
-                $class = $aggregateRoot->getClassByName($row['c.name']);
-                if ($class === null) {
-                    $class = new $puppetClassClassName;
-                    $this->puppetClassHydrator->hydrate($row, $class);
-                    /** @var PuppetClassProxy $classProxy */
-                    $classProxy = $this->puppetClassProxyFactory->createProxy($class);
-                    $aggregateRoot->addClass($classProxy);
+                $groupClass = $aggregateRoot->getClassByName($row['c.name']);
+                if ($groupClass === null) {
+                    $groupClass = new $groupClassClassName;
+                    $this->groupClassHydrator->hydrate($row, $groupClass);
+                    /** @var GroupClassProxy $groupClassProxy */
+                    $groupClassProxy = $this->groupClassProxyFactory->createProxy($groupClass);
+                    $aggregateRoot->addClass($groupClassProxy);
                 }
                 if (isset($row['p.name'])) {
-                    $parameter = $class->getParameterByName($row['p.name']);
-                    if ($parameter === null) {
-                        $parameter = new $parameterClassName;
-                        $this->parameterHydrator->hydrate($row, $parameter);
-                        /** @var ParameterProxy $parameterProxy */
-                        $parameterProxy = $this->parameterProxyFactory->createProxy($parameter);
-                        $class->addParameter($parameterProxy);
+                    $groupParameter = $groupClass->getParameterByName($row['p.name']);
+                    if ($groupParameter === null) {
+                        $groupParameter = new $groupParameterClassName;
+                        $this->groupParameterHydrator->hydrate($row, $groupParameter);
+                        /** @var GroupParameterProxy $groupParameterProxy */
+                        $groupParameterProxy = $this->groupParameterProxyFactory->createProxy($groupParameter);
+                        $groupClass->addParameter($groupParameterProxy);
                     }
                     if (isset($row['value'])) {
-                        $parameter->addValue($row['value']);
+                        $groupParameter->addValue($row['value']);
                     }
                 }
             }
@@ -295,7 +295,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * Set RevisionClass.
+     * Set Revision class name.
      *
      * @param string $revisionClass
      * @return GroupRepository
@@ -307,7 +307,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * Get RevisionClass.
+     * Get Revision class name.
      *
      * @return string
      */
@@ -383,7 +383,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * Set EnvironmentClass.
+     * Set Environment class name.
      *
      * @param string $environmentClass
      * @return GroupRepository
@@ -395,7 +395,7 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * Get EnvironmentClass.
+     * Get Environment class name.
      *
      * @return string
      */
@@ -471,200 +471,200 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     }
 
     /**
-     * Set PuppetClassClass.
+     * Set GroupClass class name.
      *
-     * @param string $puppetClassClass
+     * @param string $groupClassClass
      * @return GroupRepository
      */
-    public function setPuppetClassClass($puppetClassClass)
+    public function setGroupClassClass($groupClassClass)
     {
-        $this->puppetClassClass = $puppetClassClass;
+        $this->groupClassClass = $groupClassClass;
         return $this;
     }
 
     /**
-     * Get PuppetClassClass.
+     * Get GroupClass class name.
      *
      * @return string
      */
-    public function getPuppetClassClass()
+    public function getGroupClassClass()
     {
-        return $this->puppetClassClass;
+        return $this->groupClassClass;
     }
 
     /**
-     * Set PuppetClassProxyFactory.
+     * Set GroupClassProxyFactory.
      *
-     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $puppetClassProxyFactory
+     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $groupClassProxyFactory
      * @return GroupRepository
      */
-    public function setPuppetClassProxyFactory($puppetClassProxyFactory)
+    public function setGroupClassProxyFactory($groupClassProxyFactory)
     {
-        $this->puppetClassProxyFactory = $puppetClassProxyFactory;
+        $this->groupClassProxyFactory = $groupClassProxyFactory;
         return $this;
     }
 
     /**
-     * Get PuppetClassProxyFactory.
+     * Get GroupClassProxyFactory.
      *
      * @return \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface
      */
-    public function getPuppetClassProxyFactory()
+    public function getGroupClassProxyFactory()
     {
-        return $this->puppetClassProxyFactory;
+        return $this->groupClassProxyFactory;
     }
 
     /**
-     * Set PuppetClassHydrator.
+     * Set GroupClassHydrator.
      *
-     * @param \Zend\Stdlib\Hydrator\HydratorInterface $puppetClassHydrator
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $groupClassHydrator
      * @return GroupRepository
      */
-    public function setPuppetClassHydrator($puppetClassHydrator)
+    public function setGroupClassHydrator($groupClassHydrator)
     {
-        $this->puppetClassHydrator = $puppetClassHydrator;
+        $this->groupClassHydrator = $groupClassHydrator;
         return $this;
     }
 
     /**
-     * Get PuppetClassHydrator.
+     * Get GroupClassHydrator.
      *
      * @return \Zend\Stdlib\Hydrator\HydratorInterface
      */
-    public function getPuppetClassHydrator()
+    public function getGroupClassHydrator()
     {
-        return $this->puppetClassHydrator;
+        return $this->groupClassHydrator;
     }
 
     /**
-     * Set PuppetClassTableName.
+     * Set GroupClassTableName.
      *
-     * @param string $puppetClassTableName
+     * @param string $groupClassTableName
      * @return GroupRepository
      */
-    public function setPuppetClassTableName($puppetClassTableName)
+    public function setGroupClassTableName($groupClassTableName)
     {
-        $this->puppetClassTableName = $puppetClassTableName;
+        $this->groupClassTableName = $groupClassTableName;
         return $this;
     }
 
     /**
-     * Get PuppetClassTableName.
+     * Get GroupClassTableName.
      *
      * @return string
      */
-    public function getPuppetClassTableName()
+    public function getGroupClassTableName()
     {
-        return $this->puppetClassTableName;
+        return $this->groupClassTableName;
     }
 
     /**
-     * Set ParameterClass.
+     * Set GroupParameter class name.
      *
-     * @param string $parameterClass
+     * @param string $groupParameterClass
      * @return GroupRepository
      */
-    public function setParameterClass($parameterClass)
+    public function setGroupParameterClass($groupParameterClass)
     {
-        $this->parameterClass = $parameterClass;
+        $this->groupParameterClass = $groupParameterClass;
         return $this;
     }
 
     /**
-     * Get ParameterClass.
+     * Get GroupParameter class name.
      *
      * @return string
      */
-    public function getParameterClass()
+    public function getGroupParameterClass()
     {
-        return $this->parameterClass;
+        return $this->groupParameterClass;
     }
 
     /**
-     * Set ParameterProxyFactory.
+     * Set GroupParameterProxyFactory.
      *
-     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $parameterProxyFactory
+     * @param \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface $groupParameterProxyFactory
      * @return GroupRepository
      */
-    public function setParameterProxyFactory($parameterProxyFactory)
+    public function setGroupParameterProxyFactory($groupParameterProxyFactory)
     {
-        $this->parameterProxyFactory = $parameterProxyFactory;
+        $this->groupParameterProxyFactory = $groupParameterProxyFactory;
         return $this;
     }
 
     /**
-     * Get ParameterProxyFactory.
+     * Get GroupParameterProxyFactory.
      *
      * @return \GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface
      */
-    public function getParameterProxyFactory()
+    public function getGroupParameterProxyFactory()
     {
-        return $this->parameterProxyFactory;
+        return $this->groupParameterProxyFactory;
     }
 
     /**
-     * Set ParameterHydrator.
+     * Set GroupParameterHydrator.
      *
-     * @param \Zend\Stdlib\Hydrator\HydratorInterface $parameterHydrator
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $groupParameterHydrator
      * @return GroupRepository
      */
-    public function setParameterHydrator($parameterHydrator)
+    public function setGroupParameterHydrator($groupParameterHydrator)
     {
-        $this->parameterHydrator = $parameterHydrator;
+        $this->groupParameterHydrator = $groupParameterHydrator;
         return $this;
     }
 
     /**
-     * Get ParameterHydrator.
+     * Get GroupParameterHydrator.
      *
      * @return \Zend\Stdlib\Hydrator\HydratorInterface
      */
-    public function getParameterHydrator()
+    public function getGroupParameterHydrator()
     {
-        return $this->parameterHydrator;
+        return $this->groupParameterHydrator;
     }
 
     /**
-     * Set ParameterTableName.
+     * Set GroupParameterTableName.
      *
-     * @param string $parameterTableName
+     * @param string $groupParameterTableName
      * @return GroupRepository
      */
-    public function setParameterTableName($parameterTableName)
+    public function setGroupParameterTableName($groupParameterTableName)
     {
-        $this->parameterTableName = $parameterTableName;
+        $this->groupParameterTableName = $groupParameterTableName;
         return $this;
     }
 
     /**
-     * Get ParameterTableName.
+     * Get GroupParameterTableName.
      *
      * @return string
      */
-    public function getParameterTableName()
+    public function getGroupParameterTableName()
     {
-        return $this->parameterTableName;
+        return $this->groupParameterTableName;
     }
 
     /**
-     * Set ValueTableName.
+     * Set GroupValueTableName.
      *
-     * @param string $valueTableName
+     * @param string $groupValueTableName
      * @return GroupRepository
      */
-    public function setValueTableName($valueTableName)
+    public function setGroupValueTableName($groupValueTableName)
     {
-        $this->valueTableName = $valueTableName;
+        $this->groupValueTableName = $groupValueTableName;
         return $this;
     }
 
     /**
-     * Get ValueTableName.
+     * Get GroupValueTableName.
      *
      * @return string
      */
-    public function getValueTableName()
+    public function getGroupValueTableName()
     {
-        return $this->valueTableName;
+        return $this->groupValueTableName;
     }
 }

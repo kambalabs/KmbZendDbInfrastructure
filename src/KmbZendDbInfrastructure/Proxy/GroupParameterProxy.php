@@ -20,37 +20,37 @@
  */
 namespace KmbZendDbInfrastructure\Proxy;
 
-use KmbDomain\Model\Parameter;
-use KmbDomain\Model\ParameterInterface;
-use KmbDomain\Model\ParameterRepositoryInterface;
-use KmbDomain\Model\PuppetClassInterface;
-use KmbDomain\Model\PuppetClassRepositoryInterface;
+use KmbDomain\Model\GroupParameter;
+use KmbDomain\Model\GroupParameterInterface;
+use KmbDomain\Model\GroupParameterRepositoryInterface;
+use KmbDomain\Model\GroupClassInterface;
+use KmbDomain\Model\GroupClassRepositoryInterface;
 
-class ParameterProxy implements ParameterInterface
+class GroupParameterProxy implements GroupParameterInterface
 {
-    /** @var  PuppetClassRepositoryInterface */
-    protected $classRepository;
+    /** @var  GroupClassRepositoryInterface */
+    protected $groupClassRepository;
 
-    /** @var  ParameterRepositoryInterface */
-    protected $parameterRepository;
+    /** @var  GroupParameterRepositoryInterface */
+    protected $groupParameterRepository;
 
-    /** @var  Parameter */
+    /** @var  GroupParameter */
     protected $aggregateRoot;
 
-    /** @var  PuppetClassInterface */
+    /** @var  GroupClassInterface */
     protected $class;
 
-    /** @var  ParameterInterface */
+    /** @var  GroupParameterInterface */
     protected $parent;
 
-    /** @var  ParameterInterface[] */
+    /** @var  GroupParameterInterface[] */
     protected $children;
 
     /**
      * Set AggregateRoot.
      *
      * @param \GtnPersistBase\Model\AggregateRootInterface $aggregateRoot
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setAggregateRoot($aggregateRoot)
     {
@@ -70,7 +70,7 @@ class ParameterProxy implements ParameterInterface
 
     /**
      * @param int $id
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setId($id)
     {
@@ -90,7 +90,7 @@ class ParameterProxy implements ParameterInterface
      * Set Name.
      *
      * @param string $name
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setName($name)
     {
@@ -111,8 +111,8 @@ class ParameterProxy implements ParameterInterface
     /**
      * Set Class.
      *
-     * @param \KmbDomain\Model\PuppetClassInterface $class
-     * @return ParameterProxy
+     * @param GroupClassInterface $class
+     * @return GroupParameterProxy
      */
     public function setClass($class)
     {
@@ -123,12 +123,12 @@ class ParameterProxy implements ParameterInterface
     /**
      * Get Class.
      *
-     * @return \KmbDomain\Model\PuppetClassInterface
+     * @return GroupClassInterface
      */
     public function getClass()
     {
         if ($this->class === null) {
-            $this->setClass($this->classRepository->getByParameter($this));
+            $this->setClass($this->groupClassRepository->getByParameter($this));
         }
         return $this->class;
     }
@@ -137,7 +137,7 @@ class ParameterProxy implements ParameterInterface
      * Set Values.
      *
      * @param array $values
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setValues($values)
     {
@@ -149,7 +149,7 @@ class ParameterProxy implements ParameterInterface
      * Add specified value.
      *
      * @param array $value
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function addValue($value)
     {
@@ -186,8 +186,8 @@ class ParameterProxy implements ParameterInterface
     /**
      * Set Parent.
      *
-     * @param \KmbDomain\Model\ParameterInterface $parent
-     * @return ParameterProxy
+     * @param GroupParameterInterface $parent
+     * @return GroupParameterProxy
      */
     public function setParent($parent)
     {
@@ -198,12 +198,12 @@ class ParameterProxy implements ParameterInterface
     /**
      * Get Parent.
      *
-     * @return \KmbDomain\Model\ParameterInterface
+     * @return GroupParameterInterface
      */
     public function getParent()
     {
         if ($this->parent === null) {
-            $this->setParent($this->parameterRepository->getByChild($this));
+            $this->setParent($this->groupParameterRepository->getByChild($this));
         }
         return $this->parent;
     }
@@ -235,8 +235,8 @@ class ParameterProxy implements ParameterInterface
     /**
      * Set Children.
      *
-     * @param \KmbDomain\Model\ParameterInterface[] $children
-     * @return ParameterProxy
+     * @param GroupParameterInterface[] $children
+     * @return GroupParameterProxy
      */
     public function setChildren($children)
     {
@@ -247,8 +247,8 @@ class ParameterProxy implements ParameterInterface
     /**
      * Add specified child.
      *
-     * @param \KmbDomain\Model\ParameterInterface $child
-     * @return ParameterProxy
+     * @param GroupParameterInterface $child
+     * @return GroupParameterProxy
      */
     public function addChild($child)
     {
@@ -259,12 +259,12 @@ class ParameterProxy implements ParameterInterface
     /**
      * Get Children.
      *
-     * @return \KmbDomain\Model\ParameterInterface[]
+     * @return GroupParameterInterface[]
      */
     public function getChildren()
     {
         if ($this->children === null) {
-            $this->setChildren($this->parameterRepository->getAllByParent($this));
+            $this->setChildren($this->groupParameterRepository->getAllByParent($this));
         }
         return $this->children;
     }
@@ -279,7 +279,7 @@ class ParameterProxy implements ParameterInterface
 
     /**
      * @param string $name
-     * @return \KmbDomain\Model\ParameterInterface
+     * @return GroupParameterInterface
      */
     public function getChildByName($name)
     {
@@ -305,7 +305,7 @@ class ParameterProxy implements ParameterInterface
      * Set Template.
      *
      * @param \stdClass $template
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setTemplate($template)
     {
@@ -337,7 +337,7 @@ class ParameterProxy implements ParameterInterface
      * Set available children.
      *
      * @param \stdClass[] $availableChildren
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setAvailableChildren($availableChildren)
     {
@@ -367,7 +367,7 @@ class ParameterProxy implements ParameterInterface
      * Set AvailableValues.
      *
      * @param array $availableValues
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     public function setAvailableValues($availableValues)
     {
@@ -394,46 +394,46 @@ class ParameterProxy implements ParameterInterface
     }
 
     /**
-     * Set ClassRepository.
+     * Set GroupClassRepository.
      *
-     * @param \KmbDomain\Model\PuppetClassRepositoryInterface $classRepository
-     * @return ParameterProxy
+     * @param GroupClassRepositoryInterface $groupClassRepository
+     * @return GroupParameterProxy
      */
-    public function setClassRepository($classRepository)
+    public function setGroupClassRepository($groupClassRepository)
     {
-        $this->classRepository = $classRepository;
+        $this->groupClassRepository = $groupClassRepository;
         return $this;
     }
 
     /**
      * Get ClassRepository.
      *
-     * @return \KmbDomain\Model\PuppetClassRepositoryInterface
+     * @return GroupClassRepositoryInterface
      */
-    public function getClassRepository()
+    public function getGroupClassRepository()
     {
-        return $this->classRepository;
+        return $this->groupClassRepository;
     }
 
     /**
-     * Set ParameterRepository.
+     * Set GroupParameterRepository.
      *
-     * @param \KmbDomain\Model\ParameterRepositoryInterface $parameterRepository
-     * @return ParameterProxy
+     * @param GroupParameterRepositoryInterface $groupParameterRepository
+     * @return GroupParameterProxy
      */
-    public function setParameterRepository($parameterRepository)
+    public function setGroupParameterRepository($groupParameterRepository)
     {
-        $this->parameterRepository = $parameterRepository;
+        $this->groupParameterRepository = $groupParameterRepository;
         return $this;
     }
 
     /**
-     * Get ParameterRepository.
+     * Get GroupParameterRepository.
      *
-     * @return \KmbDomain\Model\ParameterRepositoryInterface
+     * @return GroupParameterRepositoryInterface
      */
-    public function getParameterRepository()
+    public function getGroupParameterRepository()
     {
-        return $this->parameterRepository;
+        return $this->groupParameterRepository;
     }
 }

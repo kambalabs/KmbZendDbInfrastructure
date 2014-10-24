@@ -23,11 +23,11 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
-use KmbDomain\Model\ParameterRepositoryInterface;
-use KmbDomain\Model\PuppetClassRepositoryInterface;
+use KmbDomain\Model\GroupParameterRepositoryInterface;
+use KmbDomain\Model\GroupClassRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
-class ParameterProxyFactory implements AggregateRootProxyFactoryInterface
+class GroupParameterProxyFactory implements AggregateRootProxyFactoryInterface
 {
     /** @var array */
     protected $config;
@@ -41,16 +41,16 @@ class ParameterProxyFactory implements AggregateRootProxyFactoryInterface
      */
     public function createProxy(AggregateRootInterface $aggregateRoot)
     {
-        $proxy = new ParameterProxy();
+        $proxy = new GroupParameterProxy();
         $proxy->setAggregateRoot($aggregateRoot);
 
-        /** @var PuppetClassRepositoryInterface $classRepository */
-        $classRepository = $this->serviceManager->get('PuppetClassRepository');
-        $proxy->setClassRepository($classRepository);
+        /** @var GroupClassRepositoryInterface $groupClassRepository */
+        $groupClassRepository = $this->serviceManager->get('GroupClassRepository');
+        $proxy->setGroupClassRepository($groupClassRepository);
 
-        /** @var ParameterRepositoryInterface $parameterRepository */
-        $parameterRepository = $this->serviceManager->get('ParameterRepository');
-        $proxy->setParameterRepository($parameterRepository);
+        /** @var GroupParameterRepositoryInterface $groupParameterRepository */
+        $groupParameterRepository = $this->serviceManager->get('GroupParameterRepository');
+        $proxy->setGroupParameterRepository($groupParameterRepository);
 
         return $proxy;
     }

@@ -21,16 +21,17 @@
 namespace KmbZendDbInfrastructure\Proxy;
 
 use KmbDomain\Model\GroupInterface;
+use KmbDomain\Model\GroupParameterInterface;
 use KmbDomain\Model\GroupRepositoryInterface;
-use KmbDomain\Model\PuppetClass;
-use KmbDomain\Model\PuppetClassInterface;
+use KmbDomain\Model\GroupClass;
+use KmbDomain\Model\GroupClassInterface;
 
-class PuppetClassProxy implements PuppetClassInterface
+class GroupClassProxy implements GroupClassInterface
 {
     /** @var  GroupRepositoryInterface */
     protected $groupRepository;
 
-    /** @var PuppetClass */
+    /** @var GroupClass */
     protected $aggregateRoot;
 
     /** @var  GroupInterface */
@@ -40,7 +41,7 @@ class PuppetClassProxy implements PuppetClassInterface
      * Set AggregateRoot.
      *
      * @param \GtnPersistBase\Model\AggregateRootInterface $aggregateRoot
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setAggregateRoot($aggregateRoot)
     {
@@ -60,7 +61,7 @@ class PuppetClassProxy implements PuppetClassInterface
 
     /**
      * @param int $id
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setId($id)
     {
@@ -80,7 +81,7 @@ class PuppetClassProxy implements PuppetClassInterface
      * Set Name.
      *
      * @param string $name
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setName($name)
     {
@@ -102,7 +103,7 @@ class PuppetClassProxy implements PuppetClassInterface
      * Set Group.
      *
      * @param \KmbDomain\Model\GroupInterface $group
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setGroup($group)
     {
@@ -126,8 +127,8 @@ class PuppetClassProxy implements PuppetClassInterface
     /**
      * Set Parameters.
      *
-     * @param \KmbDomain\Model\ParameterInterface[] $parameters
-     * @return PuppetClassProxy
+     * @param GroupParameterInterface[] $parameters
+     * @return GroupClassProxy
      */
     public function setParameters($parameters)
     {
@@ -138,8 +139,8 @@ class PuppetClassProxy implements PuppetClassInterface
     /**
      * Add specified parameter.
      *
-     * @param \KmbDomain\Model\ParameterInterface
-     * @return PuppetClassProxy
+     * @param GroupParameterInterface
+     * @return GroupClassProxy
      */
     public function addParameter($parameter)
     {
@@ -150,7 +151,7 @@ class PuppetClassProxy implements PuppetClassInterface
     /**
      * Get Parameters.
      *
-     * @return \KmbDomain\Model\ParameterInterface[]
+     * @return GroupParameterInterface[]
      */
     public function getParameters()
     {
@@ -167,7 +168,7 @@ class PuppetClassProxy implements PuppetClassInterface
 
     /**
      * @param string $name
-     * @return \KmbDomain\Model\ParameterInterface
+     * @return GroupParameterInterface
      */
     public function getParameterByName($name)
     {
@@ -187,7 +188,7 @@ class PuppetClassProxy implements PuppetClassInterface
      * Set AvailableParameters.
      *
      * @param \stdClass[] $availableParameters
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setAvailableParameters($availableParameters)
     {
@@ -217,7 +218,7 @@ class PuppetClassProxy implements PuppetClassInterface
      * Set GroupRepository.
      *
      * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
-     * @return PuppetClassProxy
+     * @return GroupClassProxy
      */
     public function setGroupRepository($groupRepository)
     {

@@ -1,28 +1,28 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Proxy;
 
-use KmbDomain\Model\Parameter;
-use KmbDomain\Model\PuppetClass;
-use KmbZendDbInfrastructure\Proxy\ParameterProxy;
+use KmbDomain\Model\GroupParameter;
+use KmbDomain\Model\GroupClass;
+use KmbZendDbInfrastructure\Proxy\GroupParameterProxy;
 
-class ParameterProxyTest extends \PHPUnit_Framework_TestCase
+class GroupParameterProxyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ParameterProxy */
+    /** @var GroupParameterProxy */
     protected $proxy;
 
-    /** @var Parameter */
+    /** @var GroupParameter */
     protected $aggregateRoot;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $classRepository;
+    protected $groupClassRepository;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $parameterRepository;
+    protected $groupParameterRepository;
 
     protected function setUp()
     {
-        $this->classRepository = $this->getMock('KmbDomain\Model\PuppetClassRepositoryInterface');
-        $this->parameterRepository = $this->getMock('KmbDomain\Model\ParameterRepositoryInterface');
+        $this->groupClassRepository = $this->getMock('KmbDomain\Model\GroupClassRepositoryInterface');
+        $this->groupParameterRepository = $this->getMock('KmbDomain\Model\GroupParameterRepositoryInterface');
         $this->proxy = $this->createProxy(3, 'nameserver');
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }
@@ -58,9 +58,9 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetClassFromRepository()
     {
-        $class = new PuppetClass();
+        $class = new GroupClass();
         $class->setId(3);
-        $this->classRepository->expects($this->any())
+        $this->groupClassRepository->expects($this->any())
             ->method('getByParameter')
             ->with($this->proxy)
             ->will($this->returnValue($class));
@@ -71,9 +71,9 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetParentFromRepository()
     {
-        $parent = new Parameter();
+        $parent = new GroupParameter();
         $parent->setId(3);
-        $this->parameterRepository->expects($this->any())
+        $this->groupParameterRepository->expects($this->any())
             ->method('getByChild')
             ->with($this->proxy)
             ->will($this->returnValue($parent));
@@ -84,9 +84,9 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetAncestorsNames()
     {
-        $parent = new Parameter();
+        $parent = new GroupParameter();
         $parent->setName('parent');
-        $this->parameterRepository->expects($this->any())
+        $this->groupParameterRepository->expects($this->any())
             ->method('getByChild')
             ->with($this->proxy)
             ->will($this->returnValue($parent));
@@ -97,10 +97,10 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canCheckIfHasParentFromRepository()
     {
-        $this->parameterRepository->expects($this->any())
+        $this->groupParameterRepository->expects($this->any())
             ->method('getByChild')
             ->with($this->proxy)
-            ->will($this->returnValue(new Parameter()));
+            ->will($this->returnValue(new GroupParameter()));
 
         $this->assertTrue($this->proxy->hasParent());
     }
@@ -108,8 +108,8 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetChildrenFromRepository()
     {
-        $children = [new Parameter(), new Parameter()];
-        $this->parameterRepository->expects($this->any())
+        $children = [new GroupParameter(), new GroupParameter()];
+        $this->groupParameterRepository->expects($this->any())
             ->method('getAllByParent')
             ->with($this->proxy)
             ->will($this->returnValue($children));
@@ -120,10 +120,10 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canCheckIfHasChildrenFromRepository()
     {
-        $this->parameterRepository->expects($this->any())
+        $this->groupParameterRepository->expects($this->any())
             ->method('getAllByParent')
             ->with($this->proxy)
-            ->will($this->returnValue([new Parameter(), new Parameter()]));
+            ->will($this->returnValue([new GroupParameter(), new GroupParameter()]));
 
         $this->assertTrue($this->proxy->hasChildren());
     }
@@ -131,12 +131,12 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canGetChildByNameFromRepository()
     {
-        $child = new Parameter();
+        $child = new GroupParameter();
         $child->setName('DocumentRoot');
-        $this->parameterRepository->expects($this->any())
+        $this->groupParameterRepository->expects($this->any())
             ->method('getAllByParent')
             ->with($this->proxy)
-            ->will($this->returnValue([new Parameter(), $child]));
+            ->will($this->returnValue([new GroupParameter(), $child]));
 
         $this->assertEquals($child, $this->proxy->getChildByName('DocumentRoot'));
     }
@@ -144,11 +144,11 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /**
      * @param int    $id
      * @param string $name
-     * @return Parameter
+     * @return GroupParameter
      */
     protected function createAggregateRoot($id = null, $name = null)
     {
-        $aggregateRoot = new Parameter();
+        $aggregateRoot = new GroupParameter();
         $aggregateRoot->setId($id);
         return $aggregateRoot->setName($name);
     }
@@ -156,13 +156,13 @@ class ParameterProxyTest extends \PHPUnit_Framework_TestCase
     /**
      * @param int    $id
      * @param string $name
-     * @return ParameterProxy
+     * @return GroupParameterProxy
      */
     protected function createProxy($id = null, $name = null)
     {
-        $proxy = new ParameterProxy();
-        $proxy->setClassRepository($this->classRepository);
-        $proxy->setParameterRepository($this->parameterRepository);
+        $proxy = new GroupParameterProxy();
+        $proxy->setGroupClassRepository($this->groupClassRepository);
+        $proxy->setGroupParameterRepository($this->groupParameterRepository);
         return $proxy->setAggregateRoot($this->createAggregateRoot($id, $name));
     }
 }

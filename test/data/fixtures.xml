@@ -130,68 +130,68 @@
     <groups id="7" revision_id="9" name="sql" include_pattern="" exclude_pattern="" ordering="4" />
 
     <!-- RELEASE -->
-    <puppet_classes id="1" name="dns" group_id="1" />
-    <puppet_classes id="2" name="ntp" group_id="1" />
-    <puppet_classes id="3" name="haproxy" group_id="2" />
-    <puppet_classes id="4" name="apache::vhost" group_id="3" />
+    <group_classes id="1" name="dns" group_id="1" />
+    <group_classes id="2" name="ntp" group_id="1" />
+    <group_classes id="3" name="haproxy" group_id="2" />
+    <group_classes id="4" name="apache::vhost" group_id="3" />
     <!-- CURRENT -->
-    <puppet_classes id="5" name="dns" group_id="4" />
-    <puppet_classes id="6" name="ntp" group_id="4" />
-    <puppet_classes id="7" name="haproxy" group_id="5" />
-    <puppet_classes id="8" name="apache::vhost" group_id="6" />
-    <puppet_classes id="9" name="apache::modules" group_id="6" />
-    <puppet_classes id="10" name="php" group_id="6" />
-    <puppet_classes id="11" name="mysql" group_id="7" />
+    <group_classes id="5" name="dns" group_id="4" />
+    <group_classes id="6" name="ntp" group_id="4" />
+    <group_classes id="7" name="haproxy" group_id="5" />
+    <group_classes id="8" name="apache::vhost" group_id="6" />
+    <group_classes id="9" name="apache::modules" group_id="6" />
+    <group_classes id="10" name="php" group_id="6" />
+    <group_classes id="11" name="mysql" group_id="7" />
 
     <!-- RELEASE -->
     <!-- dns -->
-    <parameters id="1" name="nameserver" puppet_class_id="1" />
+    <group_parameters id="1" name="nameserver" group_class_id="1" />
     <!-- ntp -->
-    <parameters id="2" name="server" puppet_class_id="2" />
+    <group_parameters id="2" name="server" group_class_id="2" />
     <!-- apache::vhost -->
-    <parameters id="3" name="vhosts" puppet_class_id="4" />
-    <parameters id="4" name="host1.local" parent_id="3" puppet_class_id="4" />
-    <parameters id="5" name="DocumentRoot" parent_id="4" puppet_class_id="4" />
-    <parameters id="6" name="ServerAdmin" parent_id="4" puppet_class_id="4" />
-    <parameters id="7" name="host2.local" parent_id="3" puppet_class_id="4" />
-    <parameters id="8" name="DocumentRoot" parent_id="7" puppet_class_id="4" />
+    <group_parameters id="3" name="vhosts" group_class_id="4" />
+    <group_parameters id="4" name="host1.local" parent_id="3" group_class_id="4" />
+    <group_parameters id="5" name="DocumentRoot" parent_id="4" group_class_id="4" />
+    <group_parameters id="6" name="ServerAdmin" parent_id="4" group_class_id="4" />
+    <group_parameters id="7" name="host2.local" parent_id="3" group_class_id="4" />
+    <group_parameters id="8" name="DocumentRoot" parent_id="7" group_class_id="4" />
     <!-- CURRENT -->
     <!-- dns -->
-    <parameters id="9" name="nameserver" puppet_class_id="5" />
+    <group_parameters id="9" name="nameserver" group_class_id="5" />
     <!-- ntp -->
-    <parameters id="10" name="server" puppet_class_id="6" />
+    <group_parameters id="10" name="server" group_class_id="6" />
     <!-- apache::vhost -->
-    <parameters id="11" name="vhosts" puppet_class_id="8" />
-    <parameters id="12" name="host1.local" parent_id="11" puppet_class_id="8" />
-    <parameters id="13" name="DocumentRoot" parent_id="13" puppet_class_id="8" />
-    <parameters id="14" name="ServerAdmin" parent_id="13" puppet_class_id="8" />
-    <parameters id="15" name="host2.local" parent_id="11" puppet_class_id="8" />
-    <parameters id="16" name="DocumentRoot" parent_id="15" puppet_class_id="8" />
-    <parameters id="17" name="ports" puppet_class_id="8" />
+    <group_parameters id="11" name="vhosts" group_class_id="8" />
+    <group_parameters id="12" name="host1.local" parent_id="11" group_class_id="8" />
+    <group_parameters id="13" name="DocumentRoot" parent_id="13" group_class_id="8" />
+    <group_parameters id="14" name="ServerAdmin" parent_id="13" group_class_id="8" />
+    <group_parameters id="15" name="host2.local" parent_id="11" group_class_id="8" />
+    <group_parameters id="16" name="DocumentRoot" parent_id="15" group_class_id="8" />
+    <group_parameters id="17" name="ports" group_class_id="8" />
 
     <!-- RELEASE -->
     <!-- dns / nameserver -->
-    <values id="1" name="ns1.local" parameter_id="1" />
-    <values id="2" name="ns2.local" parameter_id="1" />
+    <group_values id="1" value="ns1.local" group_parameter_id="1" />
+    <group_values id="2" value="ns2.local" group_parameter_id="1" />
     <!-- ntp / server -->
-    <values id="3" name="ntp1.local" parameter_id="2" />
-    <values id="4" name="ntp2.local" parameter_id="2" />
+    <group_values id="3" value="ntp1.local" group_parameter_id="2" />
+    <group_values id="4" value="ntp2.local" group_parameter_id="2" />
     <!-- apache::vhost / vhosts -->
-    <values id="5" name="/srv/http/host1.local" parameter_id="5" />
-    <values id="6" name="jdoe@gmail.com" parameter_id="6" />
-    <values id="7" name="/srv/http/host2.local" parameter_id="8" />
+    <group_values id="5" value="/srv/http/host1.local" group_parameter_id="5" />
+    <group_values id="6" value="jdoe@gmail.com" group_parameter_id="6" />
+    <group_values id="7" value="/srv/http/host2.local" group_parameter_id="8" />
     <!-- CURRENT -->
     <!-- dns / nameserver -->
-    <values id="8" name="ns1.local" parameter_id="9" />
-    <values id="9" name="ns2.local" parameter_id="9" />
+    <group_values id="8" value="ns1.local" group_parameter_id="9" />
+    <group_values id="9" value="ns2.local" group_parameter_id="9" />
     <!-- ntp / server -->
-    <values id="10" name="ntp1.local" parameter_id="10" />
-    <values id="11" name="ntp2.local" parameter_id="10" />
+    <group_values id="10" value="ntp1.local" group_parameter_id="10" />
+    <group_values id="11" value="ntp2.local" group_parameter_id="10" />
     <!-- apache::vhost / vhosts -->
-    <values id="12" name="/srv/http/host1.local" parameter_id="13" />
-    <values id="13" name="jdoe@gmail.com" parameter_id="14" />
-    <values id="14" name="/srv/http/host2.local" parameter_id="16" />
+    <group_values id="12" value="/srv/http/host1.local" group_parameter_id="13" />
+    <group_values id="13" value="jdoe@gmail.com" group_parameter_id="14" />
+    <group_values id="14" value="/srv/http/host2.local" group_parameter_id="16" />
     <!-- apache::vhost / ports -->
-    <values id="15" name="80" parameter_id="17" />
-    <values id="16" name="443" parameter_id="17" />
+    <group_values id="15" value="80" group_parameter_id="17" />
+    <group_values id="16" value="443" group_parameter_id="17" />
 </dataset>

@@ -26,7 +26,7 @@ use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\GroupRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
-class PuppetClassProxyFactory implements AggregateRootProxyFactoryInterface
+class GroupClassProxyFactory implements AggregateRootProxyFactoryInterface
 {
     /** @var array */
     protected $config;
@@ -40,7 +40,7 @@ class PuppetClassProxyFactory implements AggregateRootProxyFactoryInterface
      */
     public function createProxy(AggregateRootInterface $aggregateRoot)
     {
-        $proxy = new PuppetClassProxy();
+        $proxy = new GroupClassProxy();
         $proxy->setAggregateRoot($aggregateRoot);
 
         /** @var GroupRepositoryInterface $groupRepository */

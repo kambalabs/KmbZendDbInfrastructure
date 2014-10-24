@@ -184,7 +184,7 @@ class GroupProxy implements GroupInterface
     /**
      * Set Classes.
      *
-     * @param \KmbDomain\Model\PuppetClassInterface[] $classes
+     * @param \KmbDomain\Model\GroupClassInterface[] $classes
      * @return GroupProxy
      */
     public function setClasses($classes)
@@ -196,7 +196,7 @@ class GroupProxy implements GroupInterface
     /**
      * Add specified class.
      *
-     * @param \KmbDomain\Model\PuppetClassInterface $class
+     * @param \KmbDomain\Model\GroupClassInterface $class
      * @return GroupProxy
      */
     public function addClass($class)
@@ -208,7 +208,7 @@ class GroupProxy implements GroupInterface
     /**
      * Get Classes.
      *
-     * @return \KmbDomain\Model\PuppetClassInterface[]
+     * @return \KmbDomain\Model\GroupClassInterface[]
      */
     public function getClasses()
     {
@@ -234,7 +234,7 @@ class GroupProxy implements GroupInterface
 
     /**
      * @param string $name
-     * @return \KmbDomain\Model\PuppetClassInterface
+     * @return \KmbDomain\Model\GroupClassInterface
      */
     public function getClassByName($name)
     {
