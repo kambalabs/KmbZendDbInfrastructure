@@ -20,13 +20,21 @@
  */
 namespace KmbZendDbInfrastructure\Proxy;
 
+use KmbDomain\Model\GroupInterface;
+use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\PuppetClass;
 use KmbDomain\Model\PuppetClassInterface;
 
 class PuppetClassProxy implements PuppetClassInterface
 {
+    /** @var  GroupRepositoryInterface */
+    protected $groupRepository;
+
     /** @var PuppetClass */
     protected $aggregateRoot;
+
+    /** @var  GroupInterface */
+    protected $group;
 
     /**
      * Set AggregateRoot.
@@ -98,7 +106,7 @@ class PuppetClassProxy implements PuppetClassInterface
      */
     public function setGroup($group)
     {
-        $this->aggregateRoot->setGroup($group);
+        $this->group = $group;
         return $this;
     }
 
@@ -109,7 +117,10 @@ class PuppetClassProxy implements PuppetClassInterface
      */
     public function getGroup()
     {
-        return $this->aggregateRoot->getGroup();
+        if ($this->group === null) {
+            $this->setGroup($this->groupRepository->getByClass($this));
+        }
+        return $this->group;
     }
 
     /**
@@ -170,5 +181,57 @@ class PuppetClassProxy implements PuppetClassInterface
     public function hasParameterWithName($name)
     {
         return $this->aggregateRoot->hasParameterWithName($name);
+    }
+
+    /**
+     * Set AvailableParameters.
+     *
+     * @param \stdClass[] $availableParameters
+     * @return PuppetClassProxy
+     */
+    public function setAvailableParameters($availableParameters)
+    {
+        $this->aggregateRoot->setAvailableParameters($availableParameters);
+        return $this;
+    }
+
+    /**
+     * Get AvailableParameters.
+     *
+     * @return \stdClass[]
+     */
+    public function getAvailableParameters()
+    {
+        return $this->aggregateRoot->getAvailableParameters();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailableParameters()
+    {
+        return $this->aggregateRoot->hasAvailableParameters();
+    }
+
+    /**
+     * Set GroupRepository.
+     *
+     * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
+     * @return PuppetClassProxy
+     */
+    public function setGroupRepository($groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+        return $this;
+    }
+
+    /**
+     * Get GroupRepository.
+     *
+     * @return \KmbDomain\Model\GroupRepositoryInterface
+     */
+    public function getGroupRepository()
+    {
+        return $this->groupRepository;
     }
 }

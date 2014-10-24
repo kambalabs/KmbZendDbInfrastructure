@@ -144,7 +144,7 @@ class ParameterRepository extends Repository implements ParameterRepositoryInter
                 'value' => 'name',
             ],
             Select::JOIN_LEFT
-        );
+        )->order($this->getTableName() . '.id, v.id');
     }
 
     /**

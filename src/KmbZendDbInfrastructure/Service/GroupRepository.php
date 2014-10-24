@@ -26,6 +26,7 @@ use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\Group;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\GroupRepositoryInterface;
+use KmbDomain\Model\PuppetClassInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use KmbZendDbInfrastructure\Proxy\ParameterProxy;
@@ -153,6 +154,17 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
         $criteria = new Where();
         $criteria->equalTo($this->getTableName() . '.name', $name)
             ->and->equalTo($this->getTableName() . '.revision_id', $revision->getId());
+        return $this->getBy($criteria);
+    }
+
+    /**
+     * @param PuppetClassInterface $class
+     * @return GroupInterface
+     */
+    public function getByClass(PuppetClassInterface $class)
+    {
+        $criteria = new Where();
+        $criteria->equalTo('c.id', $class->getId());
         return $this->getBy($criteria);
     }
 

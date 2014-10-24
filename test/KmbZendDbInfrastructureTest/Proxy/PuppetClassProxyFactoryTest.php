@@ -21,5 +21,6 @@ class PuppetClassProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\PuppetClassProxy', $proxy);
         $this->assertEquals($aggregateRoot, $proxy->getAggregateRoot());
+        $this->assertInstanceOf('KmbDomain\Model\GroupRepositoryInterface', $proxy->getGroupRepository());
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Proxy;
 
+use KmbDomain\Model\Group;
 use KmbDomain\Model\PuppetClass;
 use KmbZendDbInfrastructure\Proxy\PuppetClassProxy;
 
@@ -13,12 +14,13 @@ class PuppetClassProxyTest extends \PHPUnit_Framework_TestCase
     protected $aggregateRoot;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $parameterRepository;
+    protected $groupRepository;
 
     protected function setUp()
     {
-        $this->parameterRepository = $this->getMock('KmbDomain\Model\ParameterRepositoryInterface');
+        $this->groupRepository = $this->getMock('KmbDomain\Model\GroupRepositoryInterface');
         $this->proxy = $this->createProxy(3);
+        $this->proxy->setGroupRepository($this->groupRepository);
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }
 
@@ -34,6 +36,19 @@ class PuppetClassProxyTest extends \PHPUnit_Framework_TestCase
     public function canGetId()
     {
         $this->assertEquals(3, $this->proxy->getId());
+    }
+
+    /** @test */
+    public function canGetGroupFromRepository()
+    {
+        $group = new Group();
+        $group->setId(3);
+        $this->groupRepository->expects($this->any())
+            ->method('getByClass')
+            ->with($this->proxy)
+            ->will($this->returnValue($group));
+
+        $this->assertEquals($group, $this->proxy->getGroup());
     }
 
     /**

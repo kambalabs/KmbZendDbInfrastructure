@@ -23,6 +23,7 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
+use KmbDomain\Model\GroupRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class PuppetClassProxyFactory implements AggregateRootProxyFactoryInterface
@@ -41,6 +42,11 @@ class PuppetClassProxyFactory implements AggregateRootProxyFactoryInterface
     {
         $proxy = new PuppetClassProxy();
         $proxy->setAggregateRoot($aggregateRoot);
+
+        /** @var GroupRepositoryInterface $groupRepository */
+        $groupRepository = $this->serviceManager->get('GroupRepository');
+        $proxy->setGroupRepository($groupRepository);
+
         return $proxy;
     }
 
