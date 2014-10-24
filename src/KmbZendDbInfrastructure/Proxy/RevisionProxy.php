@@ -163,6 +163,14 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isReleased()
+    {
+        return $this->aggregateRoot->isReleased();
+    }
+
+    /**
      * Set ReleasedBy.
      *
      * @param string $releasedBy
