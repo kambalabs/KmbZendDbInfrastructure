@@ -240,6 +240,15 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     }
 
     /**
+     * @param string $name
+     * @return GroupInterface
+     */
+    public function getGroupByName($name)
+    {
+        return $this->groupRepository->getByNameAndRevision($name, $this);
+    }
+
+    /**
      * @return bool
      */
     public function hasGroups()
@@ -253,7 +262,7 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
      */
     public function hasGroupWithName($name)
     {
-        return $this->groupRepository->getByNameAndRevision($name, $this) !== null;
+        return $this->getGroupByName($name) !== null;
     }
 
     /**
