@@ -30,6 +30,12 @@ class EnvironmentRepositoryFactory extends ZendDb\RepositoryFactory
         /** @var EnvironmentRepository $service */
         $service = parent::createService($serviceLocator);
         $service->setPathsTableName($this->getStrict('paths_table_name'));
+
+        $service->setRevisionTableName($this->getStrict('revision_table_name'));
+        $service->setRevisionTableSequenceName($this->getStrict('revision_table_sequence_name'));
+        $revisionHydratorClass = $this->getStrict('revision_hydrator_class');
+        $service->setRevisionHydrator(new $revisionHydratorClass);
+
         return $service;
     }
 }

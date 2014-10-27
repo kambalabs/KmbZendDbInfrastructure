@@ -24,11 +24,13 @@ use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb;
 use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\UserInterface;
 use Zend\Db\Adapter\Driver\StatementInterface;
 use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepositoryInterface
 {
@@ -38,6 +40,15 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     /** @var array */
     protected $allRoots;
 
+    /** @var HydratorInterface */
+    protected $revisionHydrator;
+
+    /** @var string */
+    protected $revisionTableName;
+
+    /** @var string */
+    protected $revisionTableSequenceName;
+
     /**
      * @param AggregateRootInterface $aggregateRoot
      * @return \GtnPersistBase\Model\RepositoryInterface
@@ -45,10 +56,22 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
      */
     public function add(AggregateRootInterface $aggregateRoot)
     {
+        /** @var EnvironmentInterface $aggregateRoot */
         $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
         try {
             parent::add($aggregateRoot);
             $this->addPaths($aggregateRoot);
+            /** @var RevisionInterface $currentRevision */
+            $currentRevision = $aggregateRoot->getCurrentRevision();
+            if ($currentRevision != null) {
+                $currentRevision->setEnvironment($aggregateRoot);
+                $data = $this->revisionHydrator->extract($currentRevision);
+                $insert = $this->getMasterSql()->insert($this->revisionTableName)->values($data);
+                $this->performWrite($insert);
+                if ($currentRevision->getId() === null) {
+                    $currentRevision->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->revisionTableSequenceName));
+                }
+            }
             $connection->commit();
         } catch (ExceptionInterface $e) {
             $connection->rollback();
@@ -414,5 +437,71 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         $parent = array_shift($parents);
         $environment->setParent($parent);
         $this->setAllParents($parent, $parents);
+    }
+
+    /**
+     * Set RevisionHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $revisionHydrator
+     * @return EnvironmentRepository
+     */
+    public function setRevisionHydrator($revisionHydrator)
+    {
+        $this->revisionHydrator = $revisionHydrator;
+        return $this;
+    }
+
+    /**
+     * Get RevisionHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getRevisionHydrator()
+    {
+        return $this->revisionHydrator;
+    }
+
+    /**
+     * Set RevisionTableName.
+     *
+     * @param string $revisionTableName
+     * @return EnvironmentRepository
+     */
+    public function setRevisionTableName($revisionTableName)
+    {
+        $this->revisionTableName = $revisionTableName;
+        return $this;
+    }
+
+    /**
+     * Get RevisionTableName.
+     *
+     * @return string
+     */
+    public function getRevisionTableName()
+    {
+        return $this->revisionTableName;
+    }
+
+    /**
+     * Set RevisionTableSequenceName.
+     *
+     * @param string $revisionTableSequenceName
+     * @return EnvironmentRepository
+     */
+    public function setRevisionTableSequenceName($revisionTableSequenceName)
+    {
+        $this->revisionTableSequenceName = $revisionTableSequenceName;
+        return $this;
+    }
+
+    /**
+     * Get RevisionTableSequenceName.
+     *
+     * @return string
+     */
+    public function getRevisionTableSequenceName()
+    {
+        return $this->revisionTableSequenceName;
     }
 }

@@ -3,6 +3,7 @@ namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
+use KmbDomain\Model\Revision;
 use KmbDomain\Model\User;
 use KmbDomain\Model\UserRepositoryInterface;
 use KmbZendDbInfrastructure\Service\EnvironmentRepository;
@@ -43,6 +44,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         /** @var EnvironmentInterface $parent */
         $parent = static::$repository->getById(4);
         $environment = new Environment();
+        $environment->setCurrentRevision(new Revision());
         $environment->setName('BETA');
         $environment->setParent($parent);
 
@@ -57,6 +59,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
             ],
             static::$connection->query('SELECT * FROM environments_paths WHERE descendant_id = 19 ORDER BY length')->fetchAll(\PDO::FETCH_NUM)
         );
+        $this->assertEquals(38, intval(static::$connection->query('SELECT count(*) FROM revisions')->fetchColumn()));
     }
 
     /** @test */
