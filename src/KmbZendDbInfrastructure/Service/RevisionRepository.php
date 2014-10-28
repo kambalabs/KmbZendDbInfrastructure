@@ -20,6 +20,8 @@
  */
 namespace KmbZendDbInfrastructure\Service;
 
+use GtnPersistBase\Model\AggregateRootInterface;
+use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use KmbDomain\Model\EnvironmentInterface;
@@ -45,6 +47,28 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
 
     /** @var string */
     protected $environmentTableName;
+
+    /** @var  GroupRepository */
+    protected $groupRepository;
+
+    /**
+     * @param AggregateRootInterface $aggregateRoot
+     * @return RepositoryInterface
+     */
+    public function add(AggregateRootInterface $aggregateRoot)
+    {
+        /** @var RevisionInterface $aggregateRoot */
+        parent::add($aggregateRoot);
+
+        if ($aggregateRoot->hasGroups()) {
+            foreach ($aggregateRoot->getGroups() as $group) {
+                $group->setRevision($aggregateRoot);
+                $this->groupRepository->add($group);
+            }
+        }
+
+        return $this;
+    }
 
     /**
      * @param EnvironmentInterface $environment
@@ -210,5 +234,27 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
     public function getEnvironmentTableName()
     {
         return $this->environmentTableName;
+    }
+
+    /**
+     * Set GroupRepository.
+     *
+     * @param \KmbZendDbInfrastructure\Service\GroupRepository $groupRepository
+     * @return RevisionRepository
+     */
+    public function setGroupRepository($groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+        return $this;
+    }
+
+    /**
+     * Get GroupRepository.
+     *
+     * @return \KmbZendDbInfrastructure\Service\GroupRepository
+     */
+    public function getGroupRepository()
+    {
+        return $this->groupRepository;
     }
 }

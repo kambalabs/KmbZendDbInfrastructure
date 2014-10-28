@@ -30,6 +30,7 @@ class RevisionRepositoryFactory extends ZendDb\RepositoryFactory
     {
         /** @var RevisionRepository $service */
         $service = parent::createService($serviceLocator);
+
         $service->setEnvironmentClass($this->getStrict('environment_class'));
         $service->setEnvironmentTableName($this->getStrict('environment_table_name'));
         $environmentHydratorClass = $this->getStrict('environment_hydrator_class');
@@ -40,6 +41,11 @@ class RevisionRepositoryFactory extends ZendDb\RepositoryFactory
         $environmentProxyFactory->setConfig($this->config);
         $environmentProxyFactory->setServiceManager($serviceLocator);
         $service->setEnvironmentProxyFactory($environmentProxyFactory);
+
+        /** @var GroupRepository $groupRepository */
+        $groupRepository = $serviceLocator->get('GroupRepository');
+        $service->setGroupRepository($groupRepository);
+
         return $service;
     }
 }

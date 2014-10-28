@@ -2,6 +2,7 @@
 namespace KmbZendDbInfrastructureTest\Service;
 
 use KmbDomain\Model\Group;
+use KmbDomain\Model\GroupClass;
 use KmbDomain\Model\GroupInterface;
 use KmbZendDbInfrastructure\Service\GroupRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
@@ -41,11 +42,13 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
         $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);
         $group = new Group('new group');
         $group->setRevision($revision);
+        $group->setClasses([new GroupClass('dns'), new GroupClass('ntp')]);
 
         static::$repository->add($group);
 
         $this->assertEquals(8, $group->getId());
         $this->assertEquals(4, $group->getOrdering());
+        $this->assertEquals(12, $group->getClassByName('dns')->getId());
     }
 
     /** @test */

@@ -21,14 +21,7 @@ class GroupRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory', $service->getEnvironmentProxyFactory());
         $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\EnvironmentHydrator', $service->getEnvironmentHydrator());
         $this->assertEquals('environments', $service->getEnvironmentTableName());
-        $this->assertEquals('KmbDomain\Model\GroupClass', $service->getGroupClassClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupClassProxyFactory', $service->getGroupClassProxyFactory());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\GroupClassHydrator', $service->getGroupClassHydrator());
-        $this->assertEquals('group_classes', $service->getGroupClassTableName());
-        $this->assertEquals('KmbDomain\Model\GroupParameter', $service->getGroupParameterClass());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupParameterProxyFactory', $service->getGroupParameterProxyFactory());
-        $this->assertInstanceOf('KmbZendDbInfrastructure\Hydrator\GroupParameterHydrator', $service->getGroupParameterHydrator());
-        $this->assertEquals('group_parameters', $service->getGroupParameterTableName());
-        $this->assertEquals('group_values', $service->getGroupValueTableName());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Service\GroupClassRepository', $service->getGroupClassRepository());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Service\GroupParameterRepository', $service->getGroupParameterRepository());
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace KmbZendDbInfrastructureTest\Service;
 
+use KmbDomain\Model\Group;
+use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Service\RevisionRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
@@ -32,6 +34,19 @@ class RevisionRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         static::initFixtures(static::$connection);
+    }
+
+    /** @test */
+    public function canAdd()
+    {
+        $environment = Bootstrap::getServiceManager()->get('EnvironmentRepository')->getById(4);
+        $revision = new Revision($environment);
+        $revision->setGroups([new Group('default')]);
+
+        static::$repository->add($revision);
+
+        $this->assertEquals(38, $revision->getId());
+        $this->assertEquals(8, $revision->getGroupByName('default')->getId());
     }
 
     /** @test */

@@ -53,29 +53,13 @@ class GroupRepositoryFactory extends ZendDb\RepositoryFactory
         $environmentProxyFactory->setServiceManager($serviceLocator);
         $service->setEnvironmentProxyFactory($environmentProxyFactory);
 
-        $service->setGroupClassClass($this->getStrict('group_class_class'));
-        $service->setGroupClassTableName($this->getStrict('group_class_table_name'));
-        $groupClassHydratorClass = $this->getStrict('group_class_hydrator_class');
-        $service->setGroupClassHydrator(new $groupClassHydratorClass);
-        $groupClassProxyFactoryClass = $this->getStrict('group_class_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $groupClassProxyFactory */
-        $groupClassProxyFactory = new $groupClassProxyFactoryClass;
-        $groupClassProxyFactory->setConfig($this->config);
-        $groupClassProxyFactory->setServiceManager($serviceLocator);
-        $service->setGroupClassProxyFactory($groupClassProxyFactory);
+        /** @var GroupClassRepository $groupClassRepository */
+        $groupClassRepository = $serviceLocator->get('GroupClassRepository');
+        $service->setGroupClassRepository($groupClassRepository);
 
-        $service->setGroupParameterClass($this->getStrict('group_parameter_class'));
-        $service->setGroupParameterTableName($this->getStrict('group_parameter_table_name'));
-        $groupParameterHydratorClass = $this->getStrict('group_parameter_hydrator_class');
-        $service->setGroupParameterHydrator(new $groupParameterHydratorClass);
-        $groupParameterProxyFactoryClass = $this->getStrict('group_parameter_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $groupParameterProxyFactory */
-        $groupParameterProxyFactory = new $groupParameterProxyFactoryClass;
-        $groupParameterProxyFactory->setConfig($this->config);
-        $groupParameterProxyFactory->setServiceManager($serviceLocator);
-        $service->setGroupParameterProxyFactory($groupParameterProxyFactory);
-
-        $service->setGroupValueTableName($this->getStrict('group_value_table_name'));
+        /** @var GroupParameterRepository $groupParameterRepository */
+        $groupParameterRepository = $serviceLocator->get('GroupParameterRepository');
+        $service->setGroupParameterRepository($groupParameterRepository);
 
         return $service;
     }

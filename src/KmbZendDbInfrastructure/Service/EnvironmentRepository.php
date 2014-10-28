@@ -30,7 +30,6 @@ use Zend\Db\Adapter\Driver\StatementInterface;
 use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
-use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepositoryInterface
 {
@@ -40,14 +39,8 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     /** @var array */
     protected $allRoots;
 
-    /** @var HydratorInterface */
-    protected $revisionHydrator;
-
-    /** @var string */
-    protected $revisionTableName;
-
-    /** @var string */
-    protected $revisionTableSequenceName;
+    /** @var  RevisionRepository */
+    protected $revisionRepository;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -65,12 +58,7 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
             $currentRevision = $aggregateRoot->getCurrentRevision();
             if ($currentRevision != null) {
                 $currentRevision->setEnvironment($aggregateRoot);
-                $data = $this->revisionHydrator->extract($currentRevision);
-                $insert = $this->getMasterSql()->insert($this->revisionTableName)->values($data);
-                $this->performWrite($insert);
-                if ($currentRevision->getId() === null) {
-                    $currentRevision->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->revisionTableSequenceName));
-                }
+                $this->revisionRepository->add($currentRevision);
             }
             $connection->commit();
         } catch (ExceptionInterface $e) {
@@ -440,68 +428,24 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     }
 
     /**
-     * Set RevisionHydrator.
+     * Set RevisionRepository.
      *
-     * @param \Zend\Stdlib\Hydrator\HydratorInterface $revisionHydrator
+     * @param \KmbZendDbInfrastructure\Service\RevisionRepository $revisionRepository
      * @return EnvironmentRepository
      */
-    public function setRevisionHydrator($revisionHydrator)
+    public function setRevisionRepository($revisionRepository)
     {
-        $this->revisionHydrator = $revisionHydrator;
+        $this->revisionRepository = $revisionRepository;
         return $this;
     }
 
     /**
-     * Get RevisionHydrator.
+     * Get RevisionRepository.
      *
-     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     * @return \KmbZendDbInfrastructure\Service\RevisionRepository
      */
-    public function getRevisionHydrator()
+    public function getRevisionRepository()
     {
-        return $this->revisionHydrator;
-    }
-
-    /**
-     * Set RevisionTableName.
-     *
-     * @param string $revisionTableName
-     * @return EnvironmentRepository
-     */
-    public function setRevisionTableName($revisionTableName)
-    {
-        $this->revisionTableName = $revisionTableName;
-        return $this;
-    }
-
-    /**
-     * Get RevisionTableName.
-     *
-     * @return string
-     */
-    public function getRevisionTableName()
-    {
-        return $this->revisionTableName;
-    }
-
-    /**
-     * Set RevisionTableSequenceName.
-     *
-     * @param string $revisionTableSequenceName
-     * @return EnvironmentRepository
-     */
-    public function setRevisionTableSequenceName($revisionTableSequenceName)
-    {
-        $this->revisionTableSequenceName = $revisionTableSequenceName;
-        return $this;
-    }
-
-    /**
-     * Get RevisionTableSequenceName.
-     *
-     * @return string
-     */
-    public function getRevisionTableSequenceName()
-    {
-        return $this->revisionTableSequenceName;
+        return $this->revisionRepository;
     }
 }
