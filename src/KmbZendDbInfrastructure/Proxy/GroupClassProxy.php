@@ -214,6 +214,11 @@ class GroupClassProxy implements GroupClassInterface
         return $this->aggregateRoot->hasAvailableParameters();
     }
 
+    public function __clone()
+    {
+        $this->setGroup(null);
+    }
+
     /**
      * Set GroupRepository.
      *

@@ -393,6 +393,17 @@ class GroupParameterProxy implements GroupParameterInterface
         return $this->aggregateRoot->hasAvailableValues();
     }
 
+    public function __clone()
+    {
+        if ($this->hasChildren()) {
+            $this->setChildren(array_map(function ($child) {
+                return clone $child;
+            }, $this->getChildren()));
+        }
+        $this->setClass(null);
+        $this->setParent(null);
+    }
+
     /**
      * Set GroupClassRepository.
      *
