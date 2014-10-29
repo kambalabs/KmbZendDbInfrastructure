@@ -54,17 +54,19 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         try {
             parent::add($aggregateRoot);
             $this->addPaths($aggregateRoot);
-            /** @var RevisionInterface $currentRevision */
-            $currentRevision = $aggregateRoot->getCurrentRevision();
-            if ($currentRevision != null) {
-                $currentRevision->setEnvironment($aggregateRoot);
-                $this->revisionRepository->add($currentRevision);
-            }
             $connection->commit();
         } catch (ExceptionInterface $e) {
             $connection->rollback();
             throw $e;
         }
+
+        /** @var RevisionInterface $currentRevision */
+        $currentRevision = $aggregateRoot->getCurrentRevision();
+        if ($currentRevision != null) {
+            $currentRevision->setEnvironment($aggregateRoot);
+            $this->revisionRepository->add($currentRevision);
+        }
+
         return $this;
     }
 
