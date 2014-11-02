@@ -23,6 +23,7 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
+use KmbDomain\Model\RevisionRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class GroupProxyFactory implements AggregateRootProxyFactoryInterface
@@ -41,6 +42,11 @@ class GroupProxyFactory implements AggregateRootProxyFactoryInterface
     {
         $proxy = new GroupProxy();
         $proxy->setAggregateRoot($aggregateRoot);
+
+        /** @var RevisionRepositoryInterface $revisionRepository */
+        $revisionRepository = $this->serviceManager->get('RevisionRepository');
+        $proxy->setRevisionRepository($revisionRepository);
+
         return $proxy;
     }
 

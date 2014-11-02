@@ -39,8 +39,6 @@ DROP TABLE IF EXISTS revisions;
 CREATE TABLE revisions (
   id             SERIAL PRIMARY KEY,
   environment_id INT NOT NULL,
-  updated_at     TIMESTAMP,
-  updated_by     VARCHAR(256),
   released_at    TIMESTAMP,
   released_by    VARCHAR(256),
   comment        TEXT,
@@ -48,7 +46,17 @@ CREATE TABLE revisions (
 );
 CREATE INDEX revisions_env ON revisions (environment_id);
 CREATE INDEX revisions_ra ON revisions (released_at);
-CREATE INDEX revisions_ua ON revisions (updated_at);
+
+DROP TABLE IF EXISTS revisions_logs;
+CREATE TABLE revisions_logs (
+  id             SERIAL PRIMARY KEY,
+  revision_id    INT NOT NULL,
+  created_at     TIMESTAMP,
+  created_by     VARCHAR(256),
+  comment        TEXT,
+  FOREIGN KEY (revision_id) REFERENCES revisions(id) ON DELETE CASCADE
+);
+CREATE INDEX revisions_logs_ca ON revisions_logs (created_at);
 
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (

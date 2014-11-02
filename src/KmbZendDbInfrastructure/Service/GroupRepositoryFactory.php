@@ -21,7 +21,6 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb;
-use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class GroupRepositoryFactory extends ZendDb\RepositoryFactory
@@ -30,28 +29,6 @@ class GroupRepositoryFactory extends ZendDb\RepositoryFactory
     {
         /** @var GroupRepository $service */
         $service = parent::createService($serviceLocator);
-
-        $service->setRevisionClass($this->getStrict('revision_class'));
-        $service->setRevisionTableName($this->getStrict('revision_table_name'));
-        $revisionHydratorClass = $this->getStrict('revision_hydrator_class');
-        $service->setRevisionHydrator(new $revisionHydratorClass);
-        $revisionProxyFactoryClass = $this->getStrict('revision_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $revisionProxyFactory */
-        $revisionProxyFactory = new $revisionProxyFactoryClass;
-        $revisionProxyFactory->setConfig($this->config);
-        $revisionProxyFactory->setServiceManager($serviceLocator);
-        $service->setRevisionProxyFactory($revisionProxyFactory);
-
-        $service->setEnvironmentClass($this->getStrict('environment_class'));
-        $service->setEnvironmentTableName($this->getStrict('environment_table_name'));
-        $environmentHydratorClass = $this->getStrict('environment_hydrator_class');
-        $service->setEnvironmentHydrator(new $environmentHydratorClass);
-        $environmentProxyFactoryClass = $this->getStrict('environment_proxy_factory');
-        /** @var AggregateRootProxyFactoryInterface $environmentProxyFactory */
-        $environmentProxyFactory = new $environmentProxyFactoryClass;
-        $environmentProxyFactory->setConfig($this->config);
-        $environmentProxyFactory->setServiceManager($serviceLocator);
-        $service->setEnvironmentProxyFactory($environmentProxyFactory);
 
         /** @var GroupClassRepository $groupClassRepository */
         $groupClassRepository = $serviceLocator->get('GroupClassRepository');

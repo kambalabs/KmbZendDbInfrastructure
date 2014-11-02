@@ -31,6 +31,12 @@ class RevisionRepositoryFactory extends ZendDb\RepositoryFactory
         /** @var RevisionRepository $service */
         $service = parent::createService($serviceLocator);
 
+        $service->setRevisionLogClass($this->getStrict('revision_log_class'));
+        $service->setRevisionLogTableName($this->getStrict('revision_log_table_name'));
+        $service->setRevisionLogTableSequenceName($this->getStrict('revision_log_table_sequence_name'));
+        $revisionLogHydratorClass = $this->getStrict('revision_log_hydrator_class');
+        $service->setRevisionLogHydrator(new $revisionLogHydratorClass);
+
         $service->setEnvironmentClass($this->getStrict('environment_class'));
         $service->setEnvironmentTableName($this->getStrict('environment_table_name'));
         $environmentHydratorClass = $this->getStrict('environment_hydrator_class');

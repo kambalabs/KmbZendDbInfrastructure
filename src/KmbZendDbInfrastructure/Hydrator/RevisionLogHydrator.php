@@ -20,25 +20,25 @@
  */
 namespace KmbZendDbInfrastructure\Hydrator;
 
-use KmbDomain\Model\RevisionInterface;
+use KmbDomain\Model\RevisionLogInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class RevisionHydrator implements HydratorInterface
+class RevisionLogHydrator implements HydratorInterface
 {
     const SQL_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * Extract values from an object
      *
-     * @param  RevisionInterface $object
+     * @param  RevisionLogInterface $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'environment_id' => $object->getEnvironment()->getId(),
-            'released_at' => $object->getReleasedAt() !== null ? $object->getReleasedAt()->format(self::SQL_FORMAT) : null,
-            'released_by' => $object->getReleasedBy(),
+            'revision_id' => $object->getRevision()->getId(),
+            'created_at' => $object->getCreatedAt() !== null ? $object->getCreatedAt()->format(self::SQL_FORMAT) : null,
+            'created_by' => $object->getCreatedBy(),
             'comment' => $object->getComment()
         ];
         if ($object->getId()) {
@@ -51,15 +51,15 @@ class RevisionHydrator implements HydratorInterface
      * Hydrate $object with the provided $data.
      *
      * @param  array  $data
-     * @param  RevisionInterface $object
-     * @return RevisionInterface
+     * @param  RevisionLogInterface $object
+     * @return RevisionLogInterface
      */
     public function hydrate(array $data, $object)
     {
         $object->setId($this->getData('id', $data));
-        $releasedAt = $this->getData('released_at', $data);
-        $object->setReleasedAt(isset($releasedAt) ? new \DateTime($releasedAt) : null);
-        $object->setReleasedBy($this->getData('released_by', $data));
+        $createdAt = $this->getData('created_at', $data);
+        $object->setCreatedAt(isset($createdAt) ? new \DateTime($createdAt) : null);
+        $object->setCreatedBy($this->getData('created_by', $data));
         $object->setComment($this->getData('comment', $data));
         return $object;
     }
@@ -71,8 +71,8 @@ class RevisionHydrator implements HydratorInterface
      */
     protected function getData($key, $data)
     {
-        if (isset($data['r.' . $key])) {
-            return $data['r.' . $key];
+        if (isset($data['rl.' . $key])) {
+            return $data['rl.' . $key];
         }
         if (isset($data[$key])) {
             return $data[$key];

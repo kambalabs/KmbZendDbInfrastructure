@@ -59,18 +59,13 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbDomain\Model\GroupInterface', $group);
         $this->assertEquals(6, $group->getId());
-        $this->assertEquals(9, $group->getRevision()->getId());
-        $this->assertEquals(4, $group->getEnvironment()->getId());
-        $this->assertEquals(4, $group->getRevision()->getEnvironment()->getId());
         $classes = $group->getClasses();
         $this->assertEquals(3, count($classes));
-        $class = $classes[1];
-        $this->assertEquals('apache::vhost', $class->getName());
-        $parameters = $class->getParameters();
+        $this->assertEquals('apache::vhost', $classes[1]->getName());
+        $parameters = $classes[1]->getParameters();
         $this->assertEquals(2, count($parameters));
-        $parameter = $parameters[1];
-        $this->assertEquals('ports', $parameter->getName());
-        $this->assertEquals(['80', '443'], $parameter->getValues());
+        $this->assertEquals('ports', $parameters[1]->getName());
+        $this->assertEquals(['80', '443'], $parameters[1]->getValues());
     }
 
     /** @test */

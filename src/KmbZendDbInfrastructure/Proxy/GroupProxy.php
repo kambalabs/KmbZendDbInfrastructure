@@ -20,14 +20,25 @@
  */
 namespace KmbZendDbInfrastructure\Proxy;
 
+use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\Group;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\RevisionInterface;
+use KmbDomain\Model\RevisionRepositoryInterface;
 
 class GroupProxy implements GroupInterface
 {
     /** @var Group */
     protected $aggregateRoot;
+
+    /** @var  RevisionInterface */
+    protected $revision;
+
+    /** @var  EnvironmentInterface */
+    protected $environment;
+
+    /** @var  RevisionRepositoryInterface */
+    protected $revisionRepository;
 
     /**
      * Set AggregateRoot.
@@ -75,7 +86,7 @@ class GroupProxy implements GroupInterface
      */
     public function setRevision($revision)
     {
-        $this->aggregateRoot->setRevision($revision);
+        $this->revision = $revision;
         return $this;
     }
 
@@ -84,7 +95,10 @@ class GroupProxy implements GroupInterface
      */
     public function getRevision()
     {
-        return $this->aggregateRoot->getRevision();
+        if ($this->revision == null) {
+            $this->setRevision($this->revisionRepository->getByGroup($this));
+        }
+        return $this->revision;
     }
 
     /**
@@ -95,7 +109,7 @@ class GroupProxy implements GroupInterface
      */
     public function setEnvironment($environment)
     {
-        $this->aggregateRoot->setEnvironment($environment);
+        $this->environment = $environment;
         return $this;
     }
 
@@ -106,7 +120,10 @@ class GroupProxy implements GroupInterface
      */
     public function getEnvironment()
     {
-        return $this->aggregateRoot->getEnvironment();
+        if ($this->environment == null) {
+            $this->setEnvironment($this->getRevision()->getEnvironment());
+        }
+        return $this->environment;
     }
 
     /**
@@ -239,5 +256,27 @@ class GroupProxy implements GroupInterface
     public function getClassByName($name)
     {
         return $this->aggregateRoot->getClassByName($name);
+    }
+
+    /**
+     * Set RevisionRepository.
+     *
+     * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
+     * @return GroupProxy
+     */
+    public function setRevisionRepository($revisionRepository)
+    {
+        $this->revisionRepository = $revisionRepository;
+        return $this;
+    }
+
+    /**
+     * Get RevisionRepository.
+     *
+     * @return \KmbDomain\Model\RevisionRepositoryInterface
+     */
+    public function getRevisionRepository()
+    {
+        return $this->revisionRepository;
     }
 }

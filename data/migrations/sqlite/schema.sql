@@ -35,10 +35,17 @@ DROP TABLE IF EXISTS `revisions`;
 CREATE TABLE `revisions` (
   `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   `environment_id` INTEGER NOT NULL,
-  `updated_at`     DATETIME,
-  `updated_by`     VARCHAR(256),
   `released_at`    DATETIME,
   `released_by`    VARCHAR(256),
+  `comment`        TEXT
+);
+
+DROP TABLE IF EXISTS `revisions_logs`;
+CREATE TABLE `revisions_logs` (
+  `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `revision_id`    INTEGER NOT NULL,
+  `created_at`     DATETIME,
+  `created_by`     VARCHAR(256),
   `comment`        TEXT
 );
 

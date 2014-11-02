@@ -81,43 +81,47 @@
     <environments_paths ancestor_id="7" descendant_id="18" length="1" />
     <environments_paths ancestor_id="18" descendant_id="18" length="0" />
 
-    <revisions id="1" environment_id="1" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="2" environment_id="1" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="3" environment_id="2" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="4" environment_id="2" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="5" environment_id="3" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="6" environment_id="3" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="7" environment_id="4" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="8" environment_id="4" updated_at="2014-09-10 10:04:12" updated_by="John DOE" released_at="2014-09-10 10:05:42" released_by="John DOE" comment="Add first group" />
-    <revisions id="9" environment_id="4" updated_at="2014-09-10 10:05:42" updated_by="John DOE" />
-    <revisions id="10" environment_id="5" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="11" environment_id="5" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="12" environment_id="6" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="13" environment_id="6" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="14" environment_id="7" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="15" environment_id="7" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="16" environment_id="8" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="17" environment_id="8" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="18" environment_id="9" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="19" environment_id="9" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="20" environment_id="10" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="21" environment_id="10" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="22" environment_id="11" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="23" environment_id="11" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="24" environment_id="12" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="25" environment_id="12" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="26" environment_id="13" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="27" environment_id="13" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="28" environment_id="14" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="29" environment_id="14" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="30" environment_id="15" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="31" environment_id="15" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="32" environment_id="16" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="33" environment_id="16" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="34" environment_id="17" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="35" environment_id="17" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
-    <revisions id="36" environment_id="18" updated_at="2014-09-10 10:00:23" updated_by="John DOE" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
-    <revisions id="37" environment_id="18" updated_at="2014-09-10 10:02:44" updated_by="John DOE" />
+    <revisions id="1" environment_id="1" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="2" environment_id="1" />
+    <revisions id="3" environment_id="2" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="4" environment_id="2" />
+    <revisions id="5" environment_id="3" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="6" environment_id="3" />
+    <revisions id="7" environment_id="4" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="8" environment_id="4" released_at="2014-09-10 10:05:42" released_by="John DOE" comment="Add first group" />
+    <revisions id="9" environment_id="4" />
+    <revisions id="10" environment_id="5" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="11" environment_id="5" />
+    <revisions id="12" environment_id="6" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="13" environment_id="6" />
+    <revisions id="14" environment_id="7" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="15" environment_id="7" />
+    <revisions id="16" environment_id="8" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="17" environment_id="8" />
+    <revisions id="18" environment_id="9" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="19" environment_id="9" />
+    <revisions id="20" environment_id="10" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="21" environment_id="10" />
+    <revisions id="22" environment_id="11" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="23" environment_id="11" />
+    <revisions id="24" environment_id="12" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="25" environment_id="12" />
+    <revisions id="26" environment_id="13" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="27" environment_id="13" />
+    <revisions id="28" environment_id="14" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="29" environment_id="14" />
+    <revisions id="30" environment_id="15" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="31" environment_id="15" />
+    <revisions id="32" environment_id="16" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="33" environment_id="16" />
+    <revisions id="34" environment_id="17" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="35" environment_id="17" />
+    <revisions id="36" environment_id="18" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
+    <revisions id="37" environment_id="18" />
+
+    <revisions_logs id="1" revision_id="8" created_at="2014-09-10 10:04:12" created_by="John DOE" comment="Add group default" />
+    <revisions_logs id="2" revision_id="8" created_at="2014-09-10 10:04:44" created_by="John DOE" comment="Add group web" />
+    <revisions_logs id="3" revision_id="8" created_at="2014-09-10 10:05:15" created_by="John DOE" comment="Update group default" />
 
     <!-- RELEASE -->
     <groups id="1" revision_id="8" name="default" include_pattern=".*" exclude_pattern="" ordering="1" />

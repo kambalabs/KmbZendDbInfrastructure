@@ -21,5 +21,6 @@ class GroupProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupProxy', $proxy);
         $this->assertEquals($group, $proxy->getAggregateRoot());
+        $this->assertInstanceOf('KmbZendDbInfrastructure\Service\RevisionRepository', $proxy->getRevisionRepository());
     }
 }

@@ -66,6 +66,12 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
             $currentRevision->setEnvironment($aggregateRoot);
             $this->revisionRepository->add($currentRevision);
         }
+        /** @var RevisionInterface $lastReleasedRevision */
+        $lastReleasedRevision = $aggregateRoot->getLastReleasedRevision();
+        if ($lastReleasedRevision != null) {
+            $lastReleasedRevision->setEnvironment($aggregateRoot);
+            $this->revisionRepository->add($lastReleasedRevision);
+        }
 
         return $this;
     }

@@ -45,6 +45,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $parent = static::$repository->getById(4);
         $environment = new Environment();
         $environment->setCurrentRevision(new Revision());
+        $environment->setLastReleasedRevision(new Revision());
         $environment->setName('BETA');
         $environment->setParent($parent);
 
@@ -59,7 +60,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
             ],
             static::$connection->query('SELECT * FROM environments_paths WHERE descendant_id = 19 ORDER BY length')->fetchAll(\PDO::FETCH_NUM)
         );
-        $this->assertEquals(38, intval(static::$connection->query('SELECT count(*) FROM revisions')->fetchColumn()));
+        $this->assertEquals(39, intval(static::$connection->query('SELECT count(*) FROM revisions')->fetchColumn()));
     }
 
     /** @test */

@@ -26,6 +26,7 @@ use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\GroupRepositoryInterface;
 use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
+use KmbDomain\Model\RevisionLogInterface;
 
 class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
 {
@@ -94,50 +95,6 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     public function getEnvironment()
     {
         return $this->aggregateRoot->getEnvironment();
-    }
-
-    /**
-     * Set UpdatedAt.
-     *
-     * @param \DateTime $updatedAt
-     * @return RevisionProxy
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->aggregateRoot->setUpdatedAt($updatedAt);
-        return $this;
-    }
-
-    /**
-     * Get UpdatedAt.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->aggregateRoot->getUpdatedAt();
-    }
-
-    /**
-     * Set UpdatedBy.
-     *
-     * @param string $updatedBy
-     * @return RevisionProxy
-     */
-    public function setUpdatedBy($updatedBy)
-    {
-        $this->aggregateRoot->setUpdatedBy($updatedBy);
-        return $this;
-    }
-
-    /**
-     * Get UpdatedBy.
-     *
-     * @return string
-     */
-    public function getUpdatedBy()
-    {
-        return $this->aggregateRoot->getUpdatedBy();
     }
 
     /**
@@ -212,6 +169,58 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     public function getComment()
     {
         return $this->aggregateRoot->getComment();
+    }
+
+    /**
+     * Set Logs.
+     *
+     * @param \KmbDomain\Model\RevisionLogInterface[] $logs
+     * @return RevisionProxy
+     */
+    public function setLogs($logs)
+    {
+        $this->aggregateRoot->setLogs($logs);
+        return $this;
+    }
+
+    /**
+     * Add specified log.
+     *
+     * @param \KmbDomain\Model\RevisionLogInterface $log
+     * @return Revision
+     */
+    public function addLog($log)
+    {
+        $this->aggregateRoot->addLog($log);
+        return $this;
+    }
+
+    /**
+     * Get Logs.
+     *
+     * @return \KmbDomain\Model\RevisionLogInterface[]
+     */
+    public function getLogs()
+    {
+        return $this->aggregateRoot->getLogs();
+    }
+
+    /**
+     * Get most recent log.
+     *
+     * @return RevisionLogInterface
+     */
+    public function getLastLog()
+    {
+        return $this->aggregateRoot->getLastLog();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLogs()
+    {
+        return $this->aggregateRoot->hasLogs();
     }
 
     /**
