@@ -75,7 +75,10 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getAllByIds(array $ids)
     {
         $criteria = new Where();
-        $criteria->in($this->getTableName() . '.id', $ids);
+        $criteria
+            ->isNull('p.parent_id')
+            ->and
+            ->in($this->getTableName() . '.id', $ids);
         return $this->getAllBy($criteria);
     }
 
@@ -86,21 +89,11 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getAllByRevision(RevisionInterface $revision)
     {
         $criteria = new Where();
-        $criteria->equalTo('revision_id', $revision->getId());
+        $criteria
+            ->isNull('p.parent_id')
+            ->and
+            ->equalTo('revision_id', $revision->getId());
         return $this->getAllBy($criteria);
-    }
-
-    /**
-     * @param RevisionInterface $revision
-     * @return GroupInterface
-     */
-    public function getFirstByRevision(RevisionInterface $revision)
-    {
-        $criteria = new Where();
-        $criteria->equalTo($this->getTableName() . '.revision_id', $revision->getId());
-        $select = $this->getSelect()->where($criteria)->limit(1);
-        $aggregateRoots = $this->hydrateAggregateRootsFromResult($this->performRead($select));
-        return empty($aggregateRoots) ? null : $aggregateRoots[0];
     }
 
     /**
@@ -111,7 +104,10 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getByNameAndRevision($name, RevisionInterface $revision)
     {
         $criteria = new Where();
-        $criteria->equalTo($this->getTableName() . '.name', $name)
+        $criteria
+            ->isNull('p.parent_id')
+            ->and
+            ->equalTo($this->getTableName() . '.name', $name)
             ->and->equalTo($this->getTableName() . '.revision_id', $revision->getId());
         return $this->getBy($criteria);
     }
@@ -123,7 +119,10 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function getByClass(GroupClassInterface $class)
     {
         $criteria = new Where();
-        $criteria->equalTo('c.id', $class->getId());
+        $criteria
+            ->isNull('p.parent_id')
+            ->and
+            ->equalTo('c.id', $class->getId());
         return $this->getBy($criteria);
     }
 

@@ -68,26 +68,17 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
     /**
      * @param AggregateRootInterface $aggregateRoot
      * @return RepositoryInterface
-     * @throws \Zend\Db\Exception\ExceptionInterface
      */
     public function add(AggregateRootInterface $aggregateRoot)
     {
-        /** @var EnvironmentInterface $aggregateRoot */
-        $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
-        try {
-            /** @var RevisionInterface $aggregateRoot */
-            parent::add($aggregateRoot);
+        /** @var RevisionInterface $aggregateRoot */
+        parent::add($aggregateRoot);
 
-            if ($aggregateRoot->hasGroups()) {
-                foreach ($aggregateRoot->getGroups() as $group) {
-                    $group->setRevision($aggregateRoot);
-                    $this->groupRepository->add($group);
-                }
+        if ($aggregateRoot->hasGroups()) {
+            foreach ($aggregateRoot->getGroups() as $group) {
+                $group->setRevision($aggregateRoot);
+                $this->groupRepository->add($group);
             }
-            $connection->commit();
-        } catch (ExceptionInterface $e) {
-            $connection->rollback();
-            throw $e;
         }
 
         return $this;

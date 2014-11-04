@@ -94,16 +94,6 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function canGetFirstByRevision()
-    {
-        $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(9);
-
-        $group = static::$repository->getFirstByRevision($revision);
-
-        $this->assertEquals(4, $group->getId());
-    }
-
-    /** @test */
     public function cannotGetUnknownByNameAndRevision()
     {
         $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);

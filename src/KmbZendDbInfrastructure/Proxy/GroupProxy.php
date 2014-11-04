@@ -258,6 +258,13 @@ class GroupProxy implements GroupInterface
         return $this->aggregateRoot->getClassByName($name);
     }
 
+    public function __clone()
+    {
+        $this->environment = null;
+        $this->revision = null;
+        $this->aggregateRoot = clone $this->aggregateRoot;
+    }
+
     /**
      * Set RevisionRepository.
      *

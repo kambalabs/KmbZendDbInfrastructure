@@ -1,8 +1,14 @@
 <?php
 return [
     'service_manager' => [
+        'factories' => [
+            'KmbZendDbInfrastructure\Service\RevisionService' => 'KmbZendDbInfrastructure\Service\RevisionServiceFactory',
+        ],
         'abstract_factories' => [
             'Zend\Log\LoggerAbstractServiceFactory',
+        ],
+        'aliases' => [
+            'revisionService' => 'KmbZendDbInfrastructure\Service\RevisionService',
         ],
     ],
     'zenddb_repositories' => [

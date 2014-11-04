@@ -400,8 +400,9 @@ class GroupParameterProxy implements GroupParameterInterface
                 return clone $child;
             }, $this->getChildren()));
         }
-        $this->setClass(null);
-        $this->setParent(null);
+        $this->class = null;
+        $this->parent = null;
+        $this->aggregateRoot = clone $this->aggregateRoot;
     }
 
     /**

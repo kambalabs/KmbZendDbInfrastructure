@@ -281,6 +281,7 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
                 return clone $group;
             }, $this->getGroups()));
         }
+        $this->aggregateRoot = clone $this->aggregateRoot;
     }
 
     /**

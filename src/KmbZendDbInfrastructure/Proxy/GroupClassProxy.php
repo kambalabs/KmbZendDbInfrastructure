@@ -216,7 +216,8 @@ class GroupClassProxy implements GroupClassInterface
 
     public function __clone()
     {
-        $this->setGroup(null);
+        $this->group = null;
+        $this->aggregateRoot = clone $this->aggregateRoot;
     }
 
     /**

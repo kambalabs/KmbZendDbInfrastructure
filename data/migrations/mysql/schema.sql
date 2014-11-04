@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS `group_parameters`;
 CREATE TABLE `group_parameters` (
   `id`              INTEGER      NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name`            VARCHAR(256) NOT NULL DEFAULT '',
-  `parent_id`       INTEGER NOT NULL,
+  `parent_id`       INTEGER DEFAULT NULL,
   `group_class_id`  INTEGER NOT NULL,
   FOREIGN KEY (`parent_id`) REFERENCES `group_parameters`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`group_class_id`) REFERENCES `group_classes`(`id`) ON DELETE CASCADE
