@@ -50,11 +50,17 @@ class RevisionService implements RevisionServiceInterface
         try {
             if ($revision->getReleasedAt() != null) {
                 $this->revisionRepository->remove($revision->getEnvironment()->getCurrentRevision());
+                $revision = clone $revision;
+                $revision->setReleasedAt($this->dateTimeFactory->now());
+                $revision->setReleasedBy($user->getName());
+                $revision->setComment($comment);
+                $this->revisionRepository->add($revision);
+            } else {
+                $revision->setReleasedAt($this->dateTimeFactory->now());
+                $revision->setReleasedBy($user->getName());
+                $revision->setComment($comment);
+                $this->revisionRepository->update($revision);
             }
-            $revision->setReleasedAt($this->dateTimeFactory->now());
-            $revision->setReleasedBy($user->getName());
-            $revision->setComment($comment);
-            $this->revisionRepository->update($revision);
             $newCurrentRevision = clone $revision;
             $this->revisionRepository->add($newCurrentRevision);
         } catch (ExceptionInterface $e) {

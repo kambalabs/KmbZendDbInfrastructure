@@ -119,7 +119,7 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
             ->equalTo('environment_id', $environment->getId())
             ->and
             ->isNotNull('released_at');
-        $select = $this->getSelect()->where($where)->order('released_at DESC');
+        $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
@@ -188,7 +188,7 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
                 ],
                 Select::JOIN_LEFT
             )
-            ->order('rl.created_at DESC');
+            ->order('released_at DESC, rl.created_at DESC');
     }
 
     /**
