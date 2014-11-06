@@ -93,14 +93,16 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
         /** @var RevisionInterface $aggregateRoot */
         parent::update($aggregateRoot);
 
-        foreach ($aggregateRoot->getLogs() as $log) {
-            $log->setRevision($aggregateRoot);
-            if ($log->getId() === null) {
-                $data = $this->revisionLogHydrator->extract($log);
-                $insert = $this->getMasterSql()->insert($this->revisionLogTableName)->values($data);
-                $this->performWrite($insert);
+        if ($aggregateRoot->hasLogs()) {
+            foreach ($aggregateRoot->getLogs() as $log) {
+                $log->setRevision($aggregateRoot);
                 if ($log->getId() === null) {
-                    $log->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->revisionLogTableSequenceName));
+                    $data = $this->revisionLogHydrator->extract($log);
+                    $insert = $this->getMasterSql()->insert($this->revisionLogTableName)->values($data);
+                    $this->performWrite($insert);
+                    if ($log->getId() === null) {
+                        $log->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->revisionLogTableSequenceName));
+                    }
                 }
             }
         }
