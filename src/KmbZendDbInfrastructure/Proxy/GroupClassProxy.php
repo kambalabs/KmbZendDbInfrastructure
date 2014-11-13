@@ -221,6 +221,16 @@ class GroupClassProxy implements GroupClassInterface
     }
 
     /**
+     * Dump parameters.
+     *
+     * @return array
+     */
+    public function dump()
+    {
+        return $this->aggregateRoot->dump();
+    }
+
+    /**
      * Set GroupRepository.
      *
      * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
