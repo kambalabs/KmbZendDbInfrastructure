@@ -266,6 +266,16 @@ class GroupProxy implements GroupInterface
     }
 
     /**
+     * Dump group classes.
+     *
+     * @return array
+     */
+    public function dump()
+    {
+        return $this->aggregateRoot->dump();
+    }
+
+    /**
      * Set RevisionRepository.
      *
      * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
