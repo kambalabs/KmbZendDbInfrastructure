@@ -406,6 +406,27 @@ class GroupParameterProxy implements GroupParameterInterface
     }
 
     /**
+     * Dump children or value(s).
+     *
+     * @return array
+     */
+    public function dump()
+    {
+        $values = $this->aggregateRoot->getValues();
+        if ($this->hasChildren()) {
+            $dump = [];
+            foreach ($this->children as $child) {
+                $dump[$child->getName()] = $child->dump();
+            }
+        } elseif (count($values) === 1 && (!$this->hasTemplate() || !$this->getTemplate()->multiple_values)) {
+            $dump = $values[0];
+        } else {
+            $dump = $values;
+        }
+        return $dump;
+    }
+
+    /**
      * Set GroupClassRepository.
      *
      * @param GroupClassRepositoryInterface $groupClassRepository
