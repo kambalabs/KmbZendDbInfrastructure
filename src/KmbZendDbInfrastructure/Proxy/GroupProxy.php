@@ -258,6 +258,36 @@ class GroupProxy implements GroupInterface
         return $this->aggregateRoot->getClassByName($name);
     }
 
+    /**
+     * Set AvailableClasses.
+     *
+     * @param array $availableClasses
+     * @return Group
+     */
+    public function setAvailableClasses($availableClasses)
+    {
+        $this->aggregateRoot->setAvailableClasses($availableClasses);
+        return $this;
+    }
+
+    /**
+     * Get AvailableClasses.
+     *
+     * @return array
+     */
+    public function getAvailableClasses()
+    {
+        return $this->aggregateRoot->getAvailableClasses();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailableClasses()
+    {
+        return $this->aggregateRoot->hasAvailableClasses();
+    }
+
     public function __clone()
     {
         $this->environment = null;
