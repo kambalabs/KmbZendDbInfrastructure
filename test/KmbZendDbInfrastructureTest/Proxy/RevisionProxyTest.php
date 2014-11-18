@@ -87,9 +87,11 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function canCheckIfHasGroupWithNameFromRepository()
     {
+        $groups = [new Group('default'), new Group('web')];
         $this->groupRepository->expects($this->any())
-            ->method('getByNameAndRevision')
-            ->will($this->returnValue(new Group('default')));
+            ->method('getAllByRevision')
+            ->with($this->proxy)
+            ->will($this->returnValue($groups));
 
         $this->assertTrue($this->proxy->hasGroupWithName('default'));
     }

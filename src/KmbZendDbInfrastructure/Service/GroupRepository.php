@@ -108,7 +108,8 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
             ->isNull('p.parent_id')
             ->and
             ->equalTo($this->getTableName() . '.name', $name)
-            ->and->equalTo($this->getTableName() . '.revision_id', $revision->getId());
+            ->and
+            ->equalTo('revision_id', $revision->getId());
         return $this->getBy($criteria);
     }
 

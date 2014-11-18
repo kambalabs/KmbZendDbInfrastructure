@@ -254,7 +254,13 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
      */
     public function getGroupByName($name)
     {
-        return $this->groupRepository->getByNameAndRevision($name, $this);
+        if ($this->hasGroups()) {
+            foreach ($this->groups as $group) {
+                if ($group->getName() === $name) {
+                    return $group;
+                }
+            }
+        }
     }
 
     /**

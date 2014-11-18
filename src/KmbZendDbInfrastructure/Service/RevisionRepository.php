@@ -31,7 +31,6 @@ use KmbDomain\Model\RevisionLog;
 use KmbDomain\Model\RevisionRepositoryInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
-use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Stdlib\Hydrator\HydratorInterface;
