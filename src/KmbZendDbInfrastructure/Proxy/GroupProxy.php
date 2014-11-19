@@ -288,6 +288,15 @@ class GroupProxy implements GroupInterface
         return $this->aggregateRoot->hasAvailableClasses();
     }
 
+    /**
+     * @param string $hostname
+     * @return bool
+     */
+    public function matchesForHostname($hostname)
+    {
+        return $this->aggregateRoot->matchesForHostname($hostname);
+    }
+
     public function __clone()
     {
         $this->environment = null;

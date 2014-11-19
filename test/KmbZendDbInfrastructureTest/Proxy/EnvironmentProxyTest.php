@@ -262,6 +262,22 @@ class EnvironmentProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function cannotGetEmptyDescendantByNormalizedName()
+    {
+        $children = $this->getChildren();
+        $this->proxy->setChildren($children);
+        $this->parent->setChildren([$this->proxy]);
+        $this->environmentRepository->expects($this->any())
+            ->method('getAllChildren')
+            ->with($this->equalTo($this->grandpa))
+            ->will($this->returnValue([$this->parent]));
+
+        $descendant = $this->grandpa->getDescendantByNormalizedName('ROOT_STABLE_PF1_PRP');
+
+        $this->assertEquals(4, $descendant->getId());
+    }
+
+    /** @test */
     public function canGetCurrentRevisionFromRepository()
     {
         $revision = new Revision($this->proxy);

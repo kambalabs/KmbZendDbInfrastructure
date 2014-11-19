@@ -96,6 +96,24 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->proxy->hasGroupWithName('default'));
     }
 
+    /** @test */
+    public function canGetGroupsMatchingHostnameFromRepository()
+    {
+        $group1 = $this->getMock('KmbDomain\Model\GroupInterface');
+        $group1->expects($this->any())->method('matchesForHostname')->will($this->returnValue(true));
+        $group2 = $this->getMock('KmbDomain\Model\GroupInterface');
+        $group2->expects($this->any())->method('matchesForHostname')->will($this->returnValue(false));
+        $group3 = $this->getMock('KmbDomain\Model\GroupInterface');
+        $group3->expects($this->any())->method('matchesForHostname')->will($this->returnValue(true));
+        $groups = [$group1, $group2, $group3];
+        $this->groupRepository->expects($this->any())
+            ->method('getAllByRevision')
+            ->with($this->proxy)
+            ->will($this->returnValue($groups));
+
+        $this->assertEquals([$group1, $group3], $this->proxy->getGroupsMatchingHostname('node1.local'));
+    }
+
     /**
      * @param $id
      * @return Revision

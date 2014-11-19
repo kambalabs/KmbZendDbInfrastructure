@@ -273,6 +273,27 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     }
 
     /**
+     * @param $name
+     * @return EnvironmentInterface
+     */
+    public function getDescendantByNormalizedName($name)
+    {
+        if ($this->getName() === $name) {
+            return $this;
+        }
+        $names = explode('_', $name);
+        array_shift($names);
+        if (empty($names)) {
+            return null;
+        }
+        $child = $this->getChildByName($names[0]);
+        if ($child == null) {
+            return null;
+        }
+        return $child->getDescendantByNormalizedName(implode('_', $names));
+    }
+
+    /**
      * Set Children.
      *
      * @param EnvironmentInterface[] $children
@@ -318,19 +339,27 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
 
     /**
      * @param $name
-     * @return bool
+     * @return EnvironmentInterface
      */
-    public function hasChildWithName($name)
+    public function getChildByName($name)
     {
         if ($this->hasChildren()) {
             foreach ($this->getChildren() as $child) {
                 /** @var EnvironmentInterface $child */
                 if ($child->getName() === $name) {
-                    return true;
+                    return $child;
                 }
             }
         }
-        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function hasChildWithName($name)
+    {
+        return $this->getChildByName($name) != null;
     }
 
     /**
