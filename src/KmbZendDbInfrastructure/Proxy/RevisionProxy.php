@@ -236,6 +236,21 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     }
 
     /**
+     * Add a group.
+     *
+     * @param \KmbDomain\Model\GroupInterface $group
+     * @return RevisionProxy
+     */
+    public function addGroup($group)
+    {
+        if ($this->groups === null) {
+            $this->setGroups($this->groupRepository->getAllByRevision($this));
+        }
+        $this->groups[] = $group;
+        return $this;
+    }
+
+    /**
      * Get Groups.
      *
      * @return \KmbDomain\Model\GroupInterface[]
