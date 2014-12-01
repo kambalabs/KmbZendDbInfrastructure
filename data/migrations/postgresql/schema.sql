@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id    SERIAL PRIMARY KEY,
   login VARCHAR(256) NOT NULL DEFAULT '',
@@ -7,14 +7,14 @@ CREATE TABLE users (
   role  VARCHAR(256) NOT NULL DEFAULT ''
 );
 
-DROP TABLE IF EXISTS environments;
+DROP TABLE IF EXISTS environments CASCADE;
 CREATE TABLE environments (
   id        SERIAL PRIMARY KEY,
   name      VARCHAR(256) NOT NULL DEFAULT '',
   isdefault SMALLINT NOT NULL DEFAULT 0
 );
 
-DROP TABLE IF EXISTS environments_paths;
+DROP TABLE IF EXISTS environments_paths CASCADE;
 CREATE TABLE environments_paths (
   ancestor_id   INT      NOT NULL,
   descendant_id INT      NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE environments_paths (
 CREATE INDEX environments_paths_adl ON environments_paths (ancestor_id, descendant_id, length);
 CREATE INDEX environments_paths_dl ON environments_paths (descendant_id, length);
 
-DROP TABLE IF EXISTS environments_users;
+DROP TABLE IF EXISTS environments_users CASCADE;
 CREATE TABLE environments_users (
   environment_id INT NOT NULL,
   user_id        INT NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE environments_users (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS revisions;
+DROP TABLE IF EXISTS revisions CASCADE;
 CREATE TABLE revisions (
   id             SERIAL PRIMARY KEY,
   environment_id INT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE revisions (
 CREATE INDEX revisions_env ON revisions (environment_id);
 CREATE INDEX revisions_ra ON revisions (released_at);
 
-DROP TABLE IF EXISTS revisions_logs;
+DROP TABLE IF EXISTS revisions_logs CASCADE;
 CREATE TABLE revisions_logs (
   id             SERIAL PRIMARY KEY,
   revision_id    INT NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE revisions_logs (
 );
 CREATE INDEX revisions_logs_ca ON revisions_logs (created_at);
 
-DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS groups CASCADE;
 CREATE TABLE groups (
   id              SERIAL PRIMARY KEY,
   revision_id     INT          NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE groups (
 );
 CREATE INDEX groups_o ON groups (ordering);
 
-DROP TABLE IF EXISTS group_classes;
+DROP TABLE IF EXISTS group_classes CASCADE;
 CREATE TABLE group_classes (
   id       SERIAL PRIMARY KEY,
   name     VARCHAR(256) NOT NULL DEFAULT '',
@@ -78,7 +78,7 @@ CREATE TABLE group_classes (
   FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS group_parameters;
+DROP TABLE IF EXISTS group_parameters CASCADE;
 CREATE TABLE group_parameters (
   id              SERIAL PRIMARY KEY,
   name            VARCHAR(256) NOT NULL DEFAULT '',
@@ -88,7 +88,7 @@ CREATE TABLE group_parameters (
   FOREIGN KEY (group_class_id) REFERENCES group_classes(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS group_values;
+DROP TABLE IF EXISTS group_values CASCADE;
 CREATE TABLE group_values (
   id                 SERIAL PRIMARY KEY,
   value              VARCHAR(256) NOT NULL DEFAULT '',
