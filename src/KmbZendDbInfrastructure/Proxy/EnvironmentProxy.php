@@ -542,4 +542,16 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     {
         return $this->getNormalizedName();
     }
+
+    public function __clone()
+    {
+        if ($this->hasChildren()) {
+            $this->setChildren(array_map(function ($child) {
+                return clone $child;
+            }, $this->getChildren()));
+        }
+        $this->setCurrentRevision(clone $this->getLastReleasedRevision());
+        $this->setLastReleasedRevision(clone $this->getLastReleasedRevision());
+        $this->aggregateRoot = clone $this->aggregateRoot;
+    }
 }

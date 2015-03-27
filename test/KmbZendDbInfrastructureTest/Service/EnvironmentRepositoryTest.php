@@ -80,6 +80,29 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canAddWithChildren()
+    {
+        $environment = new Environment('STABLE');
+        $environment->addChild(new Environment('PF1'));
+        $environment->addChild(new Environment('PF2'));
+
+        static::$repository->add($environment);
+
+        $this->assertEquals(21, intval(static::$connection->query('SELECT count(*) FROM environments')->fetchColumn()));
+        $this->assertEquals(
+            [[21, 21, 0]],
+            static::$connection->query('SELECT * FROM environments_paths WHERE descendant_id = 21 ORDER BY length')->fetchAll(\PDO::FETCH_NUM)
+        );
+        $this->assertEquals(
+            [
+                [22, 22, 0],
+                [21, 22, 1],
+            ],
+            static::$connection->query('SELECT * FROM environments_paths WHERE descendant_id = 22 ORDER BY length')->fetchAll(\PDO::FETCH_NUM)
+        );
+    }
+
+    /** @test */
     public function canUpdate()
     {
         /** @var UserRepositoryInterface $userRepository */
