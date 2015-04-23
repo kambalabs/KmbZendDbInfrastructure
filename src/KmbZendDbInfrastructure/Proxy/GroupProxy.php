@@ -145,6 +145,28 @@ class GroupProxy implements GroupInterface
     }
 
     /**
+     * Set Type.
+     *
+     * @param string $type
+     * @return GroupInterface
+     */
+    public function setType($type)
+    {
+        $this->aggregateRoot->setType($type);
+        return $this;
+    }
+
+    /**
+     * Get Type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->aggregateRoot->getType();
+    }
+
+    /**
      * @param int $ordering
      * @return GroupProxy
      */

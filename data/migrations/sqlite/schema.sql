@@ -54,6 +54,7 @@ CREATE TABLE `groups` (
   `id`              INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
   `revision_id`     INTEGER      NOT NULL,
   `name`            VARCHAR(256) NOT NULL DEFAULT '',
+  `type`            VARCHAR(256) NOT NULL DEFAULT 'default',
   `ordering`        INTEGER      NOT NULL DEFAULT '0',
   `include_pattern` TEXT         NOT NULL DEFAULT '',
   `exclude_pattern` TEXT         NOT NULL DEFAULT ''

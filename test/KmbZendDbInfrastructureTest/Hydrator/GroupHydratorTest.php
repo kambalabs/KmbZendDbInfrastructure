@@ -36,6 +36,7 @@ class GroupHydratorTest extends \PHPUnit_Framework_TestCase
         $hydrator->hydrate([
             'g.id' => 1,
             'g.name' => 'default',
+            'g.type' => 'fake',
             'g.ordering' => 3,
             'g.include_pattern' => '.*',
             'g.exclude_pattern' => 'node1.local',
@@ -51,6 +52,7 @@ class GroupHydratorTest extends \PHPUnit_Framework_TestCase
     {
         $group = new Group('default');
         $group->setId(1);
+        $group->settype('fake');
         $group->setIncludePattern('.*');
         $group->setExcludePattern('node1.local');
         $group->setOrdering(3);
@@ -67,6 +69,7 @@ class GroupHydratorTest extends \PHPUnit_Framework_TestCase
             'id' => 1,
             'revision_id' => 2,
             'name' => 'default',
+            'type' => 'fake',
             'ordering' => 3,
             'include_pattern' => '.*',
             'exclude_pattern' => 'node1.local',

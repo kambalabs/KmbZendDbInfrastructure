@@ -36,6 +36,7 @@ class GroupHydrator implements HydratorInterface
         $data = [
             'revision_id' => $object->getRevision()->getId(),
             'name' => $object->getName(),
+            'type' => $object->getType(),
             'ordering' => $object->getOrdering(),
             'include_pattern' => $object->getIncludePattern(),
             'exclude_pattern' => $object->getExcludePattern(),
@@ -57,6 +58,7 @@ class GroupHydrator implements HydratorInterface
     {
         $object->setId($this->getData('id', $data));
         $object->setName($this->getData('name', $data));
+        $object->setType($this->getData('type', $data));
         $object->setOrdering($this->getData('ordering', $data));
         $object->setIncludePattern($this->getData('include_pattern', $data));
         $object->setExcludePattern($this->getData('exclude_pattern', $data));
