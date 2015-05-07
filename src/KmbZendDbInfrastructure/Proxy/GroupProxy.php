@@ -167,6 +167,14 @@ class GroupProxy implements GroupInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isCustom()
+    {
+        return $this->aggregateRoot->isCustom();
+    }
+
+    /**
      * @param int $ordering
      * @return GroupProxy
      */
