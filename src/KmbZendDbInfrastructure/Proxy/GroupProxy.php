@@ -337,6 +337,16 @@ class GroupProxy implements GroupInterface
     }
 
     /**
+     * Extract all group's data in array.
+     *
+     * @return array
+     */
+    public function extract()
+    {
+        return $this->aggregateRoot->extract();
+    }
+
+    /**
      * Set RevisionRepository.
      *
      * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
