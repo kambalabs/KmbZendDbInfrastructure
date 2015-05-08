@@ -28,7 +28,7 @@ use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\RevisionLog;
-use KmbDomain\Model\RevisionRepositoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
 use KmbZendDbInfrastructure\Proxy\EnvironmentProxy;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Select;

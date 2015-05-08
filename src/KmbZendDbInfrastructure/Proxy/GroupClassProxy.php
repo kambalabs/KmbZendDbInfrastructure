@@ -22,7 +22,7 @@ namespace KmbZendDbInfrastructure\Proxy;
 
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\GroupParameterInterface;
-use KmbDomain\Model\GroupRepositoryInterface;
+use KmbDomain\Service\GroupRepositoryInterface;
 use KmbDomain\Model\GroupClass;
 use KmbDomain\Model\GroupClassInterface;
 
@@ -233,7 +233,7 @@ class GroupClassProxy implements GroupClassInterface
     /**
      * Set GroupRepository.
      *
-     * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
+     * @param GroupRepositoryInterface $groupRepository
      * @return GroupClassProxy
      */
     public function setGroupRepository($groupRepository)
@@ -245,7 +245,7 @@ class GroupClassProxy implements GroupClassInterface
     /**
      * Get GroupRepository.
      *
-     * @return \KmbDomain\Model\GroupRepositoryInterface
+     * @return GroupRepositoryInterface
      */
     public function getGroupRepository()
     {

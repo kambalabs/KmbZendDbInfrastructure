@@ -21,6 +21,7 @@
 namespace KmbZendDbInfrastructure\Service;
 
 use KmbBase\DateTimeFactoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -36,7 +37,7 @@ class RevisionServiceFactory implements FactoryInterface
     {
         $service = new RevisionService();
 
-        /** @var RevisionRepository $revisionRepository */
+        /** @var RevisionRepositoryInterface $revisionRepository */
         $revisionRepository = $serviceLocator->get('RevisionRepository');
         $service->setRevisionRepository($revisionRepository);
 

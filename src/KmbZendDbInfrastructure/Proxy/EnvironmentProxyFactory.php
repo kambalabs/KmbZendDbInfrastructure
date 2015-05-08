@@ -23,9 +23,9 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
-use KmbDomain\Model\EnvironmentRepositoryInterface;
-use KmbDomain\Model\RevisionRepositoryInterface;
-use KmbDomain\Model\UserRepositoryInterface;
+use KmbDomain\Service\EnvironmentRepositoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
+use KmbDomain\Service\UserRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class EnvironmentProxyFactory implements AggregateRootProxyFactoryInterface

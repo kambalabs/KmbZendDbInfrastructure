@@ -23,7 +23,7 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use KmbDomain\Model\GroupInterface;
-use KmbDomain\Model\GroupRepositoryInterface;
+use KmbDomain\Service\GroupRepositoryInterface;
 use KmbDomain\Model\Revision;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\RevisionLogInterface;
@@ -325,7 +325,7 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     /**
      * Set GroupRepository.
      *
-     * @param \KmbDomain\Model\GroupRepositoryInterface $groupRepository
+     * @param \KmbDomain\Service\GroupRepositoryInterface $groupRepository
      * @return RevisionProxy
      */
     public function setGroupRepository($groupRepository)
@@ -337,7 +337,7 @@ class RevisionProxy implements RevisionInterface, AggregateRootProxyInterface
     /**
      * Get GroupRepository.
      *
-     * @return \KmbDomain\Model\GroupRepositoryInterface
+     * @return \KmbDomain\Service\GroupRepositoryInterface
      */
     public function getGroupRepository()
     {

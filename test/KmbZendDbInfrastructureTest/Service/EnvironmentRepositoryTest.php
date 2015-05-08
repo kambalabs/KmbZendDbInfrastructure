@@ -5,7 +5,7 @@ use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\Revision;
 use KmbDomain\Model\User;
-use KmbDomain\Model\UserRepositoryInterface;
+use KmbDomain\Service\UserRepositoryInterface;
 use KmbZendDbInfrastructure\Service\EnvironmentRepository;
 use KmbZendDbInfrastructureTest\Bootstrap;
 use KmbZendDbInfrastructureTest\DatabaseInitTrait;

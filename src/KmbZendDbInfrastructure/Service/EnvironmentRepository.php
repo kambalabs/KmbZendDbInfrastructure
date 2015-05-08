@@ -23,7 +23,7 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb;
 use KmbDomain\Model\EnvironmentInterface;
-use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Service\EnvironmentRepositoryInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\UserInterface;
 use Zend\Db\Adapter\Driver\StatementInterface;

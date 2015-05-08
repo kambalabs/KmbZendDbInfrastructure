@@ -23,7 +23,7 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\UserInterface;
-use KmbDomain\Model\UserRepositoryInterface;
+use KmbDomain\Service\UserRepositoryInterface;
 use Zend\Db\Sql\Predicate\Predicate;
 
 class UserRepository extends Repository implements UserRepositoryInterface

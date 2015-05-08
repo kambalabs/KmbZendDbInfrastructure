@@ -22,8 +22,8 @@ class EnvironmentProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\EnvironmentProxy', $proxy);
         $this->assertEquals($environment, $proxy->getAggregateRoot());
-        $this->assertInstanceOf('KmbDomain\Model\EnvironmentRepositoryInterface', $proxy->getEnvironmentRepository());
-        $this->assertInstanceOf('KmbDomain\Model\UserRepositoryInterface', $proxy->getUserRepository());
-        $this->assertInstanceOf('KmbDomain\Model\RevisionRepositoryInterface', $proxy->getRevisionRepository());
+        $this->assertInstanceOf('KmbDomain\Service\EnvironmentRepositoryInterface', $proxy->getEnvironmentRepository());
+        $this->assertInstanceOf('KmbDomain\Service\UserRepositoryInterface', $proxy->getUserRepository());
+        $this->assertInstanceOf('KmbDomain\Service\RevisionRepositoryInterface', $proxy->getRevisionRepository());
     }
 }

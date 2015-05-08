@@ -24,7 +24,7 @@ use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\GroupParameterInterface;
 use KmbDomain\Model\GroupClassInterface;
-use KmbDomain\Model\GroupClassRepositoryInterface;
+use KmbDomain\Service\GroupClassRepositoryInterface;
 use Zend\Db\Sql\Where;
 
 class GroupClassRepository extends Repository implements GroupClassRepositoryInterface

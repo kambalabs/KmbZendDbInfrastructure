@@ -21,8 +21,8 @@ class GroupParameterProxyTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->groupClassRepository = $this->getMock('KmbDomain\Model\GroupClassRepositoryInterface');
-        $this->groupParameterRepository = $this->getMock('KmbDomain\Model\GroupParameterRepositoryInterface');
+        $this->groupClassRepository = $this->getMock('KmbDomain\Service\GroupClassRepositoryInterface');
+        $this->groupParameterRepository = $this->getMock('KmbDomain\Service\GroupParameterRepositoryInterface');
         $this->proxy = $this->createProxy(3, 'nameserver');
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }

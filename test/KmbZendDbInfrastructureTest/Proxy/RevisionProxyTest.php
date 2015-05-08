@@ -19,7 +19,7 @@ class RevisionProxyTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->groupRepository = $this->getMock('KmbDomain\Model\GroupRepositoryInterface');
+        $this->groupRepository = $this->getMock('KmbDomain\Service\GroupRepositoryInterface');
         $this->proxy = $this->createProxy(3);
         $this->aggregateRoot = $this->proxy->getAggregateRoot();
     }

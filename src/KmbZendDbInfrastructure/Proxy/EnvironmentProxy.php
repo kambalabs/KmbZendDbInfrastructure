@@ -24,11 +24,11 @@ use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use KmbDomain\Model\Environment;
 use KmbDomain\Model\EnvironmentInterface;
-use KmbDomain\Model\EnvironmentRepositoryInterface;
+use KmbDomain\Service\EnvironmentRepositoryInterface;
 use KmbDomain\Model\RevisionInterface;
-use KmbDomain\Model\RevisionRepositoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
 use KmbDomain\Model\UserInterface;
-use KmbDomain\Model\UserRepositoryInterface;
+use KmbDomain\Service\UserRepositoryInterface;
 use Zend\Stdlib\ArrayUtils;
 
 class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterface
@@ -128,7 +128,7 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     /**
      * Set RevisionRepository.
      *
-     * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
+     * @param RevisionRepositoryInterface $revisionRepository
      * @return EnvironmentProxy
      */
     public function setRevisionRepository($revisionRepository)
@@ -140,7 +140,7 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     /**
      * Get RevisionRepository.
      *
-     * @return \KmbDomain\Model\RevisionRepositoryInterface
+     * @return RevisionRepositoryInterface
      */
     public function getRevisionRepository()
     {

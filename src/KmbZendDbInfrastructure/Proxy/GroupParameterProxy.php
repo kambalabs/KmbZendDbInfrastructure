@@ -22,9 +22,9 @@ namespace KmbZendDbInfrastructure\Proxy;
 
 use KmbDomain\Model\GroupParameter;
 use KmbDomain\Model\GroupParameterInterface;
-use KmbDomain\Model\GroupParameterRepositoryInterface;
+use KmbDomain\Service\GroupParameterRepositoryInterface;
 use KmbDomain\Model\GroupClassInterface;
-use KmbDomain\Model\GroupClassRepositoryInterface;
+use KmbDomain\Service\GroupClassRepositoryInterface;
 
 class GroupParameterProxy implements GroupParameterInterface
 {

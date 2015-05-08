@@ -32,9 +32,9 @@ class EnvironmentProxyTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->environmentRepository = $this->getMock('KmbDomain\Model\EnvironmentRepositoryInterface');
-        $this->userRepository = $this->getMock('KmbDomain\Model\UserRepositoryInterface');
-        $this->revisionRepository = $this->getMock('KmbDomain\Model\RevisionRepositoryInterface');
+        $this->environmentRepository = $this->getMock('KmbDomain\Service\EnvironmentRepositoryInterface');
+        $this->userRepository = $this->getMock('KmbDomain\Service\UserRepositoryInterface');
+        $this->revisionRepository = $this->getMock('KmbDomain\Service\RevisionRepositoryInterface');
         $this->grandpa = $this->createProxy(1, 'ROOT');
         $this->parent = $this->createProxy(2, 'STABLE');
         $this->proxy = $this->createProxy(3, 'PF1');

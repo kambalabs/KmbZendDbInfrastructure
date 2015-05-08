@@ -24,7 +24,7 @@ use KmbDomain\Model\EnvironmentInterface;
 use KmbDomain\Model\Group;
 use KmbDomain\Model\GroupInterface;
 use KmbDomain\Model\RevisionInterface;
-use KmbDomain\Model\RevisionRepositoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
 
 class GroupProxy implements GroupInterface
 {
@@ -357,7 +357,7 @@ class GroupProxy implements GroupInterface
     /**
      * Set RevisionRepository.
      *
-     * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
+     * @param \KmbDomain\Service\RevisionRepositoryInterface $revisionRepository
      * @return GroupProxy
      */
     public function setRevisionRepository($revisionRepository)
@@ -369,7 +369,7 @@ class GroupProxy implements GroupInterface
     /**
      * Get RevisionRepository.
      *
-     * @return \KmbDomain\Model\RevisionRepositoryInterface
+     * @return \KmbDomain\Service\RevisionRepositoryInterface
      */
     public function getRevisionRepository()
     {

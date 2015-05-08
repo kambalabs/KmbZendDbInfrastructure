@@ -23,7 +23,7 @@ namespace KmbZendDbInfrastructure\Proxy;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Model\AggregateRootProxyInterface;
 use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
-use KmbDomain\Model\RevisionRepositoryInterface;
+use KmbDomain\Service\RevisionRepositoryInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class GroupProxyFactory implements AggregateRootProxyFactoryInterface

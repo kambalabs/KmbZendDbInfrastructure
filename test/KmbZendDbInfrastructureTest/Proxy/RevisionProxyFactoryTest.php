@@ -21,6 +21,6 @@ class RevisionProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\RevisionProxy', $proxy);
         $this->assertEquals($revision, $proxy->getAggregateRoot());
-        $this->assertInstanceOf('KmbDomain\Model\GroupRepositoryInterface', $proxy->getGroupRepository());
+        $this->assertInstanceOf('KmbDomain\Service\GroupRepositoryInterface', $proxy->getGroupRepository());
     }
 }

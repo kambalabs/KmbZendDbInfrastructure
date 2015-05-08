@@ -25,7 +25,7 @@ use GtnPersistBase\Model\RepositoryInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\GroupParameter;
 use KmbDomain\Model\GroupParameterInterface;
-use KmbDomain\Model\GroupParameterRepositoryInterface;
+use KmbDomain\Service\GroupParameterRepositoryInterface;
 use KmbDomain\Model\GroupClassInterface;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Select;

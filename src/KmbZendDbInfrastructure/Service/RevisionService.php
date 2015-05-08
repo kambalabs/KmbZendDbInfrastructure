@@ -22,7 +22,7 @@ namespace KmbZendDbInfrastructure\Service;
 
 use KmbBase\DateTimeFactoryInterface;
 use KmbDomain\Model\RevisionInterface;
-use KmbDomain\Model\RevisionServiceInterface;
+use KmbDomain\Service\RevisionServiceInterface;
 use KmbDomain\Model\UserInterface;
 use Zend\Db\Exception\ExceptionInterface;
 
@@ -99,7 +99,7 @@ class RevisionService implements RevisionServiceInterface
     /**
      * Set RevisionRepository.
      *
-     * @param \KmbDomain\Model\RevisionRepositoryInterface $revisionRepository
+     * @param \KmbDomain\Service\RevisionRepositoryInterface $revisionRepository
      * @return RevisionService
      */
     public function setRevisionRepository($revisionRepository)
@@ -111,7 +111,7 @@ class RevisionService implements RevisionServiceInterface
     /**
      * Get RevisionRepository.
      *
-     * @return \KmbDomain\Model\RevisionRepositoryInterface
+     * @return \KmbDomain\Service\RevisionRepositoryInterface
      */
     public function getRevisionRepository()
     {

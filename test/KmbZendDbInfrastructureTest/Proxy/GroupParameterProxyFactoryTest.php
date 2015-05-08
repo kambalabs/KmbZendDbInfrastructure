@@ -21,7 +21,7 @@ class GroupParameterProxyFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbZendDbInfrastructure\Proxy\GroupParameterProxy', $proxy);
         $this->assertEquals($aggregateRoot, $proxy->getAggregateRoot());
-        $this->assertInstanceOf('KmbDomain\Model\GroupClassRepositoryInterface', $proxy->getGroupClassRepository());
-        $this->assertInstanceOf('KmbDomain\Model\GroupParameterRepositoryInterface', $proxy->getGroupParameterRepository());
+        $this->assertInstanceOf('KmbDomain\Service\GroupClassRepositoryInterface', $proxy->getGroupClassRepository());
+        $this->assertInstanceOf('KmbDomain\Service\GroupParameterRepositoryInterface', $proxy->getGroupParameterRepository());
     }
 }

@@ -24,7 +24,7 @@ use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbDomain\Model\GroupClassInterface;
 use KmbDomain\Model\GroupInterface;
-use KmbDomain\Model\GroupRepositoryInterface;
+use KmbDomain\Service\GroupRepositoryInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbZendDbInfrastructure\Proxy\GroupClassProxy;
 use KmbZendDbInfrastructure\Proxy\GroupParameterProxy;
