@@ -23,9 +23,10 @@ namespace KmbZendDbInfrastructure\Service;
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb;
 use KmbDomain\Model\EnvironmentInterface;
-use KmbDomain\Service\EnvironmentRepositoryInterface;
 use KmbDomain\Model\RevisionInterface;
 use KmbDomain\Model\UserInterface;
+use KmbDomain\Service\EnvironmentRepositoryInterface;
+use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Adapter\Driver\StatementInterface;
 use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Predicate\Predicate;
@@ -35,6 +36,9 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
 {
     /** @var string */
     protected $pathsTableName;
+
+    /** @var string */
+    protected $autoUpdatedModulesTableName;
 
     /** @var array */
     protected $allRoots;
@@ -79,6 +83,17 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
                 $this->add($child);
             }
         }
+
+        if ($aggregateRoot->hasAutoUpdatedModules()) {
+            foreach ($aggregateRoot->getAutoUpdatedModules() as $moduleName => $branch) {
+                $insert = $this->getMasterSql()->insert($this->autoUpdatedModulesTableName)->values([
+                    'environment_id' => $aggregateRoot->getId(),
+                    'module_name' => $moduleName,
+                    'branch' => $branch
+                ]);
+                $this->performWrite($insert);
+            }
+        }
         return $this;
     }
 
@@ -90,7 +105,7 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     public function update(AggregateRootInterface $aggregateRoot)
     {
         /** @var EnvironmentInterface $aggregateRoot */
-        $data = array_map(
+        $userData = array_map(
             function (UserInterface $user) use ($aggregateRoot) {
                 return [
                     'environment_id' => $aggregateRoot->getId(),
@@ -113,8 +128,21 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
             $delete->where->equalTo('environment_id', $aggregateRoot->getId());
             $this->performWrite($delete);
 
-            foreach ($data as $datum) {
+            foreach ($userData as $datum) {
                 $insert = $this->getMasterSql()->insert('environments_users')->values($datum);
+                $this->performWrite($insert);
+            }
+
+            $delete = $this->getMasterSql()->delete($this->autoUpdatedModulesTableName);
+            $delete->where->equalTo('environment_id', $aggregateRoot->getId());
+            $this->performWrite($delete);
+
+            foreach ($aggregateRoot->getAutoUpdatedModules() as $moduleName => $branch) {
+                $insert = $this->getMasterSql()->insert($this->autoUpdatedModulesTableName)->values([
+                    'environment_id' => $aggregateRoot->getId(),
+                    'module_name' => $moduleName,
+                    'branch' => $branch
+                ]);
                 $this->performWrite($insert);
             }
 
@@ -239,9 +267,19 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         $className = $this->getAggregateRootClass();
         $allChildrenGroupedByParentId = [];
         foreach ($result as $row) {
-            $aggregateRoot = new $className;
-            $this->getAggregateRootHydrator()->hydrate($row, $aggregateRoot);
-            $allChildrenGroupedByParentId[$row['parent_id']][] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            $environmentId = $row['id'];
+            $parentId = $row['parent_id'];
+            if (!isset($allChildrenGroupedByParentId[$parentId][$environmentId])) {
+                /** @var EnvironmentInterface $aggregateRoot */
+                $aggregateRoot = new $className;
+                $this->getAggregateRootHydrator()->hydrate($row, $aggregateRoot);
+                $allChildrenGroupedByParentId[$parentId][$environmentId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            } else {
+                $aggregateRoot = $allChildrenGroupedByParentId[$parentId][$environmentId];
+            }
+            if (isset($row['a.module_name']) && isset($row['a.branch'])) {
+                $aggregateRoot->addAutoUpdatedModule($row['a.module_name'], $row['a.branch']);
+            }
         }
 
         $children = [];
@@ -251,7 +289,7 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
                 $this->setAllChildren($child, $allChildrenGroupedByParentId);
             }
         }
-        return $children;
+        return array_values($children);
     }
 
     /**
@@ -278,9 +316,18 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
         $className = $this->getAggregateRootClass();
         $parents = [];
         foreach ($result as $row) {
-            $aggregateRoot = new $className;
-            $this->getAggregateRootHydrator()->hydrate($row, $aggregateRoot);
-            $parents[] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            $environmentId = $row['id'];
+            if (!isset($parents[$environmentId])) {
+                /** @var EnvironmentInterface $aggregateRoot */
+                $aggregateRoot = new $className;
+                $this->getAggregateRootHydrator()->hydrate($row, $aggregateRoot);
+                $parents[$environmentId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            } else {
+                $aggregateRoot = $parents[$environmentId];
+            }
+            if (isset($row['a.module_name']) && isset($row['a.branch'])) {
+                $aggregateRoot->addAutoUpdatedModule($row['a.module_name'], $row['a.branch']);
+            }
         }
 
         $parent = null;
@@ -309,6 +356,69 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     }
 
     /**
+     * @param string $moduleName
+     * @param string $branch
+     * @return EnvironmentInterface[]
+     */
+    public function getAllWhereModuleIsAutoUpdated($moduleName, $branch)
+    {
+        $subselect = $this->getSlaveSql()->select()->from($this->autoUpdatedModulesTableName)->columns(['environment_id']);
+        $subselect
+            ->where
+            ->equalTo('module_name', $moduleName)
+            ->and
+            ->equalTo('branch', $branch);
+        $select = $this->getSelect();
+        $select
+            ->where
+            ->in($this->getTableName() . '.id', $subselect);
+
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
+    /**
+     * @return Select
+     */
+    protected function getSelect()
+    {
+        return parent::getSelect()
+            ->join(
+                ['a' => $this->autoUpdatedModulesTableName],
+                $this->getTableName() . '.id = a.environment_id',
+                [
+                    'a.module_name' => 'module_name',
+                    'a.branch' => 'branch',
+                ],
+                Select::JOIN_LEFT
+            );
+    }
+
+    /**
+     * @param ResultInterface $result
+     * @return array
+     */
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $aggregateRoots = [];
+        foreach ($result as $row) {
+            $environmentId = $row['id'];
+            /** @var EnvironmentInterface $aggregateRoot */
+            if (!array_key_exists($environmentId, $aggregateRoots)) {
+                $aggregateRoot = new $aggregateRootClassName();
+                $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+                $aggregateRoots[$environmentId] = $this->aggregateRootProxyFactory->createProxy($aggregateRoot);
+            } else {
+                $aggregateRoot = $aggregateRoots[$environmentId];
+            }
+            if (isset($row['a.module_name']) && isset($row['a.branch'])) {
+                $aggregateRoot->addAutoUpdatedModule($row['a.module_name'], $row['a.branch']);
+            }
+        }
+        return array_values($aggregateRoots);
+    }
+
+    /**
      * Set PathsTableName.
      *
      * @param string $pathsTableName
@@ -328,6 +438,28 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     public function getPathsTableName()
     {
         return $this->pathsTableName;
+    }
+
+    /**
+     * Set AutoUpdatedModulesTableName.
+     *
+     * @param string $autoUpdatedModulesTableName
+     * @return EnvironmentRepository
+     */
+    public function setAutoUpdatedModulesTableName($autoUpdatedModulesTableName)
+    {
+        $this->autoUpdatedModulesTableName = $autoUpdatedModulesTableName;
+        return $this;
+    }
+
+    /**
+     * Get AutoUpdatedModulesTableName.
+     *
+     * @return string
+     */
+    public function getAutoUpdatedModulesTableName()
+    {
+        return $this->autoUpdatedModulesTableName;
     }
 
     /**

@@ -81,6 +81,16 @@
     <environments_paths ancestor_id="7" descendant_id="18" length="1" />
     <environments_paths ancestor_id="18" descendant_id="18" length="0" />
 
+    <auto_updated_modules id="1" environment_id="1" module_name="dns" branch="master" />
+    <auto_updated_modules id="2" environment_id="1" module_name="ntp" branch="master" />
+    <auto_updated_modules id="3" environment_id="4" module_name="bashrc" branch="master" />
+    <auto_updated_modules id="4" environment_id="4" module_name="ssh" branch="master" />
+    <auto_updated_modules id="5" environment_id="4" module_name="apache" branch="master" />
+    <auto_updated_modules id="6" environment_id="4" module_name="emacs" branch="master" />
+    <auto_updated_modules id="7" environment_id="7" module_name="apache" branch="unstable" />
+    <auto_updated_modules id="8" environment_id="8" module_name="apache" branch="master" />
+    <auto_updated_modules id="9" environment_id="9" module_name="apache" branch="master" />
+
     <revisions id="1" environment_id="1" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />
     <revisions id="2" environment_id="1" />
     <revisions id="3" environment_id="2" released_at="2014-09-10 10:02:44" released_by="John DOE" comment="Init" />

@@ -536,6 +536,67 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
     }
 
     /**
+     * Set AutoUpdatedModules.
+     *
+     * @param array $autoUpdatedModules
+     * @return EnvironmentInterface
+     */
+    public function setAutoUpdatedModules($autoUpdatedModules)
+    {
+        $this->aggregateRoot->setAutoUpdatedModules($autoUpdatedModules);
+        return $this;
+    }
+
+    /**
+     * @param string $moduleName
+     * @param string $branch
+     * @return EnvironmentInterface
+     */
+    public function addAutoUpdatedModule($moduleName, $branch)
+    {
+        $this->aggregateRoot->addAutoUpdatedModule($moduleName, $branch);
+        return $this;
+    }
+
+    /**
+     * @param string $moduleName
+     * @return EnvironmentInterface
+     */
+    public function removeAutoUpdatedModule($moduleName)
+    {
+        $this->aggregateRoot->removeAutoUpdatedModule($moduleName);
+        return $this;
+    }
+
+    /**
+     * Get AutoUpdatedModules.
+     *
+     * @return array
+     */
+    public function getAutoUpdatedModules()
+    {
+        return $this->aggregateRoot->getAutoUpdatedModules();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasAutoUpdatedModules()
+    {
+        return $this->aggregateRoot->hasAutoUpdatedModules();
+    }
+
+    /**
+     * @param string $moduleName
+     * @param string $branch
+     * @return boolean
+     */
+    public function isModuleAutoUpdated($moduleName, $branch)
+    {
+        return $this->isModuleAutoUpdated($moduleName, $branch);
+    }
+
+    /**
      * @return string
      */
     public function __toString()

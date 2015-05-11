@@ -30,6 +30,7 @@ class EnvironmentRepositoryFactory extends ZendDb\RepositoryFactory
         /** @var EnvironmentRepository $service */
         $service = parent::createService($serviceLocator);
         $service->setPathsTableName($this->getStrict('paths_table_name'));
+        $service->setAutoUpdatedModulesTableName($this->getStrict('auto_updated_modules_table_name'));
 
         /** @var RevisionRepository $revisionRepository */
         $revisionRepository = $serviceLocator->get('RevisionRepository');

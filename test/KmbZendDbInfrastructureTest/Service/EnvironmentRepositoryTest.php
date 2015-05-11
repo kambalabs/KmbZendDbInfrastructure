@@ -48,6 +48,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $environment->setLastReleasedRevision(new Revision());
         $environment->setName('BETA');
         $environment->setParent($parent);
+        $environment->setAutoUpdatedModules(['ntp' => 'master', 'apache' => 'unstable']);
 
         static::$repository->add($environment);
 
@@ -61,6 +62,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
             static::$connection->query('SELECT * FROM environments_paths WHERE descendant_id = 19 ORDER BY length')->fetchAll(\PDO::FETCH_NUM)
         );
         $this->assertEquals(39, intval(static::$connection->query('SELECT count(*) FROM revisions')->fetchColumn()));
+        $this->assertEquals([['ntp'], ['apache']], static::$connection->query('SELECT module_name FROM auto_updated_modules WHERE environment_id = 19')->fetchAll(\PDO::FETCH_NUM));
     }
 
     /** @test */
@@ -116,6 +118,9 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $aggregateRoot->setParent($newParent);
         $aggregateRoot->setName('PF4');
         $aggregateRoot->addUsers([$mike, $nick]);
+        $aggregateRoot->addAutoUpdatedModule('fake', 'unstable');
+        $aggregateRoot->removeAutoUpdatedModule('apache');
+        $aggregateRoot->removeAutoUpdatedModule('bashrc');
         $aggregateRoot->setDefault(true);
 
         static::$repository->update($aggregateRoot);
@@ -126,6 +131,7 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('UNSTABLE', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 4')->fetchColumn());
         $this->assertEquals('PF4', static::$connection->query('select name from environments join environments_paths on id = ancestor_id where length = 1 and descendant_id = 7')->fetchColumn());
         $this->assertEquals([[3], [4], [6]], static::$connection->query('SELECT user_id FROM environments_users WHERE environment_id = 4')->fetchAll(\PDO::FETCH_NUM));
+        $this->assertEquals([['ssh'], ['emacs'], ['fake']], static::$connection->query('SELECT module_name FROM auto_updated_modules WHERE environment_id = 4')->fetchAll(\PDO::FETCH_NUM));
     }
 
     /** @test */
@@ -200,17 +206,19 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $firstChild = $children[0];
         $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $firstChild);
         $this->assertEquals('PF1', $firstChild->getName());
+        $this->assertEquals(4, count($firstChild->getAutoUpdatedModules()));
     }
 
     /** @test */
     public function canGetParent()
     {
-        $environment = static::$repository->getById(4);
+        $environment = static::$repository->getById(7);
 
         $parent = static::$repository->getParent($environment);
 
         $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $parent);
-        $this->assertEquals(1, $parent->getId());
+        $this->assertEquals(4, $parent->getId());
+        $this->assertEquals(4, count($parent->getAutoUpdatedModules()));
     }
 
     /** @test */
@@ -226,5 +234,18 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
         $firstEnvironment = $environments[0];
         $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $firstEnvironment);
         $this->assertEquals('PF1', $firstEnvironment->getName());
+    }
+
+    /** @test */
+    public function canGetAllWhereModuleIsAutoUpdated()
+    {
+        $environments = static::$repository->getAllWhereModuleIsAutoUpdated('apache', 'master');
+
+        $this->assertEquals(3, count($environments));
+        /** @var EnvironmentInterface $firstEnvironment */
+        $firstEnvironment = $environments[0];
+        $this->assertInstanceOf('KmbDomain\Model\EnvironmentInterface', $firstEnvironment);
+        $this->assertEquals('STABLE_PF1', $firstEnvironment->getNormalizedName());
+        $this->assertEquals(4, count($firstEnvironment->getAutoUpdatedModules()));
     }
 }

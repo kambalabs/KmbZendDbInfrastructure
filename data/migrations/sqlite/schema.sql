@@ -31,6 +31,14 @@ CREATE TABLE `environments_users` (
   PRIMARY KEY (`environment_id`, `user_id`)
 );
 
+DROP TABLE IF EXISTS `auto_updated_modules`;
+CREATE TABLE `auto_updated_modules` (
+  `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `environment_id` INTEGER NOT NULL,
+  `module_name`    VARCHAR(256),
+  `branch`         VARCHAR(256)
+);
+
 DROP TABLE IF EXISTS `revisions`;
 CREATE TABLE `revisions` (
   `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

@@ -26,6 +26,7 @@ return [
             'table_name' => 'environments',
             'table_sequence_name' => 'environments_id_seq',
             'paths_table_name' => 'environments_paths',
+            'auto_updated_modules_table_name' => 'auto_updated_modules',
             'factory' => 'KmbZendDbInfrastructure\Service\EnvironmentRepositoryFactory',
             'repository_class' => 'KmbZendDbInfrastructure\Service\EnvironmentRepository',
         ],

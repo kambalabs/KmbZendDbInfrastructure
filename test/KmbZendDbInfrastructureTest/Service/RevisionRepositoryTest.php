@@ -108,7 +108,7 @@ class RevisionRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('KmbDomain\Model\RevisionInterface', $revision);
         $this->assertEquals(9, $revision->getId());
-        $this->assertEquals($environment, $revision->getEnvironment());
+        $this->assertEquals(4, $revision->getEnvironment()->getId());
     }
 
     /** @test */
