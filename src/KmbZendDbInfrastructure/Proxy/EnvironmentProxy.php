@@ -593,7 +593,7 @@ class EnvironmentProxy implements EnvironmentInterface, AggregateRootProxyInterf
      */
     public function isModuleAutoUpdated($moduleName, $branch)
     {
-        return $this->isModuleAutoUpdated($moduleName, $branch);
+        return $this->aggregateRoot->isModuleAutoUpdated($moduleName, $branch);
     }
 
     /**
