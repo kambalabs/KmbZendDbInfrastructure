@@ -195,6 +195,22 @@ class EnvironmentRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canGetRootByNormalizedName()
+    {
+        $environment = static::$repository->getByNormalizedName('STABLE');
+
+        $this->assertEquals(1, $environment->getId());
+    }
+
+    /** @test */
+    public function canGetByNormalizedName()
+    {
+        $environment = static::$repository->getByNormalizedName('STABLE_PF1_ITG');
+
+        $this->assertEquals(7, $environment->getId());
+    }
+
+    /** @test */
     public function canGetAllChildren()
     {
         $environment = static::$repository->getById(1);

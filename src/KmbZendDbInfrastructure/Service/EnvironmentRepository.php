@@ -235,6 +235,18 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
     }
 
     /**
+     * @param string $name
+     * @return EnvironmentInterface
+     */
+    public function getByNormalizedName($name)
+    {
+        $names = explode('_', $name);
+        $environmentRootName = array_shift($names);
+        $environmentRoot = $this->getRootByName($environmentRootName);
+        return $environmentRoot != null ? $environmentRoot->getDescendantByNormalizedName($name) : null;
+    }
+
+    /**
      * @param EnvironmentInterface $environment
      * @return array
      */
