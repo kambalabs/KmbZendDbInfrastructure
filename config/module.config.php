@@ -19,6 +19,13 @@ return [
             'table_sequence_name' => 'users_id_seq',
             'repository_class' => 'KmbZendDbInfrastructure\Service\UserRepository',
         ],
+        'LogRepository' => [
+            'aggregate_root_class' => 'KmbDomain\Model\Log',
+            'aggregate_root_hydrator_class' => 'KmbZendDbInfrastructure\Hydrator\LogHydrator',
+            'table_name' => 'logs',
+            'table_sequence_name' => 'logs_id_seq',
+            'repository_class' => 'KmbZendDbInfrastructure\Service\LogRepository',
+        ],
         'EnvironmentRepository' => [
             'aggregate_root_class' => 'KmbDomain\Model\Environment',
             'aggregate_root_proxy_factory' => 'KmbZendDbInfrastructure\Proxy\EnvironmentProxyFactory',

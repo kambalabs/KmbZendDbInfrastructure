@@ -137,13 +137,15 @@ class EnvironmentRepository extends ZendDb\Repository implements EnvironmentRepo
             $delete->where->equalTo('environment_id', $aggregateRoot->getId());
             $this->performWrite($delete);
 
-            foreach ($aggregateRoot->getAutoUpdatedModules() as $moduleName => $branch) {
-                $insert = $this->getMasterSql()->insert($this->autoUpdatedModulesTableName)->values([
-                    'environment_id' => $aggregateRoot->getId(),
-                    'module_name' => $moduleName,
-                    'branch' => $branch
-                ]);
-                $this->performWrite($insert);
+            if ($aggregateRoot->hasAutoUpdatedModules()) {
+                foreach ($aggregateRoot->getAutoUpdatedModules() as $moduleName => $branch) {
+                    $insert = $this->getMasterSql()->insert($this->autoUpdatedModulesTableName)->values([
+                        'environment_id' => $aggregateRoot->getId(),
+                        'module_name' => $moduleName,
+                        'branch' => $branch
+                    ]);
+                    $this->performWrite($insert);
+                }
             }
 
             $this->movePaths($aggregateRoot);

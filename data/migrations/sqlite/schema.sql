@@ -39,6 +39,14 @@ CREATE TABLE `auto_updated_modules` (
   `branch`         VARCHAR(256)
 );
 
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE `logs` (
+  `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `created_at`     DATETIME,
+  `created_by`     VARCHAR(256),
+  `comment`        TEXT
+);
+
 DROP TABLE IF EXISTS `revisions`;
 CREATE TABLE `revisions` (
   `id`             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

@@ -20,24 +20,25 @@
  */
 namespace KmbZendDbInfrastructure\Hydrator;
 
-use KmbDomain\Model\UserInterface;
+use KmbDomain\Model\LogInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class UserHydrator implements HydratorInterface
+class LogHydrator implements HydratorInterface
 {
+    const SQL_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * Extract values from an object
      *
-     * @param  UserInterface $object
+     * @param  LogInterface $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'login' => $object->getLogin(),
-            'name' => $object->getName(),
-            'email' => $object->getEmail(),
-            'role' => $object->getRole(),
+            'created_at' => $object->getCreatedAt() !== null ? $object->getCreatedAt()->format(self::SQL_FORMAT) : null,
+            'created_by' => $object->getCreatedBy(),
+            'comment' => $object->getComment(),
         ];
         if ($object->getId() !== null) {
             $data['id'] = $object->getId();
@@ -48,17 +49,16 @@ class UserHydrator implements HydratorInterface
     /**
      * Hydrate $object with the provided $data.
      *
-     * @param  array  $data
-     * @param  UserInterface $object
-     * @return UserInterface
+     * @param  array        $data
+     * @param  LogInterface $object
+     * @return LogInterface
      */
     public function hydrate(array $data, $object)
     {
         $object->setId($data['id']);
-        $object->setLogin($data['login']);
-        $object->setName($data['name']);
-        $object->setEmail($data['email']);
-        $object->setRole($data['role']);
+        $object->setCreatedAt(new \DateTime($data['created_at']));
+        $object->setCreatedBy($data['created_by']);
+        $object->setComment($data['comment']);
         return $object;
     }
 }
