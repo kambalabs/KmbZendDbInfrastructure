@@ -91,7 +91,7 @@ CREATE TABLE `group_parameters` (
 DROP TABLE IF EXISTS `group_values` CASCADE;
 CREATE TABLE `group_values` (
   `id`                 INTEGER      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `value`              VARCHAR(256) NOT NULL DEFAULT '',
+  `value`              VARCHAR(4000) NOT NULL DEFAULT '',
   `group_parameter_id` INTEGER NOT NULL,
   FOREIGN KEY (`group_parameter_id`) REFERENCES `group_parameters`(`id`) ON DELETE CASCADE
 );
