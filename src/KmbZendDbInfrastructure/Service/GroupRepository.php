@@ -58,6 +58,10 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
             $result = $this->performRead($select)->current();
             $ordering = $result['ordering'] === null ? 0 : $result['ordering'] + 1;
             $aggregateRoot->setOrdering($ordering);
+        } else {
+            $query = 'UPDATE ' . $this->getTableName() . ' SET ordering = ordering + 1 WHERE ordering >= ? and revision_id = ?';
+            $statement = $this->getDbAdapter()->query($query);
+            $statement->execute([$aggregateRoot->getOrdering(), $aggregateRoot->getRevision()->getId()]);
         }
         parent::add($aggregateRoot);
 

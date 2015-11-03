@@ -47,7 +47,7 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
         static::$repository->add($group);
 
         $this->assertEquals(8, $group->getId());
-        $this->assertEquals(4, $group->getOrdering());
+        $this->assertEquals(3, $group->getOrdering());
         $this->assertEquals(12, $group->getClassByName('dns')->getId());
     }
 
@@ -56,12 +56,16 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);
         $group = new Group('new group');
-        $group->setOrdering(8);
+        $group->setOrdering(1);
         $group->setRevision($revision);
 
         static::$repository->add($group);
 
-        $this->assertEquals(8, $group->getOrdering());
+        $this->assertEquals(9, $group->getId()); // Sequence is not reinit during test setup
+        $this->assertEquals(1, intval(static::$connection->query('SELECT ordering FROM groups WHERE id = 9')->fetchColumn()));
+        $this->assertEquals(0, intval(static::$connection->query('SELECT ordering FROM groups WHERE id = 1')->fetchColumn()));
+        $this->assertEquals(3, intval(static::$connection->query('SELECT ordering FROM groups WHERE id = 2')->fetchColumn()));
+        $this->assertEquals(2, intval(static::$connection->query('SELECT ordering FROM groups WHERE id = 3')->fetchColumn()));
     }
 
     /** @test */
