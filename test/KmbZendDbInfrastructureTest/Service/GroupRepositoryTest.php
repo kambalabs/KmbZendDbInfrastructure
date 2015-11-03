@@ -52,6 +52,19 @@ class GroupRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canAddWithOrdering()
+    {
+        $revision = Bootstrap::getServiceManager()->get('RevisionRepository')->getById(8);
+        $group = new Group('new group');
+        $group->setOrdering(8);
+        $group->setRevision($revision);
+
+        static::$repository->add($group);
+
+        $this->assertEquals(8, $group->getOrdering());
+    }
+
+    /** @test */
     public function canGetById()
     {
         /** @var GroupInterface $group */

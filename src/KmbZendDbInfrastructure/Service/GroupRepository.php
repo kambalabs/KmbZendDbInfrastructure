@@ -48,14 +48,17 @@ class GroupRepository extends Repository implements GroupRepositoryInterface
     public function add(AggregateRootInterface $aggregateRoot)
     {
         /** @var GroupInterface $aggregateRoot */
-        $select = $this->getSlaveSql()
-            ->select()
-            ->from($this->getTableName())
-            ->columns(['ordering' => new Expression('MAX(ordering)')])
-            ->where(['revision_id' => $aggregateRoot->getRevision()->getId()]);
-        $result = $this->performRead($select)->current();
-        $ordering = $result['ordering'] === null ? 0 : $result['ordering'] + 1;
-        $aggregateRoot->setOrdering($ordering);
+        if ($aggregateRoot->getOrdering() === null) {
+            /** @var GroupInterface $aggregateRoot */
+            $select = $this->getSlaveSql()
+                ->select()
+                ->from($this->getTableName())
+                ->columns(['ordering' => new Expression('MAX(ordering)')])
+                ->where(['revision_id' => $aggregateRoot->getRevision()->getId()]);
+            $result = $this->performRead($select)->current();
+            $ordering = $result['ordering'] === null ? 0 : $result['ordering'] + 1;
+            $aggregateRoot->setOrdering($ordering);
+        }
         parent::add($aggregateRoot);
 
         if ($aggregateRoot->hasClasses()) {
