@@ -120,7 +120,7 @@ class RevisionRepository extends Repository implements RevisionRepositoryInterfa
             ->equalTo('environment_id', $environment->getId())
             ->and
             ->isNotNull('released_at');
-        $select = $this->getSelect()->where($where);
+        $select = $this->getSelect()->where($where)->order('released_at');
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
